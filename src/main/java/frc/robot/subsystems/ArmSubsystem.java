@@ -3,15 +3,17 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
+import frc.robot.constants.CANCoderConstants;
 import frc.robot.constants.TalonFXConstants;
+import org.opencv.core.Mat;
 
 public class ArmSubsystem extends SubsystemBase {
 
@@ -55,6 +57,66 @@ public class ArmSubsystem extends SubsystemBase {
 
     }
 
+    @Override
+    public void periodic() {
+
+    }
+
+    public boolean getBeamBreak() {
+        return beamBreak.get();
+    }
+
+    public void setPosition(ArmConstants.ArmPositions position) {
+        armPositions = position;
+        setMotorsBrake();
+
+        double radians = Math.toRadians(getAngle());
+        double cosineScalar = Math.cos(radians);
+
+        MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(
+                position.sensorUnits, true, ArmConstants.GRAVITY_FEEDFORWARD * cosineScalar, 0,
+                true, false, false);
+
+        armKraken.setControl(motionMagicVoltage);
+
+    }
+
+    public double getAngle() {
+        return armKraken.getRotorPosition().getValue() / CANCoderConstants.COUNTS_PER_DEG * ArmConstants.GEAR_RATIO;
+    }
+
+    public ArmConstants.ArmPositions getArmPositions() {
+        return armPositions;
+    }
+
+    public boolean isMotionFinished() {
+        return Math.abs(getAngle() - armPositions.angle) <= ArmConstants.ANGLE_TOLERANCE;
+    }
+
+    public void moveUp(double speed) {
+        setMotorsBrake();
+        armKraken.set(Math.abs(speed));
+    }
+    public void moveDown(double speed) {
+        setMotorsBrake();
+        armKraken.set(-Math.abs(speed));
+    }
+
+    public void setMotorsCoast() {
+        armKraken.setNeutralMode(NeutralModeValue.Coast);
+    }
+
+    public void setMotorsBrake() {
+        armKraken.setNeutralMode(NeutralModeValue.Brake);
+    }
+
+    public double getSuppliedCurrent() {
+        return armKraken.getSupplyCurrent().getValue();
+    }
+
+    public void stop() {
+        armKraken.stopMotor();
+    }
 
 }
 

@@ -19,6 +19,10 @@ public final class ArmConstants {
     public static final double ARM_POSITION_STATUS_FRAME = 0.05;
     public static final double ARM_VELOCITY_STATUS_FRAME = 0.01;
 
+    public static final double GRAVITY_FEEDFORWARD = 0.05;
+
+    public static final double ANGLE_TOLERANCE = 5;
+
     public static final double ARM_P = 0;
     public static final double ARM_I = 0;
     public static final double ARM_D = 0;
