@@ -6,16 +6,32 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.robot.constants.OIConstants;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.util.controllerUtils.ButtonHelper;
+import frc.robot.util.controllerUtils.Controller;
+import frc.robot.util.controllerUtils.ControllerContainer;
+import frc.robot.util.controllerUtils.MultiButton;
 
 public class RobotContainer {
+
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  ControllerContainer controllerContainer = new ControllerContainer();
+  ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
   
   public RobotContainer() {
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+
+  buttonHelper.createButton(1, 0, new StartEndCommand(() -> shooterSubsystem.spinShooter(1),
+          shooterSubsystem::stopShooter), MultiButton.RunCondition.WHILE_HELD);
+
+  }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return new StartEndCommand(() -> shooterSubsystem.spinShooter(-.75), shooterSubsystem::stopShooter);
   }
 }

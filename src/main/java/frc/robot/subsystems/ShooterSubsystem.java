@@ -13,18 +13,23 @@ public class ShooterSubsystem extends SubsystemBase {
     TalonFX rightTalon;
     public ShooterSubsystem() {
 
-        leftTalon = new TalonFX(15);
-        rightTalon = new TalonFX(16);
+        leftTalon = new TalonFX(15, "canivoreBus");
+        rightTalon = new TalonFX(16, "canivoreBus");
 
         TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
         TalonFXConfigurator talonFXConfigurator = leftTalon.getConfigurator();
 
 
-        leftTalon.setControl(new Follower(rightTalon.getDeviceID(),false));
+        leftTalon.setControl(new Follower(rightTalon.getDeviceID(),true));
+        talonFXConfigurator.apply(talonFXConfiguration);
     }
 
     public void spinShooter(double speed) {
-        rightTalon.set(.2);
+        rightTalon.set(-speed);
+    }
+
+    public void stopShooter() {
+        rightTalon.stopMotor();
     }
 }
 
