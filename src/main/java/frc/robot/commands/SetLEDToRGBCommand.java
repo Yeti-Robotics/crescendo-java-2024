@@ -3,16 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LEDSubsystem;
 
-
 public class SetLEDToRGBCommand extends Command {
 
     private final LEDSubsystem ledSubsystem;
     private final int red, green, blue;
 
-
     public SetLEDToRGBCommand(LEDSubsystem ledSubsystem, int red, int green, int blue) {
-        // each subsystem used by the command must be passed into the
-        // addRequirements() method (which takes a vararg of Subsystem)
         this.ledSubsystem = ledSubsystem;
         this.red = red;
         this.green = green;
@@ -29,9 +25,7 @@ public class SetLEDToRGBCommand extends Command {
     }
 
     @Override
-    public void execute() {
-
-    }
+    public void execute() {}
 
     @Override
     public boolean isFinished() {return true;}
