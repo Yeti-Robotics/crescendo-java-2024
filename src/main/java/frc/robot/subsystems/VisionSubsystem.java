@@ -5,6 +5,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.VisionConstants;
 import frc.robot.util.LimelightHelpers;
@@ -40,7 +41,6 @@ public Pose2d getPose2d() {
     return LimelightHelpers.getBotPose2d(VisionConstants.LIMELIGHT_NAME);
 }
 
-
 public double getYaw() {
     return getPose()[5];
 }
@@ -55,8 +55,6 @@ public double getID() {
 
 public void setPipeline(int num){
     LimelightHelpers.setPipelineIndex(VisionConstants.LIMELIGHT_NAME, num);
-} 
-
-
-
 }
+
+
