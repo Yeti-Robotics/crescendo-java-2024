@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -12,6 +11,7 @@ public class SpeakerTargetCommand extends Command {
     private double calcAngle;
     private double relativePoseY;
     private double relativePoseX;
+    private double robotPoseX;
     public SpeakerTargetCommand(VisionSubsystem visionSubsystem) {
         this.visionSubsystem = visionSubsystem;
         // each subsystem used by the command must be passed into the
@@ -24,12 +24,11 @@ public class SpeakerTargetCommand extends Command {
         calcAngle = 0;
         relativePoseY = fieldLength - visionSubsystem.getPose2d().getY();
         relativePoseX = speakerPose - visionSubsystem.getPose2d().getX();
+        robotPoseX = visionSubsystem.getPose2d().getX();
     }
     @Override
     public void execute() {
-        visionSubsystem.getPose2d().getY();
-        visionSubsystem.getPose2d().getX();
-        if (visionSubsystem.getPose2d().getX() >= speakerPose + 20.6785 && visionSubsystem.getPose2d().getX() <= speakerPose - 20.6875) {
+        if (robotPoseX >= speakerPose + 20.6785 && robotPoseX <= speakerPose - 20.6875) {
             calcAngle = 0.0;
         }
         else {
