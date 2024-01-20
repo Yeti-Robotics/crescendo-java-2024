@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class PivotSubsytemSubsystem extends SubsystemBase {
+public class PivotSubsytem extends SubsystemBase {
 
     // With eager singleton initialization, any static variables/fields used in the 
     // constructor must appear before the "INSTANCE" variable so that they are initialized 
@@ -14,7 +14,7 @@ public class PivotSubsytemSubsystem extends SubsystemBase {
      * the {@link #getInstance()} method to get the single instance (rather
      * than trying to construct an instance of this class.)
      */
-    private final static PivotSubsytemSubsystem INSTANCE = new PivotSubsytemSubsystem();
+    private final static PivotSubsytem INSTANCE = new PivotSubsytem();
 
     /**
      * Returns the Singleton instance of this PivotSubsytemSubsystem. This static method
@@ -22,7 +22,7 @@ public class PivotSubsytemSubsystem extends SubsystemBase {
      * of this class. For example: {@code PivotSubsytemSubsystem.getInstance();}
      */
     @SuppressWarnings("WeakerAccess")
-    public static PivotSubsytemSubsystem getInstance() {
+    public static PivotSubsytem getInstance() {
         return INSTANCE;
     }
 
@@ -31,11 +31,7 @@ public class PivotSubsytemSubsystem extends SubsystemBase {
      * is private since this class is a Singleton. Code should use
      * the {@link #getInstance()} method to get the singleton instance.
      */
-    private PivotSubsytemSubsystem() {
-        // TODO: Set the default command, if any, for this subsystem by calling setDefaultCommand(command)
-        //       in the constructor or in the robot coordination class, such as RobotContainer.
-        //       Also, you can call addChild(name, sendableChild) to associate sendables with the subsystem
-        //       such as SpeedControllers, Encoders, DigitalInputs, etc.
+    private PivotSubsytem() {
     }
 }
 
