@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 
-import com.ctre.phoenix6.StatusSignal;
+//import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
