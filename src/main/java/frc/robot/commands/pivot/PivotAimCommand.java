@@ -1,5 +1,6 @@
 package frc.robot.commands.pivot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.VisionSubsystem;
 import static frc.robot.constants.PivotConstants.*;
@@ -12,6 +13,8 @@ public class PivotAimCommand extends Command {
     private double relativePoseX;
     private double robotPoseY;
     private double robotPoseX;
+    private double hypoGroundLength;
+    private double VertAngle;
     public PivotAimCommand(VisionSubsystem visionSubsystem) {
         this.visionSubsystem = visionSubsystem;
         addRequirements(this.visionSubsystem);
@@ -28,6 +31,9 @@ public class PivotAimCommand extends Command {
 
     @Override
     public void execute() {
+        hypoGroundLength = Math.sqrt((relativePoseX*relativePoseX)+(relativePoseY*relativePoseY));
+        VertAngle = Math.atan2(Units.inchesToMeters(speakerHeight), hypoGroundLength);
+
     }
 
     @Override

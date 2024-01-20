@@ -28,6 +28,7 @@ public class FieldConstants {
     public static double podiumX = Units.inchesToMeters(126.75);
     public static double startingLineX = Units.inchesToMeters(74.111);
     public static double speakerPose = fieldWidth - Units.inchesToMeters(104.0);
+    public static double speakerHeight = Units.inchesToMeters(77.9375);
 
     public static Translation2d ampCenter =
             new Translation2d(Units.inchesToMeters(72.455), Units.inchesToMeters(322.996));
