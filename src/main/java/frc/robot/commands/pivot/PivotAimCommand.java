@@ -32,8 +32,7 @@ public class PivotAimCommand extends Command {
     @Override
     public void execute() {
         hypoGroundLength = Math.sqrt((relativePoseX*relativePoseX)+(relativePoseY*relativePoseY));
-        VertAngle = Math.atan2(Units.inchesToMeters(speakerHeight), hypoGroundLength);
-
+        VertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
     }
 
     @Override
