@@ -10,12 +10,17 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.PivotConstants;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.CANCoderConstants;
 import frc.robot.constants.TalonFXConstants;
 import org.opencv.core.Mat;
+
+import static frc.robot.constants.FieldConstants.*;
 
 public class PivotSubsystem extends SubsystemBase {
 
@@ -23,8 +28,16 @@ public class PivotSubsystem extends SubsystemBase {
     private final TalonFX pivotMotor2;
     private final CANcoder pivotEncoder1;
     private final CANcoder pivotEncoder2;
+    private final VisionSubsystem visionSubsystem;
+    private double relativePoseY;
+    private double relativePoseX;
+    private double robotPoseY;
+    private double robotPoseX;
+    private double hypoGroundLength;
+    public double vertAngle;
     private PivotConstants.PivotPositions pivotPositions = PivotConstants.PivotPositions.BUMPFIRE;
     public PivotSubsystem() {
+        visionSubsystem = new VisionSubsystem();
         pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID);
         pivotMotor2 = new TalonFX(PivotConstants.PIVOT_TWO_MOTOR_ID);
         pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID);
@@ -34,12 +47,11 @@ public class PivotSubsystem extends SubsystemBase {
         var pivotMotor2Configurator = pivotMotor2.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
 
-
         talonFXConfiguration.Feedback.FeedbackRemoteSensorID = pivotEncoder1.getDeviceID();
         talonFXConfiguration.Feedback.FeedbackRemoteSensorID = pivotEncoder2.getDeviceID();
         talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
         talonFXConfiguration.MotorOutput.NeutralMode = PivotConstants.PIVOT_NEUTRAL_MODE;
-        // talonFXConfiguration.FutureProofConfigs = TalonFXConstants.TALON_FUTURE_PROOF;
+         talonFXConfiguration.FutureProofConfigs = true;
         // talonFXConfiguration.Feedback.SensorToMechanismRatio = 1.0;
         // talonFXConfiguration.Feedback.RotorToSensorRatio = 12.8;
         talonFXConfiguration.CurrentLimits = PivotConstants.PIVOT_CURRENT_LIMIT;
@@ -67,17 +79,25 @@ public class PivotSubsystem extends SubsystemBase {
         pivotEncoder2Configurator.apply(cancoderConfiguration);
     }
     @Override
-    public void periodic() {    }
+    public void periodic() {
+        relativePoseY = fieldLength - visionSubsystem.getPose2d().getY();
+        relativePoseX = speakerPose - visionSubsystem.getPose2d().getX();
+        robotPoseX = visionSubsystem.getPose2d().getX();
+        robotPoseY = visionSubsystem.getPose2d().getY();
+        hypoGroundLength = Math.sqrt((relativePoseX*relativePoseX)+(relativePoseY*relativePoseY));
+        vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
+    }
 
-    public void setPosition(PivotConstants.PivotPositions position) {
-        pivotPositions = position;
+    public void setPosition(double angle) {
+
+        double angleUnits = angle / PivotConstants.GEAR_RATIO * CANCoderConstants.COUNTS_PER_DEG;
         setMotorsBrake();
 
         double radians = Math.toRadians(getAngle());
         double cosineScalar = Math.cos(radians);
 
         MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(
-                position.sensorUnits, true, PivotConstants.GRAVITY_FEEDFORWARD * cosineScalar, 0,
+                angleUnits, true, PivotConstants.GRAVITY_FEEDFORWARD * cosineScalar, 0,
                 true, false, false);
 
         pivotMotor1.setControl(motionMagicVoltage);
