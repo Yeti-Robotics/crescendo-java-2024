@@ -7,6 +7,10 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.TalonFXConstants;
@@ -15,6 +19,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final TalonFX leftKraken;
     private final TalonFX rightKraken;
+    private final CANSparkMax neo;
+    private final DigitalInput beamBreak;
     public enum ShooterModes {
         DEFAULT,
         SPEAKER,
@@ -58,6 +64,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
          rightMotorConfigurator.apply(rightMotorConfiguration);
          leftMotorConfigurator.apply(rightMotorConfiguration);
+
+         neo = new CANSparkMax(ShooterConstants.SHOOTER_NEO, CANSparkLowLevel.MotorType.kBrushless);
+         neo.setIdleMode(CANSparkBase.IdleMode.kBrake);
+         neo.enableVoltageCompensation(12);
+         neo.setSmartCurrentLimit((int) ShooterConstants.SHOOTER_CURRENT_LIMIT.SupplyCurrentLimit);
+         beamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK);
     }
 
     @Override
@@ -96,6 +108,13 @@ public class ShooterSubsystem extends SubsystemBase {
 //
 //
    }
+    public boolean getBeamBreak(){
+        return beamBreak.get();
+    }
+
+    public void spinNeo() {
+        neo.set(ShooterConstants.STAGE_SPEED);
+    }
 
     public void shootFlywheel(double speed) {
         rightKraken.set(speed);

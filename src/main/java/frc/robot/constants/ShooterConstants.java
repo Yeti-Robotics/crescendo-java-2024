@@ -32,4 +32,7 @@ public final class ShooterConstants {
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().withKP(SHOOTER_P).withKI(SHOOTER_I).withKD(SHOOTER_D).withKA(SHOOTER_A).withKV(SHOOTER_V);
 
+    public static final int SHOOTER_NEO = 0;
+    public static final int BEAM_BREAK = 0;
+    public static final double STAGE_SPEED = 0;
 }
