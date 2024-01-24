@@ -8,7 +8,11 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Contains various field dimensions and useful reference points. Dimensions are in meters, and sets
@@ -102,6 +106,42 @@ public class FieldConstants {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    public static AprilTagFieldLayout aprilTagLayout;
+    public static List<Pose2d> aprilTagPoses = new ArrayList<Pose2d>(12);
+    public static List<Pose2d> allianceAprilTags = new ArrayList<Pose2d>(6);
+    public static Pose2d ampTag = new Pose2d(FieldConstants.ampCenter, Rotation2d.fromDegrees(0));
+
+    public static List<Pose2d> opposingAllianceAprilTags = new ArrayList<Pose2d>(6);
+
+    static{
+        try {
+            aprilTagLayout = k2024Crescendo.loadAprilTagLayoutField();
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static void updateAprilTagTranslations() {
+
+        aprilTagPoses.clear();
+        allianceAprilTags.clear();
+        opposingAllianceAprilTags.clear();
+
+        for(int i = 0; i < aprilTagLayout.getTags().size(); i++) {
+            aprilTagPoses.add(i, aprilTagLayout.getTagPose(i + 1).get().toPose2d());
+        }
+
+        if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            ampTag = new Pose2d(FieldConstants.ampCenter, Rotation2d.fromDegrees(0));
+            allianceAprilTags.addAll(aprilTagPoses.subList(1,6));
+            opposingAllianceAprilTags.addAll(aprilTagPoses.subList(7,12));
+        } else {
+            ampTag = new Pose2d(FieldConstants.ampCenter.getX(), 0, Rotation2d.fromDegrees(0));
+            allianceAprilTags.addAll(aprilTagPoses.subList(7,12));
+            opposingAllianceAprilTags.addAll(aprilTagPoses.subList(1,6));
+
         }
     }
 }
