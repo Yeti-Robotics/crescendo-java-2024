@@ -51,7 +51,7 @@ public class PivotSubsystem extends SubsystemBase {
         talonFXConfiguration.Feedback.FeedbackRemoteSensorID = pivotEncoder2.getDeviceID();
         talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
         talonFXConfiguration.MotorOutput.NeutralMode = PivotConstants.PIVOT_NEUTRAL_MODE;
-         talonFXConfiguration.FutureProofConfigs = true;
+        talonFXConfiguration.FutureProofConfigs = true;
         // talonFXConfiguration.Feedback.SensorToMechanismRatio = 1.0;
         // talonFXConfiguration.Feedback.RotorToSensorRatio = 12.8;
         talonFXConfiguration.CurrentLimits = PivotConstants.PIVOT_CURRENT_LIMIT;
