@@ -32,7 +32,7 @@ public class FieldConstants {
     public static final double podiumX = Units.inchesToMeters(126.75);
     public static final double startingLineX = Units.inchesToMeters(74.111);
     public static final double speakerPose = fieldWidth - Units.inchesToMeters(104.0);
-    public static final double robotHeight = Units.feetToMeters(2.5);
+    public static final double robotHeight = Units.feetToMeters(2.333);
     public static final double speakerHeightRelativeToBot = Units.inchesToMeters(77.9375) - robotHeight;
 
     public static final Translation2d ampCenter =
