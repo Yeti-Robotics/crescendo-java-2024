@@ -37,7 +37,7 @@ public class LEDSubsystem extends SubsystemBase implements Sendable{
 
     @Override
     public void periodic() {
-        setRGB(0,20, 120, 255);
+        setRGB(0,0, 0, 130);
     }
     
     public void setHSV (int i, int hue, int saturation, int value) {

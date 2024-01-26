@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     robotContainer = new RobotContainer();
-    new SetLEDToRGBCommand(robotContainer.ledSubsystem, 255, 0, 0).schedule();
+    new SetLEDToRGBCommand(robotContainer.ledSubsystem, 1,50,32).schedule();
   }
 
   @Override

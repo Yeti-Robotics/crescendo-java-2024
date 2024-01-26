@@ -16,12 +16,12 @@ public class AmpSignalCommand extends Command {
     public void initialize() {
     }
 
-    @Override
-    public void execute() {
-        if (AmpReady) {
-            ledSubsystem.setRGB(0, 255, 0, 255);
-        }
-    }
+//    @Override
+////    public void execute() {
+//        if (AmpReady) {
+//            ledSubsystem.setRGB(0, 255, 0, 255);
+//        }
+//    }
 
     @Override
     public boolean isFinished() {
