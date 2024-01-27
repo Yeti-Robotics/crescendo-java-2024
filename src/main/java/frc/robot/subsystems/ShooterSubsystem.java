@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DifferentialFollower;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -39,68 +40,85 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     public ShooterSubsystem() {
-        leftKraken = new TalonFX(ShooterConstants.SHOOTER_LEFT_MOTOR);
-        rightKraken = new TalonFX(ShooterConstants.SHOOTER_RIGHT_MOTOR);
-        leftKraken.setControl(new DifferentialFollower(rightKraken.getDeviceID(), true));
+        leftKraken = new TalonFX(ShooterConstants.SHOOTER_LEFT_MOTOR, TalonFXConstants.CANIVORE_NAME);
+        rightKraken = new TalonFX(ShooterConstants.SHOOTER_RIGHT_MOTOR, TalonFXConstants.CANIVORE_NAME);
         var rightMotorConfigurator = rightKraken.getConfigurator();
+        var leftMotorConfigurator = leftKraken.getConfigurator();
         var rightMotorConfiguration = new TalonFXConfiguration();
 
         rightMotorConfiguration.MotorOutput.Inverted = ShooterConstants.SHOOTER_INVERSION;
         rightMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         rightMotorConfiguration.CurrentLimits = ShooterConstants.SHOOTER_CURRENT_LIMIT;
         rightMotorConfiguration.Slot0 = ShooterConstants.SLOT_0_CONFIGS;
-         shooterStatus = ShooterStatus.OFF;
-         shooterModes = ShooterModes.SPEAKER;
+        leftKraken.setControl(new Follower(rightKraken.getDeviceID(), true));
+        shooterStatus = ShooterStatus.OFF;
+         shooterModes = ShooterModes.TRAP;
 
 
 
-                rightMotorConfigurator.apply(rightMotorConfiguration);
+         rightMotorConfigurator.apply(rightMotorConfiguration);
+         leftMotorConfigurator.apply(rightMotorConfiguration);
     }
 
     @Override
-    public void periodic() {
-
-        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
-                velocity, 0, true, ShooterConstants.SHOOTER_F, 0, false, false, false);
-
-        switch (shooterModes) {
-            case SPEAKER:
-             //   if() Pose get y is above a certain value {
-                //   Our main linear regression for RPM}
-            break;
-
-            case BUMP:
-                velocity = ShooterConstants.BUMP_FIRE_VEL;
-                rightKraken.setControl(motionMagicVelocityVoltage);
-             break;
-            case AMP:
-                velocity = ShooterConstants.AMP_VEL;
-                rightKraken.setControl(motionMagicVelocityVoltage);
-                break;
-            case TRAP:
-                velocity = ShooterConstants.TRAP_VEL;
-                 rightKraken.setControl(motionMagicVelocityVoltage);
-            case DEFAULT:
-                velocity = ShooterConstants.DEFAULT_VEL;
-                rightKraken.setControl(motionMagicVelocityVoltage);
-                break;
-        }
-
-
-
-    }
+ public void periodic() {
+//
+//        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
+//                velocity, 0, true, ShooterConstants.SHOOTER_F, 0, false, false, false);
+//
+//        switch (shooterModes) {
+//            case SPEAKER:
+//                shooterStatus = ShooterStatus.FORWARD;
+//                //   if() Pose get y is above a certain value {
+//                //   Our main linear regression for RPM}
+//            break;
+//
+//            case BUMP:
+//                velocity = ShooterConstants.BUMP_FIRE_VEL;
+//                shooterStatus = ShooterStatus.FORWARD;
+//                rightKraken.setControl(motionMagicVelocityVoltage);
+//             break;
+//            case AMP:
+//                velocity = ShooterConstants.AMP_VEL;
+//                shooterStatus = ShooterStatus.FORWARD;
+//                rightKraken.setControl(motionMagicVelocityVoltage);
+//                break;
+//            case TRAP:
+//                velocity = ShooterConstants.TRAP_VEL;
+//                shooterStatus = ShooterStatus.FORWARD;
+//                rightKraken.setControl(motionMagicVelocityVoltage);
+//            case DEFAULT:
+//                velocity = ShooterConstants.DEFAULT_VEL;
+//                rightKraken.setControl(motionMagicVelocityVoltage);
+//                break;
+//        }
+//
+//
+//
+   }
 
     public void shootFlywheel(double speed) {
         rightKraken.set(speed);
         shooterStatus = ShooterStatus.FORWARD;
     }
 
+    public void setMode(ShooterModes mode) {
+        shooterModes = mode;
+    }
+
 
     public void stopFlywheel() {
         rightKraken.stopMotor();
+        leftKraken.stopMotor();
         shooterStatus = ShooterStatus.OFF;
     }
 
+    public void testMotionMagic(double vel) {
+        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
+                vel, 0, false, ShooterConstants.SHOOTER_F, 0, false, false, false);
+        rightKraken.setControl(motionMagicVelocityVoltage);
+        leftKraken.setControl(motionMagicVelocityVoltage);
+    }
     public double getRightEncoder() {
         return rightKraken.getRotorVelocity().getValue();
     }

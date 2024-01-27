@@ -6,8 +6,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 
 public final class ShooterConstants {
 
-    public static final int SHOOTER_LEFT_MOTOR = 0;
-    public static final int SHOOTER_RIGHT_MOTOR = 0;
+    public static final int SHOOTER_LEFT_MOTOR = 15;
+    public static final int     SHOOTER_RIGHT_MOTOR = 16;
     public static final CurrentLimitsConfigs SHOOTER_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
             withSupplyCurrentThreshold(55).withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);
     public static final InvertedValue SHOOTER_INVERSION = InvertedValue.CounterClockwise_Positive;
@@ -15,8 +15,8 @@ public final class ShooterConstants {
     public static final double SHOOTER_P = 0.1;
     public static final double SHOOTER_I = 0.0;
     public static final double SHOOTER_D = 0.0;
-    public static final double SHOOTER_F = 0.0545;
-    public static final double SHOOTER_V = 0.45887;
+    public static final double SHOOTER_F = 0.0545 + 5;
+    public static final double SHOOTER_V = 0.45887 + 0.3;
     public static final double SHOOTER_A = .05;
 
     public static final double FLYWHEEL_DIAMETER_IN = 4.0; // inches
