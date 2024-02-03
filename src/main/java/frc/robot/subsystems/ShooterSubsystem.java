@@ -36,8 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public static boolean atSetpoint = false;
     public static boolean isShooting = false;
     public static double velocity = 0;
-
-
+    public boolean toggleLED = false;
 
     public ShooterSubsystem() {
         leftKraken = new TalonFX(ShooterConstants.SHOOTER_LEFT_MOTOR, TalonFXConstants.CANIVORE_NAME);
@@ -58,6 +57,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
          rightMotorConfigurator.apply(rightMotorConfiguration);
          leftMotorConfigurator.apply(rightMotorConfiguration);
+    }
+
+    public boolean isOnSetPoint(double setpoint) {
+        return rightKraken.getRotorVelocity().getValue() == setpoint;
     }
 
     @Override
@@ -115,7 +118,18 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void testMotionMagic(double vel) {
         MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
-                vel, 0, false, ShooterConstants.SHOOTER_F, 0, false, false, false);
+                vel,
+                0,
+                false,
+                ShooterConstants.SHOOTER_F,
+                0,
+                false,
+                false,
+                false
+        );
+        if (isOnSetPoint(vel)) {
+            boolean toggleLED = true;
+        }
         rightKraken.setControl(motionMagicVelocityVoltage);
         leftKraken.setControl(motionMagicVelocityVoltage);
     }
