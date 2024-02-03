@@ -16,12 +16,12 @@ public class TrapReadyCommand extends Command {
     public void initialize() {
     }
 
-    @Override
-    public void execute() {
-        if (ClimberSystem.atsetPoint) {
-            ledSubsystem.setRGB(0,205,50, 205);
-        }
-    }
+//    @Override
+//    public void execute() {
+//        if (ClimberSystem.atsetPoint) {
+//            ledSubsystem.setRGB(0,205,50, 205);
+//        }
+//    }
 
     @Override
     public boolean isFinished() {return true;}
