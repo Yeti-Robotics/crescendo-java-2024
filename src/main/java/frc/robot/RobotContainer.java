@@ -23,9 +23,11 @@ import frc.robot.subsystems.LEDSubsystem;
 public class RobotContainer {
 
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-  ControllerContainer controllerContainer = new ControllerContainer();
+    public LEDSubsystem ledSubsystem;
+    ControllerContainer controllerContainer = new ControllerContainer();
   ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
   public RobotContainer() {
+    ledSubsystem = new LEDSubsystem(shooterSubsystem);
     configureBindings();
   }
 

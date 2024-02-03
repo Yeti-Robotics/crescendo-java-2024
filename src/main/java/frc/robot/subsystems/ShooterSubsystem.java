@@ -37,6 +37,13 @@ public class ShooterSubsystem extends SubsystemBase {
     public static boolean isShooting = false;
     public static double velocity = 0;
     public boolean toggleLED = false;
+    public enum ShootingState {
+        AMPING_UP,
+        READY_TO_SHOOT,
+        SHOOTING,
+        NOT_SHOOTING
+    }
+    public ShootingState shootingState;
 
     public ShooterSubsystem() {
         leftKraken = new TalonFX(ShooterConstants.SHOOTER_LEFT_MOTOR, TalonFXConstants.CANIVORE_NAME);
@@ -52,6 +59,8 @@ public class ShooterSubsystem extends SubsystemBase {
         leftKraken.setControl(new Follower(rightKraken.getDeviceID(), true));
         shooterStatus = ShooterStatus.OFF;
          shooterModes = ShooterModes.TRAP;
+
+         shootingState = ShootingState.NOT_SHOOTING;
 
 
 

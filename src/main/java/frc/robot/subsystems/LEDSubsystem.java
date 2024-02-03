@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.LEDConstants;
 
@@ -10,17 +11,13 @@ public class LEDSubsystem extends SubsystemBase {
 
     private final AddressableLED ledStrip;
     private final AddressableLEDBuffer ledBuffer;
+    private final LEDStripStatus stripStatus;
+    private final ShooterSubsystem shooterSubsystem;
+    // I dont care if this is "bad practice" 😎
+    private double brightness = LEDConstants.BRIGHTNESS;
 
-    private double brightness = 1.0; // Default to full brightness
-
-    public enum LEDStripStatus {
-        OFF,
-        ON
-    }
-
-    public LEDStripStatus stripStatus;
-
-    public LEDSubsystem(){
+    public LEDSubsystem(ShooterSubsystem shooterSubsystem) {
+        this.shooterSubsystem = shooterSubsystem;
         ledStrip = new AddressableLED(LEDConstants.ADDRESSABLE_LED);
         ledBuffer = new AddressableLEDBuffer(LEDConstants.LED_COUNT);
 
@@ -30,7 +27,34 @@ public class LEDSubsystem extends SubsystemBase {
 
         stripStatus = LEDStripStatus.ON;
         SmartDashboard.putNumber("Brightness", brightness);
+
+
+        // Light states
+        super.setDefaultCommand(
+                new RunCommand(() -> {
+                    if (shooterSubsystem.shootingState == ShooterSubsystem.ShootingState.NOT_SHOOTING) { // Add && if theta controller is at set point
+                        setRGB(
+                                0,
+                                LEDConstants.READY_GREEN[1],
+                                LEDConstants.READY_GREEN[2],
+                                LEDConstants.READY_GREEN[3]
+                        );
+                        sendData();
+                    } 
+                    /*
+                    else if (note_loaded) {
+                        if note_loaded then display noteOrange color on LED's
+                    }
+                    */
+                    else {
+                        double red = LEDConstants.YETI_BLUE[1];
+                        double green = LEDConstants.YETI_BLUE[2];
+                        double blue = LEDConstants.YETI_BLUE[3];
+                        ledBuffer.setRGB(0, (int) (red * brightness), (int) (green * brightness), (int) (blue * brightness));
+                    }
+                }, this));
     }
+
 
     @Override
     public void periodic() {
@@ -41,7 +65,7 @@ public class LEDSubsystem extends SubsystemBase {
         sendData();
     }
 
-    public void setHSV (int i, int hue, int saturation, int value) {
+    public void setHSV(int i, int hue, int saturation, int value) {
         ledBuffer.setHSV(i, hue, saturation, (int) (value * brightness));
     }
 
@@ -49,15 +73,20 @@ public class LEDSubsystem extends SubsystemBase {
         ledBuffer.setRGB(i, (int) (red * brightness), (int) (green * brightness), (int) (blue * brightness));
     }
 
-    public int getBufferLength () {
+    public int getBufferLength() {
         return ledBuffer.getLength();
     }
 
-    public void sendData () {
+    public void sendData() {
         ledStrip.setData(ledBuffer);
     }
 
     public void setBrightness(double brightness) {
         this.brightness = Math.max(0.0, Math.min(1.0, brightness)); // Ensure brightness is between 0 and 1
+    }
+
+    public enum LEDStripStatus {
+        OFF,
+        ON
     }
 }

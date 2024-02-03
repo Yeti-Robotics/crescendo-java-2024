@@ -5,6 +5,7 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
+import frc.robot.constants.LEDConstants;
 import static frc.robot.constants.FieldConstants.*;
 
 
@@ -34,9 +35,17 @@ public class SpeakerTargetCommand extends Command {
     }
     @Override
     public void execute() {
-        if (shooterSubsystem.toggleLED) { // Add && if theta controller is at set point
-            ledSubsystem.setRGB(0, 0, 255, 0);
-            ledSubsystem.sendData();
+//        if (shooterSubsystem.shootingState == ShooterSubsystem.ShootingState.NOT_SHOOTING) { // Add && if theta controller is at set point
+//            ledSubsystem.setRGB(
+//                    0,
+//                    LEDConstants.READY_GREEN[1],
+//                    LEDConstants.READY_GREEN[2],
+//                    LEDConstants.READY_GREEN[3]
+//            );
+//            ledSubsystem.sendData();
+//        }
+        if (true /*thetaController at setpoint*/) {
+            shooterSubsystem.shootingState = ShooterSubsystem.ShootingState.READY_TO_SHOOT;
         }
         if (robotPoseX >= speakerPose + 20.6785 && robotPoseX <= speakerPose - 20.6875) {
             calcAngle = 0.0;
