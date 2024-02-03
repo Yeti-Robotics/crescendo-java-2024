@@ -17,8 +17,9 @@ import frc.robot.constants.CANCoderConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.ElevatorConstants.ElevatorPositions;
 import frc.robot.constants.TalonFXConstants;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ElevatorSubsystem {
+public class ElevatorSubsystem extends SubsystemBase{
     private final TalonFX elevatorMotor;
     private final CANcoder elevatorCoder;
     private ElevatorConstants.ElevatorPositions elevatorPositions = ElevatorConstants.ElevatorPositions.DOWN;
