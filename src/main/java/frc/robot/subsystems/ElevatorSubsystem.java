@@ -21,13 +21,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase{
     private final TalonFX elevatorMotor;
+
+    private final DigitalInput magSwitch;
     private final CANcoder elevatorCoder;
     private ElevatorConstants.ElevatorPositions elevatorPositions = ElevatorConstants.ElevatorPositions.DOWN;
 
     public ElevatorSubsystem(){
         elevatorMotor = new TalonFX(ElevatorConstants.ELEVATOR_ID, TalonFXConstants.CANIVORE_NAME);
         elevatorCoder = new CANcoder(ElevatorConstants.ELEVATOR_CAN_ID);
-
+        magSwitch = new DigitalInput(2);
         var ElConfigurator = elevatorMotor.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
 
@@ -60,13 +62,16 @@ public class ElevatorSubsystem extends SubsystemBase{
         elevatorMotor.stopMotor();
     }
 
+    public boolean getmagSwitch(){
+        return magSwitch.get();
+    }
+
     public void SetPosition(ElevatorConstants.ElevatorPositions position){
         elevatorPositions = position;
 
         MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(
                 position.sensorUnitsEl, true, 0.0 , 0,
                 true, false, false);
-
         elevatorMotor.setControl(motionMagicVoltage);
     }
 
