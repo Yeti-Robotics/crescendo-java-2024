@@ -27,7 +27,6 @@ public class PivotSubsystem extends SubsystemBase {
     private final TalonFX pivotMotor1;
     private final TalonFX pivotMotor2;
     private final CANcoder pivotEncoder1;
-    private final CANcoder pivotEncoder2;
     private final VisionSubsystem visionSubsystem;
     private double relativePoseY;
     private double relativePoseX;
@@ -41,14 +40,12 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID);
         pivotMotor2 = new TalonFX(PivotConstants.PIVOT_TWO_MOTOR_ID);
         pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID);
-        pivotEncoder2 = new CANcoder(PivotConstants.PIVOT_TWO_CANCODER_ID);
 
         var pivotMotor1Configurator = pivotMotor1.getConfigurator();
         var pivotMotor2Configurator = pivotMotor2.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
 
         talonFXConfiguration.Feedback.FeedbackRemoteSensorID = pivotEncoder1.getDeviceID();
-        talonFXConfiguration.Feedback.FeedbackRemoteSensorID = pivotEncoder2.getDeviceID();
         talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
         talonFXConfiguration.MotorOutput.NeutralMode = PivotConstants.PIVOT_NEUTRAL_MODE;
          talonFXConfiguration.FutureProofConfigs = true;
@@ -68,7 +65,6 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor2Configurator.apply(talonFXConfiguration);
 
         var pivotEncoder1Configurator = pivotEncoder1.getConfigurator();
-        var pivotEncoder2Configurator = pivotEncoder2.getConfigurator();
 
         var cancoderConfiguration = new CANcoderConfiguration();
 
@@ -76,7 +72,6 @@ public class PivotSubsystem extends SubsystemBase {
         cancoderConfiguration.MagnetSensor.MagnetOffset = PivotConstants.MAGNET_OFFSET;
         cancoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         pivotEncoder1Configurator.apply(cancoderConfiguration);
-        pivotEncoder2Configurator.apply(cancoderConfiguration);
     }
     @Override
     public void periodic() {
