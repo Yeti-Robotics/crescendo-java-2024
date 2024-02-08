@@ -7,32 +7,44 @@ public class SetLEDToRGBCommand extends Command {
 
     private final LEDSubsystem ledSubsystem;
     private final int red, green, blue;
+    private final double brightness;
+    private final long delayMillis;
 
-    public SetLEDToRGBCommand(LEDSubsystem ledSubsystem, int red, int green, int blue) {
+    private long lastUpdateTime;
+
+    public SetLEDToRGBCommand(LEDSubsystem ledSubsystem, int red, int green, int blue, double brightness, long delayMillis) {
         this.ledSubsystem = ledSubsystem;
         this.red = red;
         this.green = green;
         this.blue = blue;
-        addRequirements();
+        this.brightness = brightness;
+        this.delayMillis = delayMillis;
+        addRequirements(ledSubsystem);
     }
 
     @Override
     public void initialize() {
-        for (int i = 0; i < ledSubsystem.getBufferLength(); i++) {
-            ledSubsystem.setRGB(i, red, green, blue);
-        }
-        ledSubsystem.sendData();
+        lastUpdateTime = System.currentTimeMillis();
     }
 
     @Override
-    public void execute() {}
+    public void execute() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastUpdateTime >= delayMillis) {
+            for (int i = 0; i < ledSubsystem.getBufferLength(); i++) {
+                // Adjust color with brightness
+                int adjustedRed = (int) (red * brightness);
+                int adjustedGreen = (int) (green * brightness);
+                int adjustedBlue = (int) (blue * brightness);
+                ledSubsystem.setRGB(i, adjustedRed, adjustedGreen, adjustedBlue);
+            }
+            ledSubsystem.sendData();
+            lastUpdateTime = currentTime;
+        }
+    }
 
     @Override
-    public boolean isFinished() {return true;}
-
-    @Override
-    public boolean runsWhenDisabled() {return true;}
-
-    @Override
-    public void end(boolean interrupted) {}
+    public boolean runsWhenDisabled() {
+        return true;
+    }
 }
