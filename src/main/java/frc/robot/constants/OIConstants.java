@@ -1,7 +1,6 @@
 package frc.robot.constants;
 
 import java.util.Map;
-
 public class OIConstants {
 
     public static final Map<Integer, ControllerType> CONTROLLERS = Map.of(
