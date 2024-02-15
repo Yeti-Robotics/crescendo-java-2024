@@ -25,7 +25,8 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    buttonHelper.createButton(1, 0, new StartEndCommand(() -> shooterSubsystem.motionMagicTest(100), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
+    buttonHelper.createButton(1, 0, new StartEndCommand(() -> shooterSubsystem.motionMagicTest(50), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
+    buttonHelper.createButton(2, 0, new StartEndCommand(() -> shooterSubsystem.shootFlywheel(.5), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
 //    buttonHelper.createButton(2, 0, new StartEndCommand(() -> shooterSubsystem.shootFlywheel(25), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
 
 

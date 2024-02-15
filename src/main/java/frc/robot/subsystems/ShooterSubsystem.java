@@ -21,7 +21,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final TalonFX leftKraken;
     private final TalonFX rightKraken;
-    private final CANSparkMax neo;
+    private final TalonFX neo;
     private final DigitalInput beamBreak;
     public enum ShooterModes {
         DEFAULT,
@@ -66,11 +66,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
 
-         neo = new CANSparkMax(ShooterConstants.SHOOTER_NEO, CANSparkLowLevel.MotorType.kBrushless);
-         neo.setIdleMode(CANSparkBase.IdleMode.kBrake);
-         neo.enableVoltageCompensation(12);
-         neo.setSmartCurrentLimit((int) ShooterConstants.SHOOTER_CURRENT_LIMIT.SupplyCurrentLimit);
-         neo.burnFlash();
+         neo = new TalonFX(ShooterConstants.SHOOTER_NEO, "canivoreBus");
+
          beamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK);
 
         motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(0);
@@ -131,6 +128,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void shootFlywheel(double speed) {
         rightKraken.set(speed);
+        leftKraken.set(speed);
         neo.set(0.9); //
         shooterStatus = ShooterStatus.FORWARD;
     }
@@ -150,8 +148,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void motionMagicTest(double vel){
 
-        rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
         leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
+        rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
         neo.set(1);
 
 
