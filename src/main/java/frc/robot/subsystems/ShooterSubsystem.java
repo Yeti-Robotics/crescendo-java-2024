@@ -126,6 +126,10 @@ public class ShooterSubsystem extends SubsystemBase {
         neo.set(ShooterConstants.STAGE_SPEED);
     }
 
+    public void stopNeo(){
+        neo.stopMotor();
+    }
+
     public void shootFlywheel(double speed) {
         rightKraken.set(speed);
         leftKraken.set(speed);
