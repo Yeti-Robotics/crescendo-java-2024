@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.util.controllerUtils.ButtonHelper;
@@ -39,7 +40,6 @@ public class RobotContainer {
       buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.70), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
       buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.testMotionMagic(25), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
 
-    }
 
 
 
