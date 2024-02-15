@@ -60,8 +60,8 @@ public class SwerveModule {
         absoluteEncoderConfig.FutureProofConfigs = true;
         configurator.apply(absoluteEncoderConfig);
 
-        driveMotor = new TalonFX(driveMotorID);
-        steerMotor = new TalonFX(steerMotorID);
+        driveMotor = new TalonFX(driveMotorID, "canivoreBus");
+        steerMotor = new TalonFX(steerMotorID, "canivoreBus");
 
         var driveConfig = new TalonFXConfiguration();
         var driveConfigurator = driveMotor.getConfigurator();
