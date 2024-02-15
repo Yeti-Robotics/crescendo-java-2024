@@ -10,7 +10,7 @@ import frc.robot.constants.TalonFXConstants;
 public class IntakeSubsystem extends SubsystemBase {
     TalonFX intakeKraken;
     public IntakeSubsystem() {
-        intakeKraken = new TalonFX(IntakeConstants.INTAKE_KRAKEN_ID);
+        intakeKraken = new TalonFX(IntakeConstants.INTAKE_KRAKEN_ID, "canivoreBus");
         var intakeConfigurator = intakeKraken.getConfigurator();
         var configs = new TalonFXConfiguration();
 
