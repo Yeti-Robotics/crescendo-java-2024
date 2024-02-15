@@ -61,14 +61,14 @@ public class ShooterSubsystem extends SubsystemBase {
         rightMotorConfiguration.Slot0 = ShooterConstants.SLOT_0_CONFIGS;
         leftKraken.setControl(new Follower(rightKraken.getDeviceID(), false));
         shooterStatus = ShooterStatus.OFF;
-         shooterModes = ShooterModes.TRAP;
+        shooterModes = ShooterModes.TRAP;
 
 
 
 
-         neo = new TalonFX(ShooterConstants.SHOOTER_NEO, "canivoreBus");
+        neo = new TalonFX(ShooterConstants.SHOOTER_NEO, "canivoreBus");
 
-         beamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK);
+        beamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK);
 
         motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(0);
 //                velocity, MOTION_MAGIC_ACCELERATION, false, SHOOTER_F, 0, false, false, false);
@@ -83,7 +83,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     @Override
- public void periodic() {
+    public void periodic() {
 //
 //        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
 //                velocity, 0, true, ShooterConstants.SHOOTER_F, 0, false, false, false);
@@ -117,7 +117,7 @@ public class ShooterSubsystem extends SubsystemBase {
 //
 //
 //
-   }
+    }
     public boolean getBeamBreak(){
         return beamBreak.get();
     }
@@ -126,6 +126,9 @@ public class ShooterSubsystem extends SubsystemBase {
         neo.set(ShooterConstants.STAGE_SPEED);
     }
 
+    public void stopNeo() {
+        neo.stopMotor();
+    }
     public void shootFlywheel(double speed) {
         rightKraken.set(speed);
         leftKraken.set(speed);
@@ -154,7 +157,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     }
-//    public void testMotionMagic(double vel) {
+    //    public void testMotionMagic(double vel) {
 //        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
 //                vel, 0, false, SHOOTER_F, 0, false, false, false);
 //        rightKraken.setControl(motionMagicVelocityVoltage);
@@ -185,4 +188,3 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
 }
-
