@@ -14,6 +14,16 @@ import frc.robot.util.controllerUtils.MultiButton;
 
 public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+import frc.robot.commands.ToggleShooterCommand;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.util.controllerUtils.ButtonHelper;
+import frc.robot.util.controllerUtils.ControllerContainer;
+import frc.robot.util.controllerUtils.MultiButton;
+import frc.robot.subsystems.LEDSubsystem;
+
+public class RobotContainer {
+
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   ControllerContainer controllerContainer = new ControllerContainer();
   ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
   public RobotContainer() {
@@ -22,11 +32,15 @@ public class RobotContainer {
 
 
 
+
   private void configureBindings() {
 
       buttonHelper.createButton(1, 0, new StartEndCommand(() -> intakeSubsystem.roll(.70), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
       buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.70), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
+      buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.testMotionMagic(25), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
+
     }
+
 
 
   public Command getAutonomousCommand() {
