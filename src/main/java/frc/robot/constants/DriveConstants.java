@@ -76,6 +76,9 @@ public class DriveConstants {
     public static final double DEGREES_TO_FALCON = 20.64 * 2048 / 360.0;
     public static final double SWERVE_X_REDUCTION = 1.0 / 6.75;
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(4); //0.1016
+
+    public static final double MaFxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 * SWERVE_X_REDUCTION * WHEEL_DIAMETER * Math.PI; //placeholder
 
     public static final CurrentLimitsConfigs ARM_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
