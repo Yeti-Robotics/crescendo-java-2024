@@ -32,7 +32,8 @@ public class RobotContainer {
     buttonHelper.createButton(1, 0, new StartEndCommand(() -> intakeSubsystem.roll(.50), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
     buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.5), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
     buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopNeo), MultiButton.RunCondition.WHILE_HELD);
-
+    buttonHelper.createButton(4, 0, new StartEndCommand(() -> shooterSubsystem.motionMagicTest(75), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
+    buttonHelper.createButton(3, 0, new IndexCommand(shooterSubsystem, intakeSubsystem), MultiButton.RunCondition.WHILE_HELD);
 
 
   }

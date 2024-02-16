@@ -123,7 +123,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void spinNeo() {
-        neo.set(ShooterConstants.STAGE_SPEED);
+        neo.set(1);
     }
 
     public void stopNeo(){
@@ -154,7 +154,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
         rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
-        neo.set(1);
+//        neo.set(1);
 
 
     }

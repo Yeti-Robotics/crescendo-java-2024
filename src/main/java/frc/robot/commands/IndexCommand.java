@@ -13,8 +13,6 @@ public class IndexCommand extends Command {
     public IndexCommand(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
-        shooterSubsystem.spinNeo();
-        intakeSubsystem.roll(-.4);
         addRequirements(intakeSubsystem);
     }
 
@@ -25,6 +23,10 @@ public class IndexCommand extends Command {
 
     @Override
     public void execute() {
+
+        shooterSubsystem.spinNeo();
+        intakeSubsystem.roll(-.4);
+
 
     }
 
