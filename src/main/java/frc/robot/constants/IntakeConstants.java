@@ -12,4 +12,8 @@ public final class IntakeConstants {
     public static final double INTAKE_POSITION_STATUS_FRAME = 0.05;
     public static final double INTAKE_VELOCITY_STATUS_FRAME = 0.01;
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 72204fa7c9963c9c868b8ce73260a55bc9a0052a

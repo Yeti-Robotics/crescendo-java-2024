@@ -43,6 +43,5 @@ public final class ShooterConstants {
 
     public static final int SHOOTER_NEO = 15; //ids i hope pleaseeeee
     public static final int BEAM_BREAK = 0;
-    public static final double STAGE_SPEED = 0;
+    public static final double STAGE_SPEED = 0.4;
 }
-

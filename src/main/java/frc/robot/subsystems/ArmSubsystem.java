@@ -24,7 +24,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final DigitalInput beamBreak;
     private ArmConstants.ArmPositions armPositions = ArmConstants.ArmPositions.STOWED;
     public ArmSubsystem() {
-        armKraken = new TalonFX(ArmConstants.ARM_KRAKEN_ID);
+        armKraken = new TalonFX(ArmConstants.ARM_KRAKEN_ID, TalonFXConstants.CANIVORE_NAME);
         armEncoder = new CANcoder(ArmConstants.ARM_CANCODER_ID);
         beamBreak = new DigitalInput(ArmConstants.BEAM_BREAK_PORT);
 
@@ -95,11 +95,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void moveUp(double speed) {
-        setMotorsBrake();
         armKraken.set(Math.abs(speed));
     }
     public void moveDown(double speed) {
-        setMotorsBrake();
         armKraken.set(-Math.abs(speed));
     }
 

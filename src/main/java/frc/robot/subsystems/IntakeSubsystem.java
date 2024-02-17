@@ -2,13 +2,13 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.TalonFXConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
     TalonFX intakeKraken;
+
     public IntakeSubsystem() {
         intakeKraken = new TalonFX(IntakeConstants.INTAKE_KRAKEN_ID, "canivoreBus");
         var intakeConfigurator = intakeKraken.getConfigurator();
@@ -21,7 +21,6 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeKraken.getRotorPosition().waitForUpdate(IntakeConstants.INTAKE_POSITION_STATUS_FRAME);
         intakeConfigurator.apply(configs);
     }
-
 
     public void rollIn(double speed) {
         intakeKraken.set(Math.abs(speed));
@@ -38,9 +37,5 @@ public class IntakeSubsystem extends SubsystemBase {
     public void stop() {
         intakeKraken.stopMotor();
     }
-
-
-
-
 
 }
