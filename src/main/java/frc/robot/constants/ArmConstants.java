@@ -10,11 +10,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public final class ArmConstants {
 
-    public static final int ARM_KRAKEN_ID = 2;
+    public static final int ARM_KRAKEN_ID = 8;
     public static final int ARM_CANCODER_ID = 1;
     public static final int BEAM_BREAK_PORT = 1;
 
-    public static final InvertedValue ARM_INVERSION = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue ARM_INVERSION = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue ARM_NEUTRAL_MODE = NeutralModeValue.Brake;
     public static final double ARM_POSITION_STATUS_FRAME = 0.05;
     public static final double ARM_VELOCITY_STATUS_FRAME = 0.01;
@@ -32,9 +32,9 @@ public final class ArmConstants {
     public static final CurrentLimitsConfigs ARM_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
             withSupplyCurrentThreshold(55).withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);
 
-    public static final SoftwareLimitSwitchConfigs ARM_SOFT_LIMIT = new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(true).withForwardSoftLimitThreshold(
+    public static final SoftwareLimitSwitchConfigs ARM_SOFT_LIMIT = new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(false).withForwardSoftLimitThreshold(
             55 //placeholder
-    ).withReverseSoftLimitEnable(true).withReverseSoftLimitThreshold(
+    ).withReverseSoftLimitEnable(false).withReverseSoftLimitThreshold(
             65 //placeholder
     );
     public static final double MAGNET_OFFSET = 0; //placeholder
