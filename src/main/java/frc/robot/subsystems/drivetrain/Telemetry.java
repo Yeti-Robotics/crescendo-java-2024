@@ -21,7 +21,7 @@ public class Telemetry {
 
     /**
      * Construct a telemetry object, with the specified max speed of the robot
-     * 
+     *
      * @param maxSpeed Maximum speed in meters per second
      */
     public Telemetry(double maxSpeed) {
@@ -49,6 +49,7 @@ public class Telemetry {
 
     /* Mechanisms to represent the swerve module states */
     private final Mechanism2d[] m_moduleMechanisms = new Mechanism2d[] {
+
         new Mechanism2d(1, 1),
         new Mechanism2d(1, 1),
         new Mechanism2d(1, 1),
@@ -108,3 +109,4 @@ public class Telemetry {
         }
     }
 }
+

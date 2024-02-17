@@ -7,24 +7,29 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.led.SetLEDToRGBCommand;
+
+import java.util.Set;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
+  private RobotContainer robotContainer;
   private RobotContainer m_robotContainer;
+  private SetLEDToRGBCommand blueLedCommand;
 
   @Override
   public void robotInit() {
-    m_robotContainer = new RobotContainer();
+    robotContainer = new RobotContainer();
+//    new SetLEDToRGBCommand(robotContainer.ledSubsystem, 128, 0, 128, 0.75, 0).schedule();
   }
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run(); 
+    CommandScheduler.getInstance().run();
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {  }
 
   @Override
   public void disabledPeriodic() {}

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -20,8 +21,6 @@ import frc.robot.subsystems.drivetrain.Telemetry;
 import frc.robot.subsystems.drivetrain.generated.TunerConstants;
 
 public class RobotContainer {
-
-
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
@@ -76,8 +75,6 @@ public class RobotContainer {
             );
 
   }
-
-
   public Command getAutonomousCommand() {
     return Commands.none();
   }
