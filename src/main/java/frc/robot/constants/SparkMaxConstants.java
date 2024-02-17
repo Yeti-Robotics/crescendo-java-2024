@@ -14,6 +14,7 @@ public final class SparkMaxConstants {
 
     public static final int SPARK_RESOLUTION = 42;
     public static final double COUNTS_PER_DEG = SPARK_RESOLUTION / 360.0;
+    
 
     public static final double SHOOTER_P = 1;
     public static final double SHOOTER_I = 1;
