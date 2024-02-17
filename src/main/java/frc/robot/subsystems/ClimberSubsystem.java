@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 
 //import com.ctre.phoenix6.StatusSignal;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -31,33 +32,44 @@ public class ClimberSubsystem extends SubsystemBase {
         motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         // motorConfig.SoftwareLimitSwitch = new SoftwareLimitSwitchConfigs()
         motorConfig.FutureProofConfigs = true;
+
+        // Fix sammy perlmen's issue :)
+        talon1Config.apply(motorConfig);
+        talon2Config.apply(motorConfig);
     }
 
-    public void setClimberBrake(double servoPosition){
+    public void setClimberBrake(double servoPosition) {
         climberBrake.set(servoPosition);
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+    }
 
     public void climbUp() {
         climberFalcon1.set(ClimberConstants.CLIMB_SPEED);
     }
+
     public void climbDown() {
         climberFalcon1.set(-ClimberConstants.CLIMB_SPEED);
     }
+
     public void stopClimb() {
         climberFalcon1.set(0);
     }
+
     public double getLeftEncoder() {
         return climberFalcon2.getRotorPosition().getValue();
     }
+
     public double getRightEncoder() {
         return climberFalcon1.getRotorPosition().getValue();
     }
+
     public double getAverageEncoder() {
         return (getLeftEncoder() + getRightEncoder()) / 2.0;
     }
+
     public boolean atEncoderLimit() {
         return getAverageEncoder() <= ClimberConstants.CLIMBER_TALON_1;
     }
