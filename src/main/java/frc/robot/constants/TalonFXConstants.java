@@ -10,4 +10,6 @@ public final class TalonFXConstants {
     
 
     
+
+    public static final String CANIVORE_NAME = "canivoreBus";
 }

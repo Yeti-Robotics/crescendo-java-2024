@@ -24,7 +24,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final DigitalInput beamBreak;
     private ArmConstants.ArmPositions armPositions = ArmConstants.ArmPositions.STOWED;
     public ArmSubsystem() {
-        armKraken = new TalonFX(ArmConstants.ARM_KRAKEN_ID);
+        armKraken = new TalonFX(ArmConstants.ARM_KRAKEN_ID, TalonFXConstants.CANIVORE_NAME);
         armEncoder = new CANcoder(ArmConstants.ARM_CANCODER_ID);
         beamBreak = new DigitalInput(ArmConstants.BEAM_BREAK_PORT);
 
@@ -33,11 +33,11 @@ public class ArmSubsystem extends SubsystemBase {
 
 
         talonFXConfiguration.Feedback.FeedbackRemoteSensorID = armEncoder.getDeviceID();
-        talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
+        talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         talonFXConfiguration.MotorOutput.Inverted = ArmConstants.ARM_INVERSION;
         talonFXConfiguration.MotorOutput.NeutralMode = ArmConstants.ARM_NEUTRAL_MODE;
         talonFXConfiguration.FutureProofConfigs = TalonFXConstants.TALON_FUTURE_PROOF;
-        talonFXConfiguration.Feedback.SensorToMechanismRatio = 1.0;
+        talonFXConfiguration.Feedback.SensorToMechanismRatio = 2.5; //placeholder
         talonFXConfiguration.Feedback.RotorToSensorRatio = 12.8;
         talonFXConfiguration.CurrentLimits = ArmConstants.ARM_CURRENT_LIMIT;
         talonFXConfiguration.SoftwareLimitSwitch = ArmConstants.ARM_SOFT_LIMIT;
@@ -99,7 +99,6 @@ public class ArmSubsystem extends SubsystemBase {
         armKraken.set(Math.abs(speed));
     }
     public void moveDown(double speed) {
-        setMotorsBrake();
         armKraken.set(-Math.abs(speed));
     }
 
