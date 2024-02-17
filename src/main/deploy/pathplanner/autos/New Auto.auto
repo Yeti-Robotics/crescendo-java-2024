@@ -1,0 +1,80 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.5,
+      "y": 5.6
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": null
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": []
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "firstPiece"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shootFirst"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": []
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "secondPiece"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shootSecond"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "thirdPiece"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shootThird"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
