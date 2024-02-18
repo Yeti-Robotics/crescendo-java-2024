@@ -13,8 +13,7 @@ public class PivotConstants {
     public static final int PIVOT_TWO_MOTOR_ID = 0; //placeholder
     public static final String PIVOT_ONE_CANCODER = "pivotEncoder1";
     public static final String PIVOT_TWO_CANCODER = "pivotEncoder2";
-    public static final int PIVOT_ONE_CANCODER_ID = 0; //placeholder
-    public static final int PIVOT_TWO_CANCODER_ID = 0; //placeholder
+    public static final int PIVOT_ONE_CANCODER_ID = 5; //placeholder
 
     public static final NeutralModeValue PIVOT_NEUTRAL_MODE = NeutralModeValue.Brake;
 

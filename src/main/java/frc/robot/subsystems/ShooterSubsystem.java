@@ -119,7 +119,7 @@ public class ShooterSubsystem extends SubsystemBase {
 //
     }
     public boolean getBeamBreak(){
-        return beamBreak.get();
+        return !beamBreak.get();
     }
 
     public void spinNeo() {
