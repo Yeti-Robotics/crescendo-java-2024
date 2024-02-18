@@ -13,9 +13,8 @@ public final class SparkMaxConstants {
     public static final int NEO550_CURRENT_LIM = 20;
 
     public static final int SPARK_RESOLUTION = 42;
-<<<<<<< Updated upstream
     public static final double COUNTS_PER_DEG = SPARK_RESOLUTION / 360.0;
-=======
+    
 
     public static final double SHOOTER_P = 1;
     public static final double SHOOTER_I = 1;
@@ -23,6 +22,4 @@ public final class SparkMaxConstants {
 
     public static final double SHOOTER_V = 1;
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().withKP(SHOOTER_P).withKI(SHOOTER_I).withKD(SHOOTER_D).withKV(SHOOTER_V);
-    
->>>>>>> Stashed changes
 }
