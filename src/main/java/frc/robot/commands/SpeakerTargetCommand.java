@@ -1,12 +1,20 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 import frc.robot.constants.LEDConstants;
+import frc.robot.util.LimelightHelpers;
+
+import java.sql.Driver;
+
 import static frc.robot.constants.FieldConstants.*;
+import static frc.robot.constants.FieldConstants.Speaker.centerSpeakerOpening;
 
 
 public class SpeakerTargetCommand extends Command {
@@ -14,9 +22,10 @@ public class SpeakerTargetCommand extends Command {
     private final ShooterSubsystem shooterSubsystem;
     private final LEDSubsystem ledSubsystem;
     private double calcAngle;
-    private double relativePoseY;
-    private double relativePoseX;
-    private double robotPoseX;
+    public double relativePoseY;
+    public double relativePoseX;
+    public double robotPoseX;
+
     public SpeakerTargetCommand(VisionSubsystem visionSubsystem, ShooterSubsystem shooterSubsystem, LEDSubsystem ledSubsystem) {
         this.visionSubsystem = visionSubsystem;
         this.shooterSubsystem = shooterSubsystem;
@@ -29,30 +38,47 @@ public class SpeakerTargetCommand extends Command {
     @Override
     public void initialize() {
         calcAngle = 0;
-        relativePoseY = fieldLength - visionSubsystem.getPose2d().getY();
-        relativePoseX = speakerPose - visionSubsystem.getPose2d().getX();
-        robotPoseX = visionSubsystem.getPose2d().getX();
     }
     @Override
     public void execute() {
+        relativePoseY = fieldLength - visionSubsystem.getPose2d().getY();
+        relativePoseX = centerSpeakerOpening.getX() - visionSubsystem.getPose2d().getX();
+        robotPoseX = visionSubsystem.getPose2d().getX();
 //        if (shooterSubsystem.shootingState == ShooterSubsystem.ShootingState.NOT_SHOOTING) { // Add && if theta controller is at set point
 //            ledSubsystem.setRGB(
 //                    0,
 //                    LEDConstants.READY_GREEN[1],
 //                    LEDConstants.READY_GREEN[2],
 //                    LEDConstants.READY_GREEN[3]
-//            );
-//            ledSubsystem.sendData();
+//       );
+//            LedSubsystem.sendData();
 //        }
         if (true /*thetaController at setpoint*/) {
             shooterSubsystem.shootingState = ShooterSubsystem.ShootingState.READY_TO_SHOOT;
         }
-        if (robotPoseX >= speakerPose + 20.6785 && robotPoseX <= speakerPose - 20.6875) {
-            calcAngle = 0.0;
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            if (robotPoseX <= (fieldWidth - centerSpeakerOpening.getX()) + 0.2 &&
+                    robotPoseX >= (fieldWidth - centerSpeakerOpening.getX()) - 0.2) {
+                calcAngle = 0.0;
+            }
+            else {
+                calcAngle = Math.toDegrees(Math.atan2(relativePoseX, relativePoseY));
+            }
+            System.out.println("Blue Speaker Pose: " + (fieldWidth - centerSpeakerOpening.getX()));
         }
         else {
-            calcAngle = Math.atan2(relativePoseX, relativePoseY);
+            if (robotPoseX <= centerSpeakerOpening.getX() + 0.2 && robotPoseX >= centerSpeakerOpening.getX() - 0.2) {
+                calcAngle = 0.0;
+            }
+            else {
+                calcAngle = Math.toDegrees(Math.atan2(relativePoseX, relativePoseY));
+            }
+            System.out.println("Red Speaker Pose: " + centerSpeakerOpening.getX());
         }
+
+
+        System.out.println("Calc Angle: " + calcAngle);
+        System.out.println("Robot Pose X: " + robotPoseX);
 
     }
 
