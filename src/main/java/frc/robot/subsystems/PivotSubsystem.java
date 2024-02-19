@@ -12,6 +12,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.PivotConstants;
 import frc.robot.subsystems.VisionSubsystem;
@@ -21,6 +22,7 @@ import frc.robot.constants.TalonFXConstants;
 import org.opencv.core.Mat;
 
 import static frc.robot.constants.FieldConstants.*;
+import static frc.robot.constants.FieldConstants.Speaker.centerSpeakerOpening;
 
 public class PivotSubsystem extends SubsystemBase {
 
@@ -76,11 +78,18 @@ public class PivotSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         relativePoseY = fieldLength - visionSubsystem.getPose2d().getY();
-        relativePoseX = speakerPose - visionSubsystem.getPose2d().getX();
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            relativePoseX = (fieldWidth - centerSpeakerOpening.getX()) - visionSubsystem.getPose2d().getX();
+            }
+        else {
+            relativePoseX = centerSpeakerOpening.getX() - visionSubsystem.getPose2d().getX();
+        }
         robotPoseX = visionSubsystem.getPose2d().getX();
         robotPoseY = visionSubsystem.getPose2d().getY();
         hypoGroundLength = Math.sqrt((relativePoseX*relativePoseX)+(relativePoseY*relativePoseY));
-        vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
+        vertAngle = Math.toDegrees(Math.atan2(speakerHeightRelativeToBot,hypoGroundLength));
+//        System.out.println("Distance to Speaker: " + hypoGroundLength);
+//        System.out.println("Pivot Angle: " + vertAngle);
     }
 
     public void setPosition(double angle) {
