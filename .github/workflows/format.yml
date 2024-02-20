@@ -1,0 +1,27 @@
+name: Format Java Files
+
+on:
+  push: {}
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Setup JDK
+      uses: gradle/gradle-build-action@v2
+      with:
+        java-version: 17
+
+    - name: Install Spotless
+      run: ./gradlew spotlessApply
+
+    - name: Commit Changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git diff-index --quiet HEAD || git commit -m "format" 
