@@ -135,12 +135,12 @@ public class FieldConstants {
 
         if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
             ampTag = new Pose2d(FieldConstants.ampCenter, Rotation2d.fromDegrees(0));
-            allianceAprilTags.addAll(aprilTagPoses.subList(1,6));
-            opposingAllianceAprilTags.addAll(aprilTagPoses.subList(7,12));
+            allianceAprilTags.addAll(aprilTagPoses.subList(1,8));
+            opposingAllianceAprilTags.addAll(aprilTagPoses.subList(9,16));
         } else {
             ampTag = new Pose2d(FieldConstants.ampCenter.getX(), 0, Rotation2d.fromDegrees(0));
-            allianceAprilTags.addAll(aprilTagPoses.subList(7,12));
-            opposingAllianceAprilTags.addAll(aprilTagPoses.subList(1,6));
+            allianceAprilTags.addAll(aprilTagPoses.subList(9,16));
+            opposingAllianceAprilTags.addAll(aprilTagPoses.subList(1,8));
 
         }
     }

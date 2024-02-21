@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.IndexCommand;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -23,6 +24,8 @@ public class RobotContainer {
 
     public final ShooterSubsystem shooterSubsystem;
     public final LEDSubsystem ledSubsystem;
+    public CommandSwerveDrivetrain drivetrain;
+
     public VisionSubsystem visionSubsystem;
     ControllerContainer controllerContainer = new ControllerContainer();
     ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
@@ -37,6 +40,7 @@ public class RobotContainer {
         visionSubsystem = new VisionSubsystem();
         visionSubsystem.setDefaultCommand(new SpeakerTargetCommand(visionSubsystem, shooterSubsystem, ledSubsystem));
         configureBindings();
+
     }
 
   private void configureBindings() {
