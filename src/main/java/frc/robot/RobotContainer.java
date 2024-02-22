@@ -26,13 +26,14 @@ import frc.robot.util.controllerUtils.MultiButton;
 
 public class RobotContainer {
 
-    private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+    public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
-    private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+    public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+
+    public final PivotSubsystem pivotSubsystem = new PivotSubsystem();
 
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-    private final PivotSubsystem pivotSubsystem = new PivotSubsystem();
-    private final ArmSubsystem armSubsystem = new ArmSubsystem();
+    public final ArmSubsystem armSubsystem = new ArmSubsystem();
     ControllerContainer controllerContainer = new ControllerContainer();
     ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
 
@@ -59,21 +60,16 @@ public class RobotContainer {
 
     private void configureBindings() {
 
-        buttonHelper.createButton(1, 0, new StartEndCommand(() -> intakeSubsystem.roll(.70), intakeSubsystem::stop).until(intakeSubsystem::getBeamBreak).
-                andThen(new RunCommand(() -> armSubsystem.moveUp(.5)).withTimeout(2).andThen(armSubsystem::stop)), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(11,0, new RunCommand(() -> armSubsystem.moveUp(.5)).withTimeout(.5), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(1, 0, new StartEndCommand(() -> intakeSubsystem.roll(.70), intakeSubsystem::stop),MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(11,0,  new StartEndCommand(() -> armSubsystem.moveUp(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() >= 0.8), MultiButton.RunCondition.WHEN_PRESSED);
 //        buttonHelper.createButton(1, 0, new ConditionalCommand(new RunCommand(() ->intakeSubsystem.roll(.5)), new RunCommand(() -> intakeSubsystem.roll(0)), intakeSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.70), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
-//        buttonHelper.createButton(3, 0, new StartEndCommand(() -> climberSubsystem.climbUp(), () -> climberSubsystem.stopClimb()), MultiButton.RunCondition.WHILE_HELD);
-//        buttonHelper.createButton(7, 0, new StartEndCommand(() -> climberSubsystem.climbDown(), () -> climberSubsystem.stopClimb()), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(4, 0, new StartEndCommand(() -> shooterSubsystem.motionMagicTest(75), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(8, 0, new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel)
-                .alongWith(new StartEndCommand(() -> shooterSubsystem.spinNeo(),
-                        shooterSubsystem::stopFlywheel))
-                .until(shooterSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(5, 0, new StartEndCommand(() -> armSubsystem.moveUp(.3), armSubsystem::stop).until(armSubsystem::atAngle), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(10, 0, new StartEndCommand(() -> armSubsystem.moveDown(.3), armSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(3, 0, new StartEndCommand(() -> climberSubsystem.climbUp(), () -> climberSubsystem.stopClimb()), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(7, 0, new StartEndCommand(() -> climberSubsystem.climbDown(), () -> climberSubsystem.stopClimb()), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(4, 0, new StartEndCommand(() -> shooterSubsystem.motionMagicTest(125), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> pivotSubsystem.moveUp(.45), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .45)), MultiButton.RunCondition.WHILE_HELD); //45 amp 52 bumpfire
+        buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopNeo).until(shooterSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(10, 0, new StartEndCommand(() -> armSubsystem.moveUp(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() >= 0.75).andThen(armSubsystem::setMotorsBrake), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(5, 0, new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() <= 0.45).andThen(armSubsystem::setMotorsBrake), MultiButton.RunCondition.WHEN_PRESSED);
 
 
 
@@ -87,7 +83,7 @@ public class RobotContainer {
                                         .withRotationalRate(-joystick.getRightX() * DriveConstants.MaFxAngularRate) // Drive counterclockwise with negative X (left)
                 ));
 
-        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+//        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         joystick.b().whileTrue(drivetrain
                 .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
@@ -99,19 +95,28 @@ public class RobotContainer {
         }
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.pov(0)
+        joystick.x()
                 .whileTrue(
-                        new RunCommand(() -> climberSubsystem.climbUp()));
-        joystick.pov(180)
+                        new StartEndCommand(() -> pivotSubsystem.moveUp(.1), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .3));
+        joystick.y()
                 .whileTrue(
-                        new RunCommand(() -> climberSubsystem.climbDown()));
+                        new StartEndCommand(() -> pivotSubsystem.moveDown(.1), pivotSubsystem::stop));
         joystick.a().onTrue(
-                new RunCommand(() -> climberSubsystem.setClimberBrake(5))
+                new RunCommand(() -> climberSubsystem.setClimberBrake())
+
+
         );
+
+        joystick.rightTrigger().whileTrue(new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
+//        joystick.leftTrigger().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(.15), pivotSubsystem::stop));
+        joystick.leftTrigger().whileTrue(new RunCommand(() -> pivotSubsystem.setPosition(-0.0003)));
+
 
 
 
     }
+
+
 
         public Command getAutonomousCommand () {
             return new InstantCommand();

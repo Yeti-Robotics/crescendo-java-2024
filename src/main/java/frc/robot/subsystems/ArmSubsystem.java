@@ -25,7 +25,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     public ArmSubsystem() {
         armKraken = new TalonFX(ArmConstants.ARM_KRAKEN_ID, TalonFXConstants.CANIVORE_NAME);
-        armEncoder = new CANcoder(ArmConstants.ARM_CANCODER_ID);
+        armEncoder = new CANcoder(ArmConstants.ARM_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
 
         var armConfigurator = armKraken.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();

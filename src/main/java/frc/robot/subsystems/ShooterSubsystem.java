@@ -153,7 +153,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
         rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
-        neo.set(1);
+//        neo.set(1);
 
 
     }
