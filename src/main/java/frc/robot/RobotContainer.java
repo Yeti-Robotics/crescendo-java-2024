@@ -4,6 +4,7 @@
 
 package frc.robot;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.IndexCommand;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -14,6 +15,8 @@ import frc.robot.commands.SpeakerTargetCommand;
 import frc.robot.commands.ToggleShooterCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drivetrain.generated.TunerConstants;
 import frc.robot.util.controllerUtils.ButtonHelper;
 import frc.robot.util.controllerUtils.ControllerContainer;
 import frc.robot.util.controllerUtils.MultiButton;
@@ -38,6 +41,7 @@ public class RobotContainer {
         buttonHelper = new ButtonHelper(controllerContainer.getControllers());
         intakeSubsystem = new IntakeSubsystem();
         visionSubsystem = new VisionSubsystem();
+        drivetrain = TunerConstants.DriveTrain;
         visionSubsystem.setDefaultCommand(new SpeakerTargetCommand(visionSubsystem, shooterSubsystem, ledSubsystem));
         configureBindings();
 

@@ -57,28 +57,29 @@ public class SpeakerTargetCommand extends Command {
             shooterSubsystem.shootingState = ShooterSubsystem.ShootingState.READY_TO_SHOOT;
         }
         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-            if (robotPoseX <= (fieldWidth - centerSpeakerOpening.getX()) + 0.2 &&
-                    robotPoseX >= (fieldWidth - centerSpeakerOpening.getX()) - 0.2) {
+            if (robotPoseX <= (6.37)  &&
+                    robotPoseX >= (6.25)) {
                 calcAngle = 0.0;
             }
             else {
                 calcAngle = Math.toDegrees(Math.atan2(relativePoseX, relativePoseY));
             }
-            System.out.println("Blue Speaker Pose: " + (fieldWidth - centerSpeakerOpening.getX()));
+            System.out.println("Blue Speaker Pose: " + (6.33));
         }
         else {
-            if (robotPoseX <= centerSpeakerOpening.getX() + 0.2 && robotPoseX >= centerSpeakerOpening.getX() - 0.2) {
+            if (robotPoseX <= -(6.5) &&
+                    robotPoseX >= -(6.71)) {
                 calcAngle = 0.0;
             }
             else {
                 calcAngle = Math.toDegrees(Math.atan2(relativePoseX, relativePoseY));
             }
-            System.out.println("Red Speaker Pose: " + centerSpeakerOpening.getX());
+           // System.out.println("Red Speaker Pose: " + -(6.60));
         }
 
 
-        System.out.println("Calc Angle: " + calcAngle);
-        System.out.println("Robot Pose X: " + robotPoseX);
+//        System.out.println("Calc Angle: " + calcAngle);
+//        System.out.println("Robot Pose X: " + robotPoseX);
 
     }
 

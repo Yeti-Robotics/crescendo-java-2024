@@ -20,6 +20,7 @@ public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
   private RobotContainer m_robotContainer;
   private SetLEDToRGBCommand blueLedCommand;
+  private CommandSwerveDrivetrain drivetrain;
 
   @Override
   public void robotInit() {
