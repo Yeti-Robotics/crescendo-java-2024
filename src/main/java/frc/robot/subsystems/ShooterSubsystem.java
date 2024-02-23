@@ -1,5 +1,3 @@
-// Whoever made this should be ashamed, clean up your code!
-
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -117,9 +115,9 @@ public class ShooterSubsystem extends SubsystemBase {
 //
 //
     }
-
-    public boolean getBeamBreak() {
-        return beamBreak.get();
+  
+    public boolean getBeamBreak(){
+        return !beamBreak.get();
     }
 
     public void spinNeo() {
@@ -154,17 +152,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
         leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
         rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
-        neo.set(1);
-
+       
 
     }
 
-    //    public void testMotionMagic(double vel) {
-//        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
-//                vel, 0, false, SHOOTER_F, 0, false, false, false);
-//        rightKraken.setControl(motionMagicVelocityVoltage);
-//        leftKraken.setControl(motionMagicVelocityVoltage);
-//    }
+
     public double getRightEncoder() {
         return rightKraken.getRotorVelocity().getValue();
     }
