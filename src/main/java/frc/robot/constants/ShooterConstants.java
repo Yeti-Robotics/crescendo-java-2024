@@ -3,6 +3,9 @@ package frc.robot.constants;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.InvertedValue;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
+import frc.robot.util.ShooterStateData;
 
 public final class ShooterConstants {
 
@@ -44,4 +47,11 @@ public final class ShooterConstants {
     public static final int SHOOTER_NEO = 16; //ids i hope pleaseeeee
     public static final int BEAM_BREAK = 0;
     public static final double STAGE_SPEED = -1;
+
+    public static InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
+        InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
+        map.put(0.0, new ShooterStateData(52, 100));
+        map.put(4.0, new ShooterStateData(45, 125));
+        return map;
+    }
 }
