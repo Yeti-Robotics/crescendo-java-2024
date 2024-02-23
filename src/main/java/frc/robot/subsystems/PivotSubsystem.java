@@ -75,12 +75,8 @@ public class PivotSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        relativePoseY = fieldLength - visionSubsystem.getPose2d().getY();
-        relativePoseX = speakerPose - visionSubsystem.getPose2d().getX();
         robotPoseX = visionSubsystem.getPose2d().getX();
         robotPoseY = visionSubsystem.getPose2d().getY();
-        hypoGroundLength = Math.sqrt((relativePoseX*relativePoseX)+(relativePoseY*relativePoseY));
-        vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
     }
 
     public void setPosition(double angle) {

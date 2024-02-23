@@ -6,13 +6,27 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.pivot.PivotAimCommand;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.PivotSubsystem;
+import frc.robot.util.controllerUtils.ButtonHelper;
+import frc.robot.util.controllerUtils.ControllerContainer;
 
 public class RobotContainer {
+  public final VisionSubsystem visionSubsystem;
+  public final PivotSubsystem pivotSubsystem;
+  public final LEDSubsystem ledSubsystem;
+  ControllerContainer controllerContainer = new ControllerContainer();
+  ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
   public RobotContainer() {
+    visionSubsystem = new VisionSubsystem();
+    pivotSubsystem = new PivotSubsystem();
+    ledSubsystem = new LEDSubsystem();
+    pivotSubsystem.setDefaultCommand(new PivotAimCommand(visionSubsystem,pivotSubsystem,ledSubsystem));
     configureBindings();
   }
-  LEDSubsystem ledSubsystem = new LEDSubsystem();
+
   private void configureBindings() {}
 
   public Command getAutonomousCommand() {
