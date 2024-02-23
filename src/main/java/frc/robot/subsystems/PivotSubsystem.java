@@ -27,7 +27,6 @@ import static frc.robot.constants.FieldConstants.Speaker.centerSpeakerOpening;
 public class PivotSubsystem extends SubsystemBase {
 
     private final TalonFX pivotMotor1;
-    private final TalonFX pivotMotor2;
     private final CANcoder pivotEncoder1;
     private final VisionSubsystem visionSubsystem;
     private double relativePoseY;
@@ -39,32 +38,27 @@ public class PivotSubsystem extends SubsystemBase {
     private PivotConstants.PivotPositions pivotPositions = PivotConstants.PivotPositions.BUMPFIRE;
     public PivotSubsystem() {
         visionSubsystem = new VisionSubsystem();
-        pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID);
-        pivotMotor2 = new TalonFX(PivotConstants.PIVOT_TWO_MOTOR_ID);
-        pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID);
+        pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID, TalonFXConstants.CANIVORE_NAME);
+        pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
 
         var pivotMotor1Configurator = pivotMotor1.getConfigurator();
-        var pivotMotor2Configurator = pivotMotor2.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
 
         talonFXConfiguration.Feedback.FeedbackRemoteSensorID = pivotEncoder1.getDeviceID();
         talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         talonFXConfiguration.MotorOutput.NeutralMode = PivotConstants.PIVOT_NEUTRAL_MODE;
         talonFXConfiguration.FutureProofConfigs = true;
-        talonFXConfiguration.Feedback.SensorToMechanismRatio = 1.0;
+        talonFXConfiguration.Feedback.SensorToMechanismRatio = 1;
         talonFXConfiguration.Feedback.RotorToSensorRatio = 12.8;
         talonFXConfiguration.CurrentLimits = PivotConstants.PIVOT_CURRENT_LIMIT;
         talonFXConfiguration.SoftwareLimitSwitch = PivotConstants.PIVOT_SOFT_LIMIT;
         talonFXConfiguration.Slot0 = PivotConstants.SLOT_0_CONFIGS;
 
         pivotMotor1.getRotorVelocity().waitForUpdate(PivotConstants.PIVOT_VELOCITY_STATUS_FRAME);
-        pivotMotor2.getRotorVelocity().waitForUpdate(PivotConstants.PIVOT_VELOCITY_STATUS_FRAME);
         pivotMotor1.getRotorPosition().waitForUpdate(PivotConstants.PIVOT_POSITION_STATUS_FRAME);
-        pivotMotor2.getRotorPosition().waitForUpdate(PivotConstants.PIVOT_POSITION_STATUS_FRAME);
 
 
         pivotMotor1Configurator.apply(talonFXConfiguration);
-        pivotMotor2Configurator.apply(talonFXConfiguration);
 
         var pivotEncoder1Configurator = pivotEncoder1.getConfigurator();
 
@@ -94,22 +88,33 @@ public class PivotSubsystem extends SubsystemBase {
 
     public void setPosition(double angle) {
 
+
+
         double angleUnits = angle / PivotConstants.GEAR_RATIO * CANCoderConstants.COUNTS_PER_DEG;
         setMotorsBrake();
 
         double radians = Math.toRadians(getAngle());
         double cosineScalar = Math.cos(radians);
 
+
+
         MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(
-                angleUnits, true, PivotConstants.GRAVITY_FEEDFORWARD * cosineScalar, 0,
+                angle, true, PivotConstants.GRAVITY_FEEDFORWARD * cosineScalar, 0,
                 true, false, false);
 
+
+
+        System.out.println(motionMagicVoltage.Position);
+
         pivotMotor1.setControl(motionMagicVoltage);
-        pivotMotor2.setControl(motionMagicVoltage);
     }
 
     public double getAngle() {
         return pivotMotor1.getRotorPosition().getValue() / CANCoderConstants.COUNTS_PER_DEG * PivotConstants.GEAR_RATIO;
+    }
+
+    public double getEncAngle() {
+        return pivotEncoder1.getAbsolutePosition().getValue();
     }
 
     public PivotConstants.PivotPositions getArmPositions() {
@@ -123,22 +128,18 @@ public class PivotSubsystem extends SubsystemBase {
     public void moveUp(double speed) {
         setMotorsBrake();
         pivotMotor1.set(Math.abs(speed));
-        pivotMotor2.set(Math.abs(speed));
     }
     public void moveDown(double speed) {
         setMotorsBrake();
         pivotMotor1.set(-Math.abs(speed));
-        pivotMotor2.set(-Math.abs(speed));
     }
 
     public void setMotorsCoast() {
         pivotMotor1.setNeutralMode(NeutralModeValue.Coast);
-        pivotMotor2.setNeutralMode(NeutralModeValue.Coast);
     }
 
     public void setMotorsBrake() {
         pivotMotor1.setNeutralMode(NeutralModeValue.Brake);
-        pivotMotor2.setNeutralMode(NeutralModeValue.Brake);
     }
 
     public double getSuppliedCurrent() {
@@ -147,7 +148,6 @@ public class PivotSubsystem extends SubsystemBase {
 
     public void stop() {
         pivotMotor1.stopMotor();
-        pivotMotor2.stopMotor();
     }
 
 }

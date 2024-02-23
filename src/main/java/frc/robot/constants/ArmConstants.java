@@ -11,7 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public final class ArmConstants {
 
     public static final int ARM_KRAKEN_ID = 8;
-    public static final int ARM_CANCODER_ID = 1;
+    public static final int ARM_CANCODER_ID = 5;
     public static final int BEAM_BREAK_PORT = 1;
 
     public static final InvertedValue ARM_INVERSION = InvertedValue.CounterClockwise_Positive;
@@ -32,8 +32,11 @@ public final class ArmConstants {
     public static final CurrentLimitsConfigs ARM_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
             withSupplyCurrentThreshold(55).withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);
 
-    public static final SoftwareLimitSwitchConfigs ARM_SOFT_LIMIT = new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(false).withForwardSoftLimitThreshold(
-            55 //placeholder
+    public static final SoftwareLimitSwitchConfigs ARM_SOFT_LIMIT = new SoftwareLimitSwitchConfigs().
+            withForwardSoftLimitEnable
+                    (true).
+            withForwardSoftLimitThreshold(
+            0.1 //placeholder
     ).withReverseSoftLimitEnable(false).withReverseSoftLimitThreshold(
             65 //placeholder
     );

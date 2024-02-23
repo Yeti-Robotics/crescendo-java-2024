@@ -55,7 +55,17 @@ public class Robot extends TimedRobot {
   public void disabledInit() {  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+
+    System.out.println(robotContainer.climberSubsystem.getServo());
+
+//    System.out.println(robotContainer.intakeSubsystem.getBeamBreak());
+//    System.out.println(robotContainer.armSubsystem.getEnc());
+    System.out.println(robotContainer.pivotSubsystem.getEncAngle());
+
+
+
+  }
 
   @Override
   public void disabledExit() {}
@@ -63,6 +73,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -83,7 +94,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+
+  }
 
   @Override
   public void teleopExit() {}
@@ -98,4 +111,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testExit() {}
+
+
 }

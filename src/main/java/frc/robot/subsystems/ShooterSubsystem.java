@@ -131,9 +131,9 @@ public class ShooterSubsystem extends SubsystemBase {
 //
 //
     }
-
-    public boolean getBeamBreak() {
-        return beamBreak.get();
+  
+    public boolean getBeamBreak(){
+        return !beamBreak.get();
     }
 
     public void spinNeo() {
@@ -184,7 +184,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public void motionMagicTest(double vel) {
         leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
         rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
-        neo.set(1);
+//        neo.set(1);
 
     }
 

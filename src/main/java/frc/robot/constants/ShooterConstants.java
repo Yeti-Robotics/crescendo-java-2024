@@ -6,7 +6,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 
 public final class ShooterConstants {
 
-    public static final int SHOOTER_LEFT_MOTOR = 16; //id
+    public static final int SHOOTER_LEFT_MOTOR = 15; //id
     public static final int SHOOTER_RIGHT_MOTOR = 5; //id
     public static final CurrentLimitsConfigs SHOOTER_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
             withSupplyCurrentThreshold(55).withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);
@@ -41,7 +41,7 @@ public final class ShooterConstants {
             withKV(SHOOTER_V);
 
 
-    public static final int SHOOTER_NEO = 15; //ids i hope pleaseeeee
+    public static final int SHOOTER_NEO = 16; //ids i hope pleaseeeee
     public static final int BEAM_BREAK = 0;
-    public static final double STAGE_SPEED = 0.4;
+    public static final double STAGE_SPEED = -1;
 }
