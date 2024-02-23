@@ -21,23 +21,22 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final TalonFX armKraken;
     private final CANcoder armEncoder;
-    private final DigitalInput beamBreak;
     private ArmConstants.ArmPositions armPositions = ArmConstants.ArmPositions.STOWED;
+
     public ArmSubsystem() {
         armKraken = new TalonFX(ArmConstants.ARM_KRAKEN_ID, TalonFXConstants.CANIVORE_NAME);
-        armEncoder = new CANcoder(ArmConstants.ARM_CANCODER_ID);
-        beamBreak = new DigitalInput(ArmConstants.BEAM_BREAK_PORT);
+        armEncoder = new CANcoder(ArmConstants.ARM_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
 
         var armConfigurator = armKraken.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
 
 
         talonFXConfiguration.Feedback.FeedbackRemoteSensorID = armEncoder.getDeviceID();
-        talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         talonFXConfiguration.MotorOutput.Inverted = ArmConstants.ARM_INVERSION;
         talonFXConfiguration.MotorOutput.NeutralMode = ArmConstants.ARM_NEUTRAL_MODE;
         talonFXConfiguration.FutureProofConfigs = TalonFXConstants.TALON_FUTURE_PROOF;
-        talonFXConfiguration.Feedback.SensorToMechanismRatio = 2.5; //placeholder
+        talonFXConfiguration.Feedback.SensorToMechanismRatio = 50; //placeholder
         talonFXConfiguration.Feedback.RotorToSensorRatio = 12.8;
         talonFXConfiguration.CurrentLimits = ArmConstants.ARM_CURRENT_LIMIT;
         talonFXConfiguration.SoftwareLimitSwitch = ArmConstants.ARM_SOFT_LIMIT;
@@ -63,9 +62,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     }
 
-    public boolean getBeamBreak() {
-        return beamBreak.get();
-    }
 
     public void setPosition(ArmConstants.ArmPositions position) {
         armPositions = position;
@@ -90,6 +86,10 @@ public class ArmSubsystem extends SubsystemBase {
         return armPositions;
     }
 
+    public double getEnc() {
+        return armEncoder.getAbsolutePosition().getValue();
+    }
+
     public boolean isMotionFinished() {
         return Math.abs(getAngle() - armPositions.angle) <= ArmConstants.ANGLE_TOLERANCE;
     }
@@ -98,6 +98,7 @@ public class ArmSubsystem extends SubsystemBase {
         setMotorsBrake();
         armKraken.set(Math.abs(speed));
     }
+
     public void moveDown(double speed) {
         armKraken.set(-Math.abs(speed));
     }
@@ -118,5 +119,11 @@ public class ArmSubsystem extends SubsystemBase {
         armKraken.stopMotor();
     }
 
+    public boolean atAngle() {
+        return (armEncoder.getAbsolutePosition().getValue() < 0.18261);
+    }
+
+
 }
+
 
