@@ -12,8 +12,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.IndexCommand;
-import frc.robot.constants.ClimberConstants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
@@ -66,7 +64,7 @@ public class RobotContainer {
         buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.70), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(3, 0, new StartEndCommand(() -> climberSubsystem.climbUp(), () -> climberSubsystem.stopClimb()), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(7, 0, new StartEndCommand(() -> climberSubsystem.climbDown(), () -> climberSubsystem.stopClimb()), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(4, 0, new StartEndCommand(() -> shooterSubsystem.motionMagicTest(125), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> pivotSubsystem.moveUp(.45), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .45)), MultiButton.RunCondition.WHILE_HELD); //45 amp 52 bumpfire
+        buttonHelper.createButton(4, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(125), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> pivotSubsystem.moveUp(.45), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .45)), MultiButton.RunCondition.WHILE_HELD); //45 amp 52 bumpfire
         buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopNeo).until(shooterSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(10, 0, new StartEndCommand(() -> armSubsystem.moveUp(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() >= 0.75).andThen(armSubsystem::setMotorsBrake), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(5, 0, new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() <= 0.45).andThen(armSubsystem::setMotorsBrake), MultiButton.RunCondition.WHEN_PRESSED);
