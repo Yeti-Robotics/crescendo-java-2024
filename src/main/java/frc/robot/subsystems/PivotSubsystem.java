@@ -77,11 +77,9 @@ public class PivotSubsystem extends SubsystemBase {
         vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
     }
 
-    public void setPosition(double angle) {
+    public void setPivotPosition(double angle) {
 
-
-
-        double angleUnits = angle / PivotConstants.GEAR_RATIO * CANCoderConstants.COUNTS_PER_DEG;
+        double angleUnits = angle/PivotConstants.GEAR_RATIO/360;
         setMotorsBrake();
 
         double radians = Math.toRadians(getAngle());
@@ -90,11 +88,10 @@ public class PivotSubsystem extends SubsystemBase {
 
 
         MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(
-                angle, true, PivotConstants.GRAVITY_FEEDFORWARD * cosineScalar, 0,
-                true, false, false);
+                angleUnits, true, PivotConstants.GRAVITY_FEEDFORWARD * cosineScalar, 0,
+                false, false, false);
 
-
-
+        System.out.println(angleUnits);
         System.out.println(motionMagicVoltage.Position);
 
         pivotMotor1.setControl(motionMagicVoltage);
