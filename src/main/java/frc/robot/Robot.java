@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.ShooterStateCommand;
 import frc.robot.commands.led.SetLEDToRGBCommand;
 import frc.robot.util.LimelightHelpers;
+import frc.robot.constants.ShooterConstants;
 
 import java.util.Set;
 
@@ -49,6 +51,8 @@ public class Robot extends TimedRobot {
     }
 
 
+    System.out.println(ShooterConstants.SHOOTER_MAP().get(3.2).angle);
+    System.out.println(ShooterConstants.SHOOTER_MAP().get(3.2).rps);
   }
 
   @Override
@@ -57,11 +61,11 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
 
-    System.out.println(robotContainer.climberSubsystem.getServo());
+//    System.out.println(robotContainer.climberSubsystem.getServo());
 
 //    System.out.println(robotContainer.intakeSubsystem.getBeamBreak());
 //    System.out.println(robotContainer.armSubsystem.getEnc());
-    System.out.println(robotContainer.pivotSubsystem.getEncAngle());
+//    System.out.println(robotContainer.pivotSubsystem.getEncAngle());
 
 
 
