@@ -6,16 +6,10 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.TalonFXConstants;
-
-import static frc.robot.constants.ShooterConstants.MOTION_MAGIC_ACCELERATION;
-import static frc.robot.constants.ShooterConstants.SHOOTER_F;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -149,7 +143,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
 
-    public void motionMagicTest(double vel){
+    public void setVelocity(double vel){
 
         leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
         rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));

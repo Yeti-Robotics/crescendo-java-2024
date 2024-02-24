@@ -3,13 +3,16 @@ package frc.robot.subsystems;
 
 //import com.ctre.phoenix6.StatusSignal;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.CANCoderConstants;
 import frc.robot.constants.ClimberConstants;
 
 public class ClimberSubsystem extends SubsystemBase {
@@ -17,32 +20,17 @@ public class ClimberSubsystem extends SubsystemBase {
     private final TalonFX climberFalcon2;
     private final Servo climberBrake1;
     private final Servo climberBrake2;
-
-    public static final double WPILIB_MIN_SERVO_ANGLE = 0.0; //degrees
-    public static final double WPILIB_MAX_SERVO_ANGLE = 360.0; //degrees
-    private static final double TIME_TO_SERVO_FULL_EXTENSION = 3.48; //Avg time to move from retract to extend
-    private static final double PERCENT_PER_SECOND = 1.00 / TIME_TO_SERVO_FULL_EXTENSION;
-    private static final double DEGREES_PER_SECOND = (WPILIB_MAX_SERVO_ANGLE - WPILIB_MIN_SERVO_ANGLE)
-            * PERCENT_PER_SECOND;
-
-    private static final double MAX_POSITION = 1.0; //percent servo travel to max hood position
-    private static final double MIN_POSITION = 0.0; //percent servo travel to min hood position
-
-    private static final double MAX_SERVO_PWM = 2.0; //ms
-    private static final double MIN_SERVO_PWM = 1.0; //ms
-    private static final double SERVO_RANGE = MAX_SERVO_PWM - MIN_SERVO_PWM;
-    private static final double CENTER_SERVO_PWM = 1.5; //ms
-    private static final double SERVO_DEADBAND = 0.0; //ms - no deadband
-
-    // pwm values in ms for the max and min angles of the shooter hood
-    private static final double HOOD_MAX_PWM = MIN_SERVO_PWM + (SERVO_RANGE * MAX_POSITION);
-    private static final double HOOD_MIN_PWM = MIN_SERVO_PWM + (SERVO_RANGE * MIN_POSITION);
+    private final CANcoder canCoder1;
+    private final CANcoder canCoder2;
 
 
 
     public ClimberSubsystem() {
         climberFalcon1 = new TalonFX(ClimberConstants.CLIMBER_TALON_1, "canivoreBus");
         climberFalcon2 = new TalonFX(ClimberConstants.CLIMBER_TALON_2, "canivoreBus");
+
+        canCoder1 = new CANcoder(ClimberConstants.CLIMBER_ENCODER_1, "canivoreBus");
+        canCoder2 = new CANcoder(ClimberConstants.CLIMBER_ENCODER_2, "canivoreBus");
 
         climberBrake1 = new Servo(ClimberConstants.SERVO_CHANNEL);
         climberBrake2 = new Servo(ClimberConstants.SERVO_CHANNEL_2);
@@ -62,7 +50,10 @@ public class ClimberSubsystem extends SubsystemBase {
         motorConfig1.FutureProofConfigs = true;
         motorConfig2.FutureProofConfigs = true;
 
+        motorConfig1.Feedback.withFeedbackRemoteSensorID(canCoder1.getDeviceID());
+        motorConfig2.Feedback.withFeedbackRemoteSensorID(canCoder2.getDeviceID());
 
+        var encoderConfig = new CANcoderConfiguration();
         // Fix sammy perlmen's issue :)
         talon1Config.apply(motorConfig1);
         talon2Config.apply(motorConfig2);
