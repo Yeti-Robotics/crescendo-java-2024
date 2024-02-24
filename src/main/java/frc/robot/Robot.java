@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+
     System.out.println(ShooterConstants.SHOOTER_MAP().get(3.2).angle);
     System.out.println(ShooterConstants.SHOOTER_MAP().get(3.2).rps);
   }
@@ -93,5 +94,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testExit() {}
 
-
+  @Override
+  public void simulationPeriodic() {}
+  
 }

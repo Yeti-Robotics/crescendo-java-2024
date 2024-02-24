@@ -10,8 +10,8 @@ import frc.robot.constants.TalonFXConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
     TalonFX intakeKraken;
-
     DigitalInput beamBreak;
+  
     public IntakeSubsystem() {
         intakeKraken = new TalonFX(IntakeConstants.INTAKE_KRAKEN_ID, "canivoreBus");
         var intakeConfigurator = intakeKraken.getConfigurator();
@@ -26,7 +26,6 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeConfigurator.apply(configs);
     }
 
-    
     public void rollIn(double speed) {
         intakeKraken.set(Math.abs(speed));
     }
@@ -37,7 +36,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void roll(double speed) {
         intakeKraken.set(speed);
-    } 
+    }
 
     public void stop() {
         intakeKraken.stopMotor();

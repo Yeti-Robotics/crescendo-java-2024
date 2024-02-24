@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
@@ -17,6 +16,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private final TalonFX rightKraken;
     private final TalonFX neo;
     private final DigitalInput beamBreak;
+
     public enum ShooterModes {
         DEFAULT,
         SPEAKER,
@@ -41,7 +41,6 @@ public class ShooterSubsystem extends SubsystemBase {
     MotionMagicVelocityVoltage motionMagicVelocityVoltage;
 
 
-
     public ShooterSubsystem() {
         leftKraken = new TalonFX(ShooterConstants.SHOOTER_LEFT_MOTOR, TalonFXConstants.CANIVORE_NAME);
         rightKraken = new TalonFX(ShooterConstants.SHOOTER_RIGHT_MOTOR, TalonFXConstants.CANIVORE_NAME);
@@ -56,8 +55,6 @@ public class ShooterSubsystem extends SubsystemBase {
         leftKraken.setControl(new Follower(rightKraken.getDeviceID(), false));
         shooterStatus = ShooterStatus.OFF;
         shooterModes = ShooterModes.TRAP;
-
-
 
 
         neo = new TalonFX(ShooterConstants.SHOOTER_NEO, "canivoreBus");
@@ -112,6 +109,7 @@ public class ShooterSubsystem extends SubsystemBase {
 //
 //
     }
+  
     public boolean getBeamBreak(){
         return !beamBreak.get();
     }
@@ -123,6 +121,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public void stopNeo() {
         neo.stopMotor();
     }
+
     public void shootFlywheel(double speed) {
         rightKraken.set(speed);
         leftKraken.set(speed);
@@ -143,25 +142,22 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
 
+
     public void setVelocity(double vel){
+
 
         leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
         rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
-//        neo.set(1);
-
+       
 
     }
-    //    public void testMotionMagic(double vel) {
-//        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
-//                vel, 0, false, SHOOTER_F, 0, false, false, false);
-//        rightKraken.setControl(motionMagicVelocityVoltage);
-//        leftKraken.setControl(motionMagicVelocityVoltage);
-//    }
+
+
     public double getRightEncoder() {
         return rightKraken.getRotorVelocity().getValue();
     }
 
-    public  double getLeftEncoder() {
+    public double getLeftEncoder() {
         return leftKraken.getRotorVelocity().getValue();
     }
 
