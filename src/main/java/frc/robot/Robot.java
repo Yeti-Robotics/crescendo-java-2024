@@ -28,6 +28,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    System.out.println(ShooterConstants.SHOOTER_MAP().get(3.2).angle);
+    System.out.println(ShooterConstants.SHOOTER_MAP().get(3.2).rps);
   }
 
   @Override
@@ -36,11 +38,11 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
 
-    System.out.println(robotContainer.climberSubsystem.getServo());
+//    System.out.println(robotContainer.climberSubsystem.getServo());
 
 //    System.out.println(robotContainer.intakeSubsystem.getBeamBreak());
 //    System.out.println(robotContainer.armSubsystem.getEnc());
-    System.out.println(robotContainer.pivotSubsystem.getEncAngle());
+//    System.out.println(robotContainer.pivotSubsystem.getEncAngle());
 
 
 

@@ -77,7 +77,7 @@ public class PivotSubsystem extends SubsystemBase {
         vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
     }
 
-    public void setPosition(double angle) {
+    public void setPivotPosition(double angle) {
 
         double angleUnits = angle/PivotConstants.GEAR_RATIO/360;
         setMotorsBrake();
