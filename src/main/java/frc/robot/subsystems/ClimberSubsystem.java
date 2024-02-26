@@ -12,7 +12,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.CANCoderConstants;
 import frc.robot.constants.ClimberConstants;
 
 public class ClimberSubsystem extends SubsystemBase {
@@ -20,6 +19,7 @@ public class ClimberSubsystem extends SubsystemBase {
     private final TalonFX climberFalcon2;
     private final Servo climberBrake1;
     private final Servo climberBrake2;
+
     private final CANcoder canCoder1;
     private final CANcoder canCoder2;
 
@@ -54,9 +54,19 @@ public class ClimberSubsystem extends SubsystemBase {
         motorConfig2.Feedback.withFeedbackRemoteSensorID(canCoder2.getDeviceID());
 
         var encoderConfig = new CANcoderConfiguration();
-        // Fix sammy perlmen's issue :)
         talon1Config.apply(motorConfig1);
         talon2Config.apply(motorConfig2);
+
+        climberBrake1.setBoundsMicroseconds(ClimberConstants.BRAKE_MAX_PWM,
+                ClimberConstants.CENTER_SERVO_PWM + ClimberConstants.SERVO_DEADBAND,
+                ClimberConstants.CENTER_SERVO_PWM,
+                ClimberConstants.CENTER_SERVO_PWM - ClimberConstants.SERVO_DEADBAND,
+                ClimberConstants.BRAKE_MIN_PWM);
+        climberBrake2.setBoundsMicroseconds(ClimberConstants.BRAKE_MAX_PWM,
+                ClimberConstants.CENTER_SERVO_PWM + ClimberConstants.SERVO_DEADBAND,
+                ClimberConstants.CENTER_SERVO_PWM,
+                ClimberConstants.CENTER_SERVO_PWM - ClimberConstants.SERVO_DEADBAND,
+                ClimberConstants.BRAKE_MIN_PWM);
     }
 
     public void setClimberBrake() {

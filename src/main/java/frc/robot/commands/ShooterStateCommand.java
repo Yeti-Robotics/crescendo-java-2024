@@ -6,9 +6,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
+
+import java.util.function.DoubleSupplier;
 
 
 public class ShooterStateCommand extends Command {
@@ -20,11 +22,17 @@ public class ShooterStateCommand extends Command {
     private double poseX = 0;
     private double rps = 0;
     private double angle = 0;
-    private double botAngle = 0;
+    private final double botAngle = 0;
     private Pose2d speakerPose;
     private Rotation2d yawTarget;
+    DoubleSupplier xVel;
+    DoubleSupplier yVel;
 
-    public ShooterStateCommand(CommandSwerveDrivetrain commandSwerveDrivetrain, PivotSubsystem pivotSubsystem, ShooterSubsystem shooterSubsystem) {
+    public ShooterStateCommand(CommandSwerveDrivetrain commandSwerveDrivetrain,
+                               PivotSubsystem pivotSubsystem,
+                               ShooterSubsystem shooterSubsystem,
+                               DoubleSupplier xVel,
+                               DoubleSupplier yVel) {
         this.commandSwerveDrivetrain = commandSwerveDrivetrain;
         this.pivotSubsystem = pivotSubsystem;
         this.shooterSubsystem = shooterSubsystem;
@@ -46,6 +54,9 @@ public class ShooterStateCommand extends Command {
 
 
     public void execute() {
+        double velocityX = xVel.getAsDouble();
+        double velocityY = yVel.getAsDouble();
+
 
         Pose2d robotPose = commandSwerveDrivetrain.getState().Pose;
         Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
@@ -53,14 +64,13 @@ public class ShooterStateCommand extends Command {
         double distance = relativeSpeaker.getTranslation().getNorm();
         rps = ShooterConstants.SHOOTER_MAP().get(distance).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(distance).angle;
-        SwerveRequest.PointWheelsAt pointCmd = new SwerveRequest.PointWheelsAt()
-                .withModuleDirection(yawTarget);
-        commandSwerveDrivetrain.applyRequest(() -> pointCmd);
+        SwerveRequest pointCmd = new SwerveRequest.FieldCentricFacingAngle()
+                .withVelocityX(velocityX)
+                .withVelocityY(velocityY)
+                .withTargetDirection(yawTarget);
+        commandSwerveDrivetrain.setControl(pointCmd);
         shooterSubsystem.setVelocity(rps);
         pivotSubsystem.setPivotPosition(angle);
-
-
-
     }
 
     @Override
