@@ -36,7 +36,7 @@ public class RobotContainer {
     ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
 
     private final CommandXboxController joystick = new CommandXboxController(1); // My joystick
-    private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+    final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(DriveConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
             .withRotationalDeadband(DriveConstants.MaFxAngularRate * 0.1) // Add a 10% deadband
