@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
 
     var lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
 
-    if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+    if(DriverStation.getAlliance().get() == (DriverStation.Alliance.Red)) {
       Pose2d llPose = lastResult.getBotPose2d_wpiRed();
       if(lastResult.valid) {
         robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
@@ -56,6 +56,7 @@ public class Robot extends TimedRobot {
 
 
     System.out.println(robotContainer.drivetrain.getState().Pose.toString());
+    System.out.println(robotContainer.climberSubsystem.getServo());
 
 
 

@@ -4,9 +4,7 @@ package frc.robot.subsystems;
 //import com.ctre.phoenix6.StatusSignal;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -56,17 +54,6 @@ public class ClimberSubsystem extends SubsystemBase {
         var encoderConfig = new CANcoderConfiguration();
         talon1Config.apply(motorConfig1);
         talon2Config.apply(motorConfig2);
-
-        climberBrake1.setBoundsMicroseconds(ClimberConstants.BRAKE_MAX_PWM,
-                ClimberConstants.CENTER_SERVO_PWM + ClimberConstants.SERVO_DEADBAND,
-                ClimberConstants.CENTER_SERVO_PWM,
-                ClimberConstants.CENTER_SERVO_PWM - ClimberConstants.SERVO_DEADBAND,
-                ClimberConstants.BRAKE_MIN_PWM);
-        climberBrake2.setBoundsMicroseconds(ClimberConstants.BRAKE_MAX_PWM,
-                ClimberConstants.CENTER_SERVO_PWM + ClimberConstants.SERVO_DEADBAND,
-                ClimberConstants.CENTER_SERVO_PWM,
-                ClimberConstants.CENTER_SERVO_PWM - ClimberConstants.SERVO_DEADBAND,
-                ClimberConstants.BRAKE_MIN_PWM);
     }
 
     public void setClimberBrake() {
@@ -95,16 +82,26 @@ public class ClimberSubsystem extends SubsystemBase {
         climberFalcon2.set(0);
     }
 
+    public void engageBrake() {
+        climberBrake1.set(0.2);
+        climberBrake2.set(0.2);
+    }
+
+    public void disengageBrake() {
+        climberBrake1.set(0.4);
+        climberBrake2.set(0.4);
+    }
+
     public double getServo() {
         return climberBrake1.getAngle();
     }
 
-    public double getLeftEncoder() {
-        return climberFalcon2.getRotorPosition().getValue();
+    public double getRightEncoder() {
+        return canCoder1.getAbsolutePosition().getValue();
     }
 
-    public double getRightEncoder() {
-        return climberFalcon1.getRotorPosition().getValue();
+    public double getLeftEncoder() {
+        return canCoder2.getAbsolutePosition().getValue();
     }
 
     public double getAverageEncoder() {
@@ -114,6 +111,7 @@ public class ClimberSubsystem extends SubsystemBase {
     public boolean atEncoderLimit() {
         return getAverageEncoder() <= ClimberConstants.CLIMBER_TALON_1;
     }
+
 
 }
 
