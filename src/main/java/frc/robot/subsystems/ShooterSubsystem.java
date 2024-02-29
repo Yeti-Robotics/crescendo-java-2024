@@ -6,10 +6,16 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.TalonFXConstants;
+
+import static frc.robot.constants.ShooterConstants.MOTION_MAGIC_ACCELERATION;
+import static frc.robot.constants.ShooterConstants.SHOOTER_F;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -17,6 +23,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private final TalonFX rightKraken;
     private final TalonFX neo;
     private final DigitalInput beamBreak;
+
     public enum ShooterModes {
         DEFAULT,
         SPEAKER,
@@ -38,9 +45,17 @@ public class ShooterSubsystem extends SubsystemBase {
     public static boolean atSetpoint = false;
     public static boolean isShooting = false;
     public static double velocity = 0;
+    public boolean toggleLED = false;
+
+    public enum ShootingState {
+        AMPING_UP,
+        READY_TO_SHOOT,
+        SHOOTING,
+        NOT_SHOOTING
+    }
+
+    public ShootingState shootingState;
     MotionMagicVelocityVoltage motionMagicVelocityVoltage;
-
-
 
     public ShooterSubsystem() {
         leftKraken = new TalonFX(ShooterConstants.SHOOTER_LEFT_MOTOR, TalonFXConstants.CANIVORE_NAME);
@@ -57,7 +72,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterStatus = ShooterStatus.OFF;
         shooterModes = ShooterModes.TRAP;
 
-
+        shootingState = ShootingState.NOT_SHOOTING;
 
 
         neo = new TalonFX(ShooterConstants.SHOOTER_NEO, "canivoreBus");
@@ -74,6 +89,10 @@ public class ShooterSubsystem extends SubsystemBase {
         leftMotorConfigurator.apply(rightMotorConfiguration);
 
 
+    }
+
+    public boolean isOnSetPoint(double setpoint) {
+        return rightKraken.getRotorVelocity().getValue() == setpoint;
     }
 
     @Override
@@ -112,6 +131,7 @@ public class ShooterSubsystem extends SubsystemBase {
 //
 //
     }
+  
     public boolean getBeamBreak(){
         return !beamBreak.get();
     }
@@ -123,6 +143,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public void stopNeo() {
         neo.stopMotor();
     }
+
     public void shootFlywheel(double speed) {
         rightKraken.set(speed);
         leftKraken.set(speed);
@@ -142,15 +163,31 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterStatus = ShooterStatus.OFF;
     }
 
+    public void testMotionMagic(double vel) {
+        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
+                vel,
+                0,
+                false,
+                ShooterConstants.SHOOTER_F,
+                0,
+                false,
+                false,
+                false
+        );
+        if (isOnSetPoint(vel)) {
+            boolean toggleLED = true;
+        }
+        rightKraken.setControl(motionMagicVelocityVoltage);
+        leftKraken.setControl(motionMagicVelocityVoltage);
+    }
 
-    public void setVelocity(double vel){
-
+    public void motionMagicTest(double vel) {
         leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
         rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(vel));
 //        neo.set(1);
 
-
     }
+
     //    public void testMotionMagic(double vel) {
 //        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
 //                vel, 0, false, SHOOTER_F, 0, false, false, false);
@@ -161,7 +198,7 @@ public class ShooterSubsystem extends SubsystemBase {
         return rightKraken.getRotorVelocity().getValue();
     }
 
-    public  double getLeftEncoder() {
+    public double getLeftEncoder() {
         return leftKraken.getRotorVelocity().getValue();
     }
 

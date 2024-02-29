@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -12,6 +14,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.IndexCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.robot.commands.SpeakerTargetCommand;
+import frc.robot.commands.ToggleShooterCommand;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
+import frc.robot.constants.ClimberConstants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
@@ -20,10 +30,14 @@ import frc.robot.subsystems.drivetrain.generated.TunerConstants;
 import frc.robot.util.controllerUtils.ButtonHelper;
 import frc.robot.util.controllerUtils.ControllerContainer;
 import frc.robot.util.controllerUtils.MultiButton;
-
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.robot.subsystems.LEDSubsystem;
 
 public class RobotContainer {
 
+    public final LEDSubsystem ledSubsystem;
+
+    public VisionSubsystem visionSubsystem;
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
     public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
@@ -34,6 +48,7 @@ public class RobotContainer {
     public final ArmSubsystem armSubsystem = new ArmSubsystem();
     ControllerContainer controllerContainer = new ControllerContainer();
     ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
+    public final IntakeSubsystem intakeSubsystem;
 
     private final CommandXboxController joystick = new CommandXboxController(1); // My joystick
     private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
@@ -52,7 +67,16 @@ public class RobotContainer {
 
 
     public RobotContainer() {
+        shooterSubsystem = new ShooterSubsystem();
+        ledSubsystem = new LEDSubsystem(shooterSubsystem);
+        controllerContainer = new ControllerContainer();
+        buttonHelper = new ButtonHelper(controllerContainer.getControllers());
+        intakeSubsystem = new IntakeSubsystem();
+        visionSubsystem = new VisionSubsystem();
+        drivetrain = TunerConstants.DriveTrain;
+        visionSubsystem.setDefaultCommand(new SpeakerTargetCommand(visionSubsystem, shooterSubsystem, ledSubsystem));
         configureBindings();
+
     }
 
 
@@ -119,5 +143,4 @@ public class RobotContainer {
         public Command getAutonomousCommand () {
             return new InstantCommand();
         }
-
 }

@@ -2,7 +2,7 @@ package frc.robot.constants;
 
 import java.util.Map;
 
-public final class OIConstants {
+public class OIConstants {
 
     public static final Map<Integer, ControllerType> CONTROLLERS = Map.of(
         0, ControllerType.CUSTOM, 1, ControllerType.XBOX

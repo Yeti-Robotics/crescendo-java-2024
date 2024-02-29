@@ -45,7 +45,7 @@ public class PivotConstants {
     public static final double GEAR_RATIO = 1.0/144.0;
 
     public enum PivotPositions {
-        BUMPFIRE(52),
+        BUMPFIRE(0),
         ADJUSTABLE_POSITIONS(0); //placeholder
         public final double angle;
         public final double sensorUnits;

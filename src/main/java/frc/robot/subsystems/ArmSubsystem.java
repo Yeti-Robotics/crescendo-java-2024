@@ -95,7 +95,6 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void moveUp(double speed) {
-        setMotorsBrake();
         armKraken.set(Math.abs(speed));
     }
 
