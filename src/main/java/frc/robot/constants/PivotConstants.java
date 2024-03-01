@@ -20,12 +20,12 @@ public class PivotConstants {
 
     public static final double PIVOT_VELOCITY_STATUS_FRAME = 0.01;
 
-    public static final double GRAVITY_FEEDFORWARD = 1; //placeholder
+    public static final double GRAVITY_FEEDFORWARD = 0; //placeholder
 
     public static final double ANGLE_TOLERANCE = 0;
 
     public static final double PIVOT_P = 0.35;
-    public static final double PIVOT_I = 0.;
+    public static final double PIVOT_I = 0.0;
     public static final double PIVOT_D = 0.3;
     public static final double PIVOT_F = 0;
 

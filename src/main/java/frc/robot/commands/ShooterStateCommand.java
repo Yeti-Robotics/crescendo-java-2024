@@ -92,5 +92,6 @@ public class ShooterStateCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         shooterSubsystem.stopFlywheel();
+        pivotSubsystem.stop();
     }
 }
