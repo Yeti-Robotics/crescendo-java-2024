@@ -94,7 +94,7 @@ public class PivotSubsystem extends SubsystemBase {
         System.out.println(angleUnits);
         System.out.println(motionMagicVoltage.Position);
 
-        pivotMotor1.setControl(motionMagicVoltage);
+        pivotMotor1.setControl(motionMagicVoltage.withPosition(angleUnits).withSlot(0));
     }
 
     public double getAngle() {
