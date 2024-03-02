@@ -28,7 +28,6 @@ public class TurnToTarget  extends SwerveRequest.FieldCentricFacingAngle {
     }
 
     public FieldCentricFacingAngle withTurnToTarget(Translation2d target) {
-        setTurnToTarget(target);
         return this;
     }
 

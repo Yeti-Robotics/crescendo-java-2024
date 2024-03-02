@@ -51,6 +51,7 @@ public final class ShooterConstants {
     public static InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
         InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
         map.put(0.0, new ShooterStateData(52, 100));
+        map.put(2.0, new ShooterStateData(50, 100));
         map.put(4.0, new ShooterStateData(45, 125));
         return map;
     }

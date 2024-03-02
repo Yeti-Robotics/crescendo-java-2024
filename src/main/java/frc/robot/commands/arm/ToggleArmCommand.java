@@ -21,11 +21,12 @@ public class ToggleArmCommand extends Command {
     @Override
     public void initialize() {
 
-        if(armSubsystem.getEnc() <= 0.75) {
-            setpoint = 0.75;
-        } else if(armSubsystem.getEnc() >= 0.7) {
-            setpoint = 0.4;
-        }
+         if(armSubsystem.getEnc() <= 0.5) {
+            setpoint = 0.63;
+        } else {
+             setpoint = 0.1;
+
+         }
 
 
     }
@@ -37,12 +38,16 @@ public class ToggleArmCommand extends Command {
     @Override
     public void execute() {
 
-        if(armSubsystem.getEnc() <= 0.75) {
-            armSubsystem.moveUp(.45);
+        if(setpoint == 0.63) {
+            if (armSubsystem.getEnc() >= 0.75) {
+                armSubsystem.moveDown(.45);
+            }
         }
 
-        if(armSubsystem.getEnc() >= 0.7) {
-            armSubsystem.moveDown(.45);
+        if(setpoint == 0.1) {
+            if (armSubsystem.getEnc() <= 0.3) {
+                armSubsystem.moveUp(.45);
+            }
         }
 
     }

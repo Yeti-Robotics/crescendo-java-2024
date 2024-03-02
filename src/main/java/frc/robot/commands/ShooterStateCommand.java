@@ -3,13 +3,18 @@ package frc.robot.commands;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
+import frc.robot.util.AllianceFlipUtil;
 
+import java.lang.reflect.Field;
 import java.util.function.DoubleSupplier;
 
 
@@ -24,6 +29,7 @@ public class ShooterStateCommand extends Command {
     private double angle = 0;
     private final double botAngle = 0;
     private Pose2d speakerPose;
+    private Translation2d speakerCenter;
     private Rotation2d yawTarget;
     DoubleSupplier xVel;
     DoubleSupplier yVel;
@@ -55,11 +61,13 @@ public class ShooterStateCommand extends Command {
         poseX = commandSwerveDrivetrain.getState().Pose.getX();
         rps = ShooterConstants.SHOOTER_MAP().get(poseY).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(poseY).angle;
-        speakerPose = DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)
+        speakerPose = DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)
                 ? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
                 : new Pose2d(16.5, 5.55, Rotation2d.fromRotations(0));
 
-        swerveRequest.setTurnToTarget(speakerPose.getTranslation());
+
+        speakerCenter = AllianceFlipUtil.apply(FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d());
+        swerveRequest.setTurnToTarget(speakerCenter);
     }
 
 
@@ -68,7 +76,7 @@ public class ShooterStateCommand extends Command {
         double velocityY = yVel.getAsDouble();
 
         commandSwerveDrivetrain.setControl(
-                swerveRequest.withVelocityX(velocityX).withVelocityY(velocityY).withDeadband(0.1)
+                swerveRequest.withVelocityX(velocityX).withVelocityY(velocityY).withDeadband(0.2)
         );
 
 
@@ -80,7 +88,8 @@ public class ShooterStateCommand extends Command {
         rps = ShooterConstants.SHOOTER_MAP().get(distance).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(distance).angle;
         shooterSubsystem.setVelocity(rps);
-        pivotSubsystem.setPivotPosition(angle);
+//        pivotSubsystem.setPivotPosition(angle);
+        System.out.println(speakerPose);
     }
 
     @Override

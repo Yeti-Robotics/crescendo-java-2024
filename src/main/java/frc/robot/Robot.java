@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
 
 
         System.out.println(robotContainer.drivetrain.getState().Pose.toString());
-        System.out.println(robotContainer.climberSubsystem.getServo());
+        System.out.println(robotContainer.armSubsystem.getEnc());
 
 
     }
