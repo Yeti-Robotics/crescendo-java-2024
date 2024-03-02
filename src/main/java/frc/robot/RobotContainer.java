@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutoAimCommand;
+import frc.robot.commands.HandoffCommandGroup;
 import frc.robot.commands.ShooterStateCommand;
 import frc.robot.commands.arm.ToggleArmCommand;
 import frc.robot.commands.pivot.PivotHomeCommand;
@@ -26,7 +27,7 @@ import frc.robot.util.controllerUtils.ControllerContainer;
 import frc.robot.util.controllerUtils.MultiButton;
 
 
-public class RobotContainer {
+public class RobotContainer{
 
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
@@ -116,10 +117,10 @@ public class RobotContainer {
 
         );
 
-        joystick.rightTrigger().whileTrue(new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
-//        joystick.leftTrigger().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(.15), pivotSubsystem::stop));
-        joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain,
-                () -> joystick.getLeftX(), () -> joystick.getLeftY()));
+        joystick.leftTrigger().onTrue(new HandoffCommandGroup(pivotSubsystem,armSubsystem,shooterSubsystem,intakeSubsystem));
+        joystick.rightTrigger().whileTrue(new StartEndCommand(() -> shooterSubsystem.spinNeo(),
+                shooterSubsystem::stopFlywheel).alongWith(
+                new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
         joystick.povUp().onTrue(new PivotHomeCommand(pivotSubsystem).until(() -> pivotSubsystem.getEncAngle() >= .48));
 
 

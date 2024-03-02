@@ -56,8 +56,8 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
 
 
-        System.out.println(robotContainer.drivetrain.getState().Pose.toString());
-        System.out.println(robotContainer.pivotSubsystem.getEncAngle());
+//        System.out.println(robotContainer.drivetrain.getState().Pose.toString());
+        System.out.println(robotContainer.armSubsystem.getEnc());
 
 
     }
