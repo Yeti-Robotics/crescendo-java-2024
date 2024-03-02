@@ -15,7 +15,7 @@ public class AutoAimCommand extends Command {
     TurnToTarget swerveRequest;
     private DoubleSupplier xVelSupplier;
     private DoubleSupplier yVelSupplier;
-
+    private double poseY = 0;
 
     public AutoAimCommand(
             CommandSwerveDrivetrain drivetrain,
@@ -35,6 +35,7 @@ public class AutoAimCommand extends Command {
 
     @Override
     public void initialize() {
+        poseY = drivetrain.getState().Pose.getY();
         Translation2d speakerCenter = AllianceFlipUtil.apply(
                 FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()
         );
@@ -45,15 +46,27 @@ public class AutoAimCommand extends Command {
     @Override
     public void execute() {
 
-        double xVel = xVelSupplier.getAsDouble();
-        double yVel = yVelSupplier.getAsDouble();
+        if (poseY > 2.58) {
+            double xVel = -(xVelSupplier.getAsDouble());
+            double yVel = -(yVelSupplier.getAsDouble());
+            drivetrain.setControl(
+                    swerveRequest.withVelocityX(xVel)
+                            .withVelocityY(yVel)
+                            .withDeadband(0.1)
+                            .withRotationalDeadband(1.5 * Math.PI * 0.1)
+            );
+        }
+        else {
+            double xVel = xVelSupplier.getAsDouble();
+            double yVel = yVelSupplier.getAsDouble();
+            drivetrain.setControl(
+                    swerveRequest.withVelocityX(xVel)
+                            .withVelocityY(yVel)
+                            .withDeadband(0.1)
+                            .withRotationalDeadband(1.5 * Math.PI * 0.1)
+            );
+        }
 
-        drivetrain.setControl(
-                swerveRequest.withVelocityX(xVel)
-                        .withVelocityY(yVel)
-                        .withDeadband(0.1)
-                        .withRotationalDeadband(1.5 * Math.PI * 0.1)
-        );
     }
 
     @Override

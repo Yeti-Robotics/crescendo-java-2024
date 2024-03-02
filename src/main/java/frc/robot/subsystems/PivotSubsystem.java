@@ -3,10 +3,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.MotionMagicVelocityDutyCycle;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
@@ -53,8 +50,8 @@ public class PivotSubsystem extends SubsystemBase {
         talonFXConfiguration.CurrentLimits = PivotConstants.PIVOT_CURRENT_LIMIT;
         talonFXConfiguration.SoftwareLimitSwitch = PivotConstants.PIVOT_SOFT_LIMIT;
         talonFXConfiguration.Slot0 = PivotConstants.SLOT_0_CONFIGS;
-        talonFXConfiguration.MotionMagic.MotionMagicAcceleration = 10;
-        talonFXConfiguration.MotionMagic.MotionMagicCruiseVelocity = 20;
+        talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = 0.7;
+        talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = 70;
 
 
         pivotMotor1.getRotorVelocity().waitForUpdate(PivotConstants.PIVOT_VELOCITY_STATUS_FRAME);
@@ -82,7 +79,7 @@ public class PivotSubsystem extends SubsystemBase {
         vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
     }
 
-    public void setPivotPosition(double angle) {
+    public void     setPivotPosition(double angle) {
 
         double angleUnits = angle / PivotConstants.GEAR_RATIO / 360;
         setMotorsBrake();
@@ -92,14 +89,14 @@ public class PivotSubsystem extends SubsystemBase {
 
 
 
-        MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(
+        MotionMagicExpoVoltage motionMagicExpoVoltage = new MotionMagicExpoVoltage(
                 angleUnits, true, PivotConstants.GRAVITY_FEEDFORWARD, 0,
                 false, false, false);
 
 
-        System.out.println(motionMagicVoltage.Position);
+        System.out.println(motionMagicExpoVoltage.Position);
 
-        pivotMotor1.setControl(motionMagicVoltage.withPosition(angleUnits).withSlot(0).withPosition(angleUnits));
+        pivotMotor1.setControl(motionMagicExpoVoltage.withPosition(angleUnits).withSlot(0).withPosition(angleUnits));
     }
 
     public double getAngle() {
@@ -142,6 +139,7 @@ public class PivotSubsystem extends SubsystemBase {
     public void stop() {
         pivotMotor1.stopMotor();
     }
+
 
 }
 

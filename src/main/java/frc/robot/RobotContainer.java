@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.ShooterStateCommand;
 import frc.robot.commands.arm.ToggleArmCommand;
+import frc.robot.commands.pivot.PivotHomeCommand;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
@@ -119,6 +120,7 @@ public class RobotContainer {
 //        joystick.leftTrigger().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(.15), pivotSubsystem::stop));
         joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain,
                 () -> joystick.getLeftX(), () -> joystick.getLeftY()));
+        joystick.povUp().onTrue(new PivotHomeCommand(pivotSubsystem).until(() -> pivotSubsystem.getEncAngle() >= .48));
 
 
 

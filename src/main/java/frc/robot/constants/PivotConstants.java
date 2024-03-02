@@ -24,9 +24,9 @@ public class PivotConstants {
 
     public static final double ANGLE_TOLERANCE = 0;
 
-    public static final double PIVOT_P = 0.55;
+    public static final double PIVOT_P = 700;
     public static final double PIVOT_I = 0.0;
-    public static final double PIVOT_D = 0.3;
+    public static final double PIVOT_D = 90;
     public static final double PIVOT_F = 0;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().withKP(PIVOT_P).withKI(PIVOT_I).withKD(PIVOT_D).withGravityType(GravityTypeValue.Arm_Cosine).withKG(0);
