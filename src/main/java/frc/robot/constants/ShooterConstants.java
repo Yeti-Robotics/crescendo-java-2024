@@ -12,7 +12,7 @@ public final class ShooterConstants {
     public static final int SHOOTER_LEFT_MOTOR = 15; //id
     public static final int SHOOTER_RIGHT_MOTOR = 5; //id
     public static final CurrentLimitsConfigs SHOOTER_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
-            withSupplyCurrentThreshold(55).withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);
+            withSupplyCurrentThreshold(65).withSupplyCurrentLimit(75).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(80);
     public static final InvertedValue SHOOTER_INVERSION = InvertedValue.CounterClockwise_Positive;
 
     public static final double SHOOTER_P = 0.11;//0.043315

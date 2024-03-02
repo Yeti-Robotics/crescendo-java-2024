@@ -69,10 +69,10 @@ public class RobotContainer{
         buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.70), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(3, 0, new StartEndCommand(() -> climberSubsystem.climbUp(), () -> climberSubsystem.stopClimb()), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(7, 0, new StartEndCommand(() -> climberSubsystem.climbDown(), () -> climberSubsystem.stopClimb()).until(() -> climberSubsystem.getRightEncoder() >= .200195 && climberSubsystem.getLeftEncoder() <= -0.242676), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(4, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(125), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> pivotSubsystem.moveUp(.45), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .45)), MultiButton.RunCondition.WHILE_HELD); //45 amp 52 bumpfire
+        buttonHelper.createButton(4, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(125), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> pivotSubsystem.moveUp(.45), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .475)), MultiButton.RunCondition.WHILE_HELD); //45 amp 52 bumpfire
         buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopNeo).until(shooterSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(10, 0, new ToggleArmCommand(armSubsystem), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(5, 0, new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() <= 0.40).andThen(armSubsystem::setMotorsBrake), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(5, 0,  new HandoffCommandGroup(pivotSubsystem,armSubsystem,shooterSubsystem,intakeSubsystem).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(8,0,new InstantCommand(climberSubsystem::engageBrake),MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(9,0,new InstantCommand(climberSubsystem::disengageBrake),MultiButton.RunCondition.WHEN_PRESSED);
 
@@ -117,11 +117,14 @@ public class RobotContainer{
 
         );
 
-        joystick.leftTrigger().onTrue(new HandoffCommandGroup(pivotSubsystem,armSubsystem,shooterSubsystem,intakeSubsystem));
+        joystick.leftTrigger().onTrue(new HandoffCommandGroup(pivotSubsystem,armSubsystem,shooterSubsystem,intakeSubsystem).withTimeout(5));
         joystick.rightTrigger().whileTrue(new StartEndCommand(() -> shooterSubsystem.spinNeo(),
                 shooterSubsystem::stopFlywheel).alongWith(
                 new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
-        joystick.povUp().onTrue(new PivotHomeCommand(pivotSubsystem).until(() -> pivotSubsystem.getEncAngle() >= .48));
+        joystick.povUp().onTrue(new StartEndCommand(() -> armSubsystem.moveUp(.5), armSubsystem::stop).until(
+                () -> armSubsystem.getEnc() >= .9));
+        joystick.povDown().onTrue(new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
+                () -> armSubsystem.getEnc() <= .68 && armSubsystem.getEnc() >= .5));
 
 
 

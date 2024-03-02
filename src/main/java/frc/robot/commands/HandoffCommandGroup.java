@@ -15,6 +15,7 @@ public class HandoffCommandGroup extends SequentialCommandGroup {
     private ArmSubsystem armSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private ShooterSubsystem shooterSubsystem;
+
     public HandoffCommandGroup(PivotSubsystem pivotSubsystem, ArmSubsystem armSubsystem, ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
 
         addCommands(
