@@ -24,12 +24,18 @@ public class PivotConstants {
 
     public static final double ANGLE_TOLERANCE = 0;
 
-    public static final double PIVOT_P = 0.35;
+    public static final double PIVOT_P = 700;
     public static final double PIVOT_I = 0.;
-    public static final double PIVOT_D = 0.3;
+    public static final double PIVOT_D = 90;
     public static final double PIVOT_F = 0;
+    public static final double PIVOT_V = 65;
+    public static final double PIVOT_A = .7;
+    public static final double PIVOT_G = .35;
+    public static final double PROFILE_V = 80;
+    public static final double PROFILE_A = 0.7;
 
-    public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().withKP(PIVOT_P).withKI(PIVOT_I).withKD(PIVOT_D).withGravityType(GravityTypeValue.Arm_Cosine);
+    public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().withKP(PIVOT_P).withKI(PIVOT_I).withKD(PIVOT_D).
+    withKA(PIVOT_A).withKV(PIVOT_V).withKG(PIVOT_G).withGravityType(GravityTypeValue.Arm_Cosine);
 
     public static final CurrentLimitsConfigs PIVOT_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).withSupplyCurrentThreshold(55).
             withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);

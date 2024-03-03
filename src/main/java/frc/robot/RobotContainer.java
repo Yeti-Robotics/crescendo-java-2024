@@ -128,6 +128,7 @@ public class RobotContainer {
         joystick.povUp().onTrue(new StartEndCommand((() -> elevatorSubsystem.goUp(.3)), elevatorSubsystem::stop).until(() -> elevatorSubsystem.getEncoder() >= 15));
         joystick.povDown().whileTrue(new StartEndCommand(() -> elevatorSubsystem.goDown(0.1), elevatorSubsystem::stop).until(elevatorSubsystem::getmagSwitch));
 
+        joystick.povLeft().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(.5)));
 
 
     }
