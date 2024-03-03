@@ -18,12 +18,12 @@ public class ElevatorCommand extends Command {
 
     @Override
     public void initialize(){
-        elevatorSubsystem.SetPosition(position);
+        elevatorSubsystem.setPosition(position);
     }
 
     @Override
     public void execute(){
-        elevatorSubsystem.SetPosition(position);
+        elevatorSubsystem.setPosition(position);
     }
 
     @Override

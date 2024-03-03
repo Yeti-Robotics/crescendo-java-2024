@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.led.SetLEDToRGBCommand;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.util.LimelightHelpers;
 
 import java.util.Set;
@@ -18,6 +19,7 @@ import java.util.Set;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer robotContainer;
+  private ElevatorSubsystem elevatorSubsystem;
   private RobotContainer m_robotContainer;
   private SetLEDToRGBCommand blueLedCommand;
 
@@ -33,6 +35,7 @@ public class Robot extends TimedRobot {
 
     var lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
 
+    if(DriverStation.getAlliance().isPresent()) {
     if(DriverStation.getAlliance().get() == (DriverStation.Alliance.Red)) {
       Pose2d llPose = lastResult.getBotPose2d_wpiRed();
       if(lastResult.valid) {
@@ -41,9 +44,10 @@ public class Robot extends TimedRobot {
 
     } else {
       Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
-      if(lastResult.valid) {
+      if (lastResult.valid) {
         robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
       }
+    }
 
     }
   }
@@ -54,7 +58,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
 
-
+    System.out.println(robotContainer.elevatorSubsystem.getEncoder());
     System.out.println(robotContainer.drivetrain.getState().Pose.toString());
     System.out.println(robotContainer.climberSubsystem.getServo());
 
@@ -91,7 +95,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-
   }
 
   @Override

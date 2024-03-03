@@ -13,7 +13,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.ShooterStateCommand;
+import frc.robot.commands.led.SetLEDToRGBCommand;
 import frc.robot.constants.DriveConstants;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drivetrain.Telemetry;
@@ -25,11 +27,15 @@ import frc.robot.util.controllerUtils.MultiButton;
 
 public class RobotContainer {
 
+
+    public final LEDSubsystem ledSubsystem = new LEDSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
     public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
     public final PivotSubsystem pivotSubsystem = new PivotSubsystem();
+
+    public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final ArmSubsystem armSubsystem = new ArmSubsystem();
@@ -53,6 +59,7 @@ public class RobotContainer {
 
 
     public RobotContainer() {
+        ledSubsystem.setDefaultCommand(new SetLEDToRGBCommand(ledSubsystem, 255, 0, 0, 1.0, 0));
         configureBindings();
     }
 
@@ -95,6 +102,7 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
         joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+        joystick.rightBumper().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.AMP)));
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -117,6 +125,8 @@ public class RobotContainer {
 //        joystick.leftTrigger().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(.15), pivotSubsystem::stop));
         joystick.leftTrigger().whileTrue(new RunCommand(() -> pivotSubsystem.setPivotPosition(-0.0003)));
 
+        joystick.povUp().onTrue(new StartEndCommand((() -> elevatorSubsystem.goUp(.3)), elevatorSubsystem::stop).until(() -> elevatorSubsystem.getEncoder() >= 15));
+        joystick.povDown().whileTrue(new StartEndCommand(() -> elevatorSubsystem.goDown(0.1), elevatorSubsystem::stop).until(elevatorSubsystem::getmagSwitch));
 
 
 

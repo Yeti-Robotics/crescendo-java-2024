@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.controls.*;
@@ -23,18 +23,20 @@ public class ElevatorSubsystem extends SubsystemBase{
     private final TalonFX elevatorMotor;
 
     private final DigitalInput magSwitch;
-    private final CANcoder elevatorCoder;
     private ElevatorConstants.ElevatorPositions elevatorPositions = ElevatorConstants.ElevatorPositions.DOWN;
 
     public ElevatorSubsystem(){
         elevatorMotor = new TalonFX(ElevatorConstants.ELEVATOR_ID, TalonFXConstants.CANIVORE_NAME);
-        elevatorCoder = new CANcoder(ElevatorConstants.ELEVATOR_CAN_ID);
-        magSwitch = new DigitalInput(2);
+        magSwitch = new DigitalInput(9);
         var ElConfigurator = elevatorMotor.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
 
         talonFXConfiguration.CurrentLimits = ElevatorConstants.ELEVATOR_CURRENT_LIMIT;
         talonFXConfiguration.SoftwareLimitSwitch = ElevatorConstants.ELEVATOR_SOFT_LIMIT;
+        talonFXConfiguration.Slot0 = ElevatorConstants.SLOT_0_CONFIGS;
+        talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = ElevatorConstants.PROFILE_V;
+        talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = ElevatorConstants.PROFILE_A;
+
 
         elevatorMotor.getRotorVelocity().waitForUpdate(ElevatorConstants.ELEVATOR_VELOCITY_STATUS_FRAME);
         elevatorMotor.getRotorPosition().waitForUpdate(ElevatorConstants.ELEVATOR_POSITION_STATUS_FRAME);
@@ -43,19 +45,14 @@ public class ElevatorSubsystem extends SubsystemBase{
         elevatorMotor.setNeutralMode(NeutralModeValue.Brake);
 
 
-        var slot0Configs = new Slot0Configs();
-        slot0Configs.kV = ElevatorConstants.ELEVATOR_F;
-        slot0Configs.kP = ElevatorConstants.ELEVATOR_P;
-        slot0Configs.kI = ElevatorConstants.ELEVATOR_I;
-        slot0Configs.kD = ElevatorConstants.ELEVATOR_D;
     }
 
-    public void goUp(double sped){
-        elevatorMotor.set(Math.abs(sped));
+    public void goUp(double speed){
+        elevatorMotor.set(Math.abs(speed));
     }
 
-    public void goDown(double sped){
-        elevatorMotor.set(-Math.abs(sped));
+    public void goDown(double speed){
+        elevatorMotor.set(-Math.abs(speed));
     }
 
     public void stop(){
@@ -66,14 +63,26 @@ public class ElevatorSubsystem extends SubsystemBase{
         return magSwitch.get();
     }
 
-    public void SetPosition(ElevatorConstants.ElevatorPositions position){
-        elevatorPositions = position;
-
-        MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(
-                position.sensorUnitsEl, true, 0.0 , 0,
-                true, false, false);
-        elevatorMotor.setControl(motionMagicVoltage);
+    public double getEncoder() {
+        return elevatorMotor.getRotorPosition().getValue();
     }
 
 
+    public void setRotations(double rotations) {
+        elevatorMotor.setPosition(rotations);
+    }
+    public void setPosition(ElevatorConstants.ElevatorPositions position){
+        elevatorPositions = position;
+
+        MotionMagicExpoVoltage motionMagicVoltage = new MotionMagicExpoVoltage(
+                position.distanceEl, true, 0.0 , 0,
+                true, false, false);
+        elevatorMotor.setControl(motionMagicVoltage.withPosition(position.distanceEl));
+    }
+
+
+    @Override
+    public void periodic() {
+
+    }
 }
