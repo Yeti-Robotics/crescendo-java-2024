@@ -12,10 +12,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.ShooterStateCommand;
 import frc.robot.commands.led.SetLEDToRGBCommand;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ElevatorConstants;
+import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drivetrain.Telemetry;
@@ -102,7 +104,7 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
         joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-        joystick.rightBumper().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.AMP)));
+        joystick.rightBumper().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.AMP)).alongWith(new StartEndCommand(() -> pivotSubsystem.moveUp(.1), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .27)));
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -111,7 +113,7 @@ public class RobotContainer {
 
         joystick.x()
                 .whileTrue(
-                        new StartEndCommand(() -> pivotSubsystem.moveUp(.1), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .3));
+                        new StartEndCommand(() -> pivotSubsystem.moveUp(.1), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .2));
         joystick.y()
                 .whileTrue(
                         new StartEndCommand(() -> pivotSubsystem.moveDown(.1), pivotSubsystem::stop));
@@ -122,13 +124,12 @@ public class RobotContainer {
         );
 
         joystick.rightTrigger().whileTrue(new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
-//        joystick.leftTrigger().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(.15), pivotSubsystem::stop));
-        joystick.leftTrigger().whileTrue(new RunCommand(() -> pivotSubsystem.setPivotPosition(-0.0003)));
+        joystick.leftTrigger().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(.15), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() <= ShooterConstants.SHOOTER_MAP().get(drivetrain.getState().Pose.getX()).angle));
 
         joystick.povUp().onTrue(new StartEndCommand((() -> elevatorSubsystem.goUp(.3)), elevatorSubsystem::stop).until(() -> elevatorSubsystem.getEncoder() >= 15));
-        joystick.povDown().whileTrue(new StartEndCommand(() -> elevatorSubsystem.goDown(0.1), elevatorSubsystem::stop).until(elevatorSubsystem::getmagSwitch));
+        joystick.povDown().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.DOWN)).until(elevatorSubsystem::getmagSwitch).andThen(new InstantCommand(() -> elevatorSubsystem.setRotations(0))));
 
-        joystick.povLeft().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(.5)));
+        joystick.povLeft().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(.6)).until(() -> pivotSubsystem.isMotionFinished()));
 
 
     }

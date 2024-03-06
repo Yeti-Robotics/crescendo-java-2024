@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -26,6 +27,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     robotContainer = new RobotContainer();
+    SignalLogger.enableAutoLogging(true);
+
 //    new SetLEDToRGBCommand(robotContainer.ledSubsystem, 128, 0, 128, 0.75, 0).schedule();
   }
 
@@ -53,13 +56,16 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {  }
+  public void disabledInit() {
+    SignalLogger.stop();
+
+  }
 
   @Override
   public void disabledPeriodic() {
 
     System.out.println(robotContainer.elevatorSubsystem.getEncoder());
-    System.out.println(robotContainer.drivetrain.getState().Pose.toString());
+//    System.out.println(robotContainer.drivetrain.getState().Pose.toString());
     System.out.println(robotContainer.climberSubsystem.getServo());
 
 
@@ -91,6 +97,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    SignalLogger.start();
+
   }
 
   @Override
