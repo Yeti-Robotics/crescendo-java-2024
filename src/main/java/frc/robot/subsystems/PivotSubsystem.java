@@ -60,7 +60,7 @@ public class PivotSubsystem extends SubsystemBase {
         talonFXConfiguration.MotorOutput.NeutralMode = PivotConstants.PIVOT_NEUTRAL_MODE;
         talonFXConfiguration.FutureProofConfigs = true;
         talonFXConfiguration.Feedback.SensorToMechanismRatio = 1;
-        talonFXConfiguration.Feedback.RotorToSensorRatio = 12.8;
+        talonFXConfiguration.Feedback.RotorToSensorRatio = 83.79;
         talonFXConfiguration.CurrentLimits = PivotConstants.PIVOT_CURRENT_LIMIT;
         talonFXConfiguration.SoftwareLimitSwitch = PivotConstants.PIVOT_SOFT_LIMIT;
         talonFXConfiguration.Slot0 = PivotConstants.SLOT_0_CONFIGS;
