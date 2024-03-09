@@ -27,7 +27,7 @@ import frc.robot.util.controllerUtils.ControllerContainer;
 import frc.robot.util.controllerUtils.MultiButton;
 
 
-public class RobotContainer{
+public class RobotContainer {
 
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
@@ -37,6 +37,7 @@ public class RobotContainer{
 
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final ArmSubsystem armSubsystem = new ArmSubsystem();
+    public final LEDSubsystem ledSubsystem = new LEDSubsystem();
     ControllerContainer controllerContainer = new ControllerContainer();
     ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
 
@@ -63,8 +64,8 @@ public class RobotContainer{
 
     private void configureBindings() {
 
-        buttonHelper.createButton(1, 0, new StartEndCommand(() -> intakeSubsystem.roll(.70), intakeSubsystem::stop),MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(11,0,  new StartEndCommand(() -> armSubsystem.moveUp(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() >= 0.8), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(1, 0, new StartEndCommand(() -> intakeSubsystem.roll(.70), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(11, 0, new StartEndCommand(() -> armSubsystem.moveUp(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() >= 0.8), MultiButton.RunCondition.WHEN_PRESSED);
 //        buttonHelper.createButton(1, 0, new ConditionalCommand(new RunCommand(() ->intakeSubsystem.roll(.5)), new RunCommand(() -> intakeSubsystem.roll(0)), intakeSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.70), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(3, 0, new StartEndCommand(() -> climberSubsystem.climbUp(), () -> climberSubsystem.stopClimb()), MultiButton.RunCondition.WHILE_HELD);
@@ -72,15 +73,14 @@ public class RobotContainer{
         buttonHelper.createButton(4, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(40), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> pivotSubsystem.moveUp(.45), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .52)), MultiButton.RunCondition.WHILE_HELD); //45 amp 52 bumpfire
         buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopNeo).until(shooterSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(10, 0, new ToggleArmCommand(armSubsystem), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(5, 0,  new HandoffCommandGroup(pivotSubsystem,armSubsystem,shooterSubsystem,intakeSubsystem).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(8,0,new InstantCommand(climberSubsystem::engageBrake),MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(9,0,new InstantCommand(climberSubsystem::disengageBrake),MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(5, 0, new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(8, 0, new InstantCommand(climberSubsystem::engageBrake), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(9, 0, new InstantCommand(climberSubsystem::disengageBrake), MultiButton.RunCondition.WHEN_PRESSED);
 
         //TO TEST
         buttonHelper.createButton(12, 0,
-                new ShooterStateCommand(drivetrain, pivotSubsystem, shooterSubsystem, joystick::getLeftX, joystick::getLeftY),
+                new ShooterStateCommand(drivetrain, pivotSubsystem, shooterSubsystem, ledSubsystem, joystick::getLeftX, joystick::getLeftY),
                 MultiButton.RunCondition.WHILE_HELD);
-
 
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -117,7 +117,7 @@ public class RobotContainer{
 
         );
 
-        joystick.leftTrigger().onTrue(new HandoffCommandGroup(pivotSubsystem,armSubsystem,shooterSubsystem,intakeSubsystem).withTimeout(5));
+        joystick.leftTrigger().onTrue(new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(5));
         joystick.rightTrigger().whileTrue(new StartEndCommand(() -> shooterSubsystem.spinNeo(),
                 shooterSubsystem::stopFlywheel).alongWith(
                 new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
@@ -127,14 +127,11 @@ public class RobotContainer{
                 () -> armSubsystem.getEnc() <= .68 && armSubsystem.getEnc() >= .5));
 
 
-
-
     }
 
 
-
-        public Command getAutonomousCommand () {
-            return new InstantCommand();
-        }
+    public Command getAutonomousCommand() {
+        return new InstantCommand();
+    }
 
 }

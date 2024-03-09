@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.TalonFXConstants;
+import frc.robot.constants.VisionConstants;
+import frc.robot.util.LimelightHelpers;
 
 public class IntakeSubsystem extends SubsystemBase {
     TalonFX intakeKraken;
@@ -26,7 +28,15 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeConfigurator.apply(configs);
     }
 
-    
+    @Override
+    public void periodic() {
+        if (getBeamBreak()) {
+            LimelightHelpers.setLEDMode_ForceBlink(VisionConstants.LIMELIGHT_NAME);
+        } else {
+            LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
+        }
+    }
+
     public void rollIn(double speed) {
         intakeKraken.set(Math.abs(speed));
     }
@@ -43,7 +53,7 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeKraken.stopMotor();
     }
 
-    public Boolean getBeamBreak() {
+    public boolean getBeamBreak() {
         return !beamBreak.get();
     }
 }
