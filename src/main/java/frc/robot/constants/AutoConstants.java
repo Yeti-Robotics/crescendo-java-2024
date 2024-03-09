@@ -1,9 +1,8 @@
 package frc.robot.constants;
 
+
 import com.pathplanner.lib.path.PathConstraints;
 import frc.robot.subsystems.drivetrain.generated.TunerConstants;
-
-import java.nio.file.Path;
 
 public final class AutoConstants {
 
@@ -18,7 +17,8 @@ public final class AutoConstants {
             MAX_THETA_ACCEL);
 
     public enum AutoModes {
-        TESTING("testing", DEFAULT_CONSTRAINTS);
+        AMP_4_THREE_PIECE("amp4ThreePiece", DEFAULT_CONSTRAINTS),
+        MID_3_THREE_PIECE("mid3ThreePiece",DEFAULT_CONSTRAINTS);
 
         public final String name;
         public final PathConstraints initConstraint;

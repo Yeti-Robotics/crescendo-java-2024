@@ -3,9 +3,15 @@
   "robotLength": 0.6858,
   "holonomicMode": true,
   "pathFolders": [
-    "New Folder"
+    "amp 4",
+    "mid 3 amp side",
+    "source 4 "
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "amp 4",
+    "mid 3 amp side",
+    "source 4"
+  ],
   "defaultMaxVel": 4.5,
   "defaultMaxAccel": 4.5,
   "defaultMaxAngVel": 540.0,
