@@ -22,17 +22,17 @@ public class PivotConstants {
 
     public static final double GRAVITY_FEEDFORWARD = 1; //placeholder
 
-    public static final double ANGLE_TOLERANCE = 0.1;
+    public static final double ANGLE_TOLERANCE = 0.2;
 
-    public static final double PIVOT_P = 350.0; //1
-    public static final double PIVOT_I = 0.;
-    public static final double PIVOT_D = 45.0; //0
+    public static final double PIVOT_P = 11.7; //1 //350.0
+    public static final double PIVOT_I = 0;
+    public static final double PIVOT_D = 2; //0 //45.0
     public static final double PIVOT_F = 0;
-    public static final double PIVOT_V = 65;
-    public static final double PIVOT_A = .7;
-    public static final double PIVOT_G = .35;
-    public static final double PROFILE_V = 80;
-    public static final double PROFILE_A = .7;
+    public static final double PIVOT_V = 0.12000000149011612; // 65
+    public static final double PIVOT_A = 0.009999999776482582; // 0.7
+    public static final double PIVOT_G = 0.02; // 0.35
+    public static final double PROFILE_V = 0.7;
+    public static final double PROFILE_A = 70;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().withKP(PIVOT_P).withKI(PIVOT_I).withKD(PIVOT_D).
     withKA(PIVOT_A).withKV(PIVOT_V).withKG(PIVOT_G).withGravityType(GravityTypeValue.Arm_Cosine);

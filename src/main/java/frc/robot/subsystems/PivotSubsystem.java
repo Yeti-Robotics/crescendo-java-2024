@@ -51,9 +51,12 @@ public class PivotSubsystem extends SubsystemBase {
         visionSubsystem = new VisionSubsystem();
         pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID, TalonFXConstants.CANIVORE_NAME);
         pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
+        pivotMotor1.setInverted(true);
 
         var pivotMotor1Configurator = pivotMotor1.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
+
+        talonFXConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         talonFXConfiguration.Feedback.FeedbackRemoteSensorID = pivotEncoder1.getDeviceID();
         talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
@@ -64,8 +67,8 @@ public class PivotSubsystem extends SubsystemBase {
         talonFXConfiguration.CurrentLimits = PivotConstants.PIVOT_CURRENT_LIMIT;
         talonFXConfiguration.SoftwareLimitSwitch = PivotConstants.PIVOT_SOFT_LIMIT;
         talonFXConfiguration.Slot0 = PivotConstants.SLOT_0_CONFIGS;
-        talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = PivotConstants.PROFILE_V;
-        talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = PivotConstants.PROFILE_A;
+        talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = PivotConstants.PROFILE_A;
+        talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = PivotConstants.PROFILE_V;
 
         pivotMotor1.getRotorVelocity().waitForUpdate(PivotConstants.PIVOT_VELOCITY_STATUS_FRAME);
         pivotMotor1.getRotorPosition().waitForUpdate(PivotConstants.PIVOT_POSITION_STATUS_FRAME);
@@ -119,12 +122,10 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public void setPivotPosition(double position) {
-
-
         MotionMagicExpoVoltage motionMagic = new MotionMagicExpoVoltage(
                 position, true, 0, 0,
-                true, false, false);
-
+                false, false, false);
+        // todo: overridebreakdurneutral = false
         System.out.println(position);
         System.out.println(motionMagic.Position);
         pivotMotor1.setControl(motionMagic.withPosition(position).withSlot(0));
