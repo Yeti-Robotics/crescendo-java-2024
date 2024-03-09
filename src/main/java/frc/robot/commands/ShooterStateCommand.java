@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.ShooterConstants;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
@@ -22,6 +23,7 @@ public class ShooterStateCommand extends Command {
     private final CommandSwerveDrivetrain commandSwerveDrivetrain;
     private final PivotSubsystem pivotSubsystem;
     private final ShooterSubsystem shooterSubsystem;
+    private final LEDSubsystem ledSubsystem;
 
     private double poseY = 0;
     private double poseX = 0;
@@ -39,11 +41,13 @@ public class ShooterStateCommand extends Command {
     public ShooterStateCommand(CommandSwerveDrivetrain commandSwerveDrivetrain,
                                PivotSubsystem pivotSubsystem,
                                ShooterSubsystem shooterSubsystem,
+                               LEDSubsystem ledSubsystem,
                                DoubleSupplier xVel,
                                DoubleSupplier yVel) {
         this.commandSwerveDrivetrain = commandSwerveDrivetrain;
         this.pivotSubsystem = pivotSubsystem;
         this.shooterSubsystem = shooterSubsystem;
+        this.ledSubsystem = ledSubsystem;
         this.xVel = xVel;
         this.yVel = yVel;
         // each subsystem used by the command must be passed into the
@@ -68,6 +72,8 @@ public class ShooterStateCommand extends Command {
 
         speakerCenter = AllianceFlipUtil.apply(FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d());
         swerveRequest.setTurnToTarget(speakerCenter);
+
+        ledSubsystem.setRGB(0,255,0,0);
     }
 
 
@@ -90,6 +96,11 @@ public class ShooterStateCommand extends Command {
         shooterSubsystem.setVelocity(rps);
 //        pivotSubsystem.setPivotPosition(angle);
         System.out.println(speakerPose);
+        if(shooterSubsystem.getAverageEncoder() == rps && pivotSubsystem.getEncAngle() == rps) {
+            ledSubsystem.setRGB(0,0,255,0);
+
+        }
+
     }
 
     @Override
