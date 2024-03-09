@@ -30,10 +30,8 @@ public class ShooterStateCommand extends Command {
 
     public ShooterStateCommand(CommandSwerveDrivetrain commandSwerveDrivetrain,
                                PivotSubsystem pivotSubsystem,
-                               ShooterSubsystem shooterSubsystem,
-                               DoubleSupplier xVel,
-                               DoubleSupplier yVel) {
-        this.commandSwerveDrivetrain = commandSwerveDrivetrain;
+                               ShooterSubsystem shooterSubsystem) {
+       this.commandSwerveDrivetrain = commandSwerveDrivetrain;
         this.pivotSubsystem = pivotSubsystem;
         this.shooterSubsystem = shooterSubsystem;
         // each subsystem used by the command must be passed into the
@@ -54,23 +52,21 @@ public class ShooterStateCommand extends Command {
 
 
     public void execute() {
-        double velocityX = xVel.getAsDouble();
-        double velocityY = yVel.getAsDouble();
 
-
-        Pose2d robotPose = commandSwerveDrivetrain.getState().Pose;
-        Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
+       Pose2d robotPose = commandSwerveDrivetrain.getState().Pose;
+       Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
         yawTarget = Rotation2d.fromRadians(Math.atan2(relativeSpeaker.getY(), relativeSpeaker.getX()) + Math.PI);
         double distance = relativeSpeaker.getTranslation().getNorm();
         rps = ShooterConstants.SHOOTER_MAP().get(distance).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(distance).angle;
-        SwerveRequest pointCmd = new SwerveRequest.FieldCentricFacingAngle()
+       /* SwerveRequest pointCmd = new SwerveRequest.FieldCentricFacingAngle()
                 .withVelocityX(velocityX)
                 .withVelocityY(velocityY)
-                .withTargetDirection(yawTarget);
-        commandSwerveDrivetrain.setControl(pointCmd);
+                .withTargetDirection(yawTarget);*/
+        //commandSwerveDrivetrain.setControl(pointCmd);
         shooterSubsystem.setVelocity(rps);
         pivotSubsystem.setPivotPosition(angle);
+        System.out.println(distance);
     }
 
     @Override

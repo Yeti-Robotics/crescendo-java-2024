@@ -82,9 +82,6 @@ public class RobotContainer {
         buttonHelper.createButton(9,0,new InstantCommand(climberSubsystem::disengageBrake),MultiButton.RunCondition.WHEN_PRESSED);
 
         //TO TEST
-        buttonHelper.createButton(12, 0,
-                new ShooterStateCommand(drivetrain, pivotSubsystem, shooterSubsystem, joystick::getLeftX, joystick::getLeftY),
-                MultiButton.RunCondition.WHILE_HELD);
 
 
 
@@ -117,8 +114,8 @@ public class RobotContainer {
         joystick.y()
                 .whileTrue(
                         new StartEndCommand(() -> pivotSubsystem.moveDown(.1), pivotSubsystem::stop));
-        joystick.a().onTrue(
-                new RunCommand(() -> climberSubsystem.setClimberBrake())
+        joystick.a().whileTrue(
+                new ShooterStateCommand(drivetrain, pivotSubsystem, shooterSubsystem)
 
 
         );
