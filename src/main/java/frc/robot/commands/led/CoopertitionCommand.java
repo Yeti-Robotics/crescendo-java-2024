@@ -25,10 +25,8 @@ public class CoopertitionCommand extends Command {
     }
     @Override
     public void execute() {
-//        if (drivetrain.isShootingRange && Shooter.subsystem.atSetPoint && Elevator.subsystem.atSetPoint && Wrist.subsystem.atSetPoint)
-        for (int i = 0; i < ledSubsystem.getBufferLength(); i++) {
-            ledSubsystem.setRGB(0,255,105,180);
-        }
+        ledSubsystem.setRGB(0, 255, 0, 255);
+        ledSubsystem.setBrightness(1);
         ledSubsystem.sendData();
     }
 
