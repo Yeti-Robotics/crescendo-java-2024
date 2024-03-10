@@ -1,0 +1,25 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.76,
+      "y": 6.6
+    },
+    "rotation": -120.40617907170228
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "mid3NoteOne"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "mid 3 amp side",
+  "choreoAuto": false
+}

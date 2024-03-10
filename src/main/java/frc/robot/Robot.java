@@ -4,119 +4,125 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.led.SetLEDToRGBCommand;
-import frc.robot.constants.VisionConstants;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.util.LimelightHelpers;
+import frc.robot.constants.AutoConstants;
 
 public class Robot extends TimedRobot {
-    private Command m_autonomousCommand;
-    private RobotContainer robotContainer;
-    private RobotContainer m_robotContainer;
-    private SetLEDToRGBCommand blueLedCommand;
+  private Command autonomousCommand;
+  private RobotContainer robotContainer;
+  private ElevatorSubsystem elevatorSubsystem;
+  private RobotContainer m_robotContainer;
+  private SetLEDToRGBCommand blueLedCommand;
 
-    @Override
-    public void robotInit() {
-        robotContainer = new RobotContainer();
-        LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
+  AutoBuilder autoBuilder;
+  private AutoConstants.AutoModes previousSelectedAuto;
+
+  private static SendableChooser<AutoConstants.AutoModes> autoChooser;
+
+
+  @Override
+  public void robotInit() {
+    robotContainer = new RobotContainer();
+    SignalLogger.enableAutoLogging(true);
+
 //    new SetLEDToRGBCommand(robotContainer.ledSubsystem, 128, 0, 128, 0.75, 0).schedule();
-    }
 
-    @Override
-    public void robotPeriodic() {
-        CommandScheduler.getInstance().run();
+    autoChooser = new SendableChooser<>();
+    autoChooser.setDefaultOption(AutoConstants.AutoModes.MID_3_THREE_PIECE.name, AutoConstants.AutoModes.MID_3_THREE_PIECE);
+    autoChooser.addOption(AutoConstants.AutoModes.AMP_4_THREE_PIECE.name, AutoConstants.AutoModes.AMP_4_THREE_PIECE);
+    autoChooser.addOption(AutoConstants.AutoModes.MID_3_THREE_PIECE.name, AutoConstants.AutoModes.MID_3_THREE_PIECE);
 
-        var lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+    previousSelectedAuto = autoChooser.getSelected();
+    autonomousCommand =  AutoBuilder.buildAuto(previousSelectedAuto.name);
 
-        if (DriverStation.getAlliance().isPresent()) {
-            if (DriverStation.getAlliance().get() == (DriverStation.Alliance.Red)) {
-                Pose2d llPose = lastResult.getBotPose2d_wpiRed();
-                if (lastResult.valid) {
-                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
-                }
+  }
 
-            } else {
-                Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
-                if (lastResult.valid) {
-                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
-                }
-            }
-
+  @Override
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+    var lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
+    if (DriverStation.getAlliance().isPresent()) {
+      if (DriverStation.getAlliance().get() == (DriverStation.Alliance.Red)) {
+        Pose2d llPose = lastResult.getBotPose2d_wpiRed();
+        if (lastResult.valid) {
+          robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
+        }
+      } else {
+        Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
+        if (lastResult.valid) {
+          robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
         }
     }
-
-    @Override
-    public void disabledInit() {
     }
 
-    @Override
-    public void disabledPeriodic() {
 
+  @Override
+  public void disabledInit() {
+    SignalLogger.stop();
+  }
 
-//        System.out.println(robotContainer.drivetrain.getState().Pose.toString());
-        System.out.println(robotContainer.armSubsystem.getEnc());
+  @Override
+  public void disabledPeriodic() {
+    if(previousSelectedAuto != autoChooser.getSelected()) {
+      previousSelectedAuto = autoChooser.getSelected();
+    }
+    autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
+  }
 
+  @Override
+  public void disabledExit() {}
 
+  @Override
+  public void autonomousInit() {
+    autonomousCommand.schedule();
+  }
+
+  @Override
+  public void autonomousPeriodic() {}
+
+  @Override
+  public void autonomousExit() {}
+
+  @Override
+  public void teleopInit() {
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
     }
 
-    @Override
-    public void disabledExit() {
-    }
+    SignalLogger.start();
 
-    @Override
-    public void autonomousInit() {
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+  }
 
+  @Override
+  public void teleopPeriodic() {}
 
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.schedule();
-        }
-    }
+  @Override
+  public void teleopExit() {}
 
-    @Override
-    public void autonomousPeriodic() {
-    }
+  @Override
+  public void testInit() {
+    CommandScheduler.getInstance().cancelAll();
+  }
 
-    @Override
-    public void autonomousExit() {
-    }
+  @Override
+  public void testPeriodic() {}
 
-    @Override
-    public void teleopInit() {
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.cancel();
-        }
-    }
+  @Override
+  public void testExit() {}
 
-    @Override
-    public void teleopPeriodic() {
-
-    }
-
-    @Override
-    public void teleopExit() {
-    }
-
-    @Override
-    public void testInit() {
-        CommandScheduler.getInstance().cancelAll();
-    }
-
-    @Override
-    public void testPeriodic() {
-    }
-
-    @Override
-    public void testExit() {
-    }
-
-    @Override
-    public void simulationPeriodic() {
-        CommandScheduler.getInstance().run();
-    }
+  @Override
+  public void simulationPeriodic() {}
 }

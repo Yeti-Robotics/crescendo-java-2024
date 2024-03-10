@@ -12,7 +12,7 @@ public final class ShooterConstants {
     public static final int SHOOTER_LEFT_MOTOR = 15; //id
     public static final int SHOOTER_RIGHT_MOTOR = 5; //id
     public static final CurrentLimitsConfigs SHOOTER_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
-            withSupplyCurrentThreshold(65).withSupplyCurrentLimit(75).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(80);
+            withSupplyCurrentThreshold(55).withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);
     public static final InvertedValue SHOOTER_INVERSION = InvertedValue.CounterClockwise_Positive;
 
     public static final double SHOOTER_P = 0.11;//0.043315
@@ -50,9 +50,12 @@ public final class ShooterConstants {
 
     public static InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
         InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
-        map.put(0.0, new ShooterStateData(52, 100));
-        map.put(2.0, new ShooterStateData(50, 100));
-        map.put(4.0, new ShooterStateData(45, 125));
+        map.put(0.0, new ShooterStateData(.5, 100));
+        map.put(1.2, new ShooterStateData(.5,100));
+        map.put(2.44, new ShooterStateData(0.42,100));
+        map.put(3.0, new ShooterStateData(.44, 125)); //protected shot
+        map.put(4.5, new ShooterStateData(0.48,125));
+        map.put(5.88, new ShooterStateData(0.42,125));
         return map;
     }
 }

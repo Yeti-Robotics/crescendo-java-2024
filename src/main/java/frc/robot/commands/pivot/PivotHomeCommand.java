@@ -28,11 +28,11 @@ public class PivotHomeCommand extends Command {
     @Override
     public void execute() {
         if (down) {
-            pivotSubsystem.moveDown(.15);
+            pivotSubsystem.moveUp(.15);
         }
 
         if (!down) {
-            pivotSubsystem.moveUp(.15);
+            pivotSubsystem.moveDown(.15);
         }
     }
 
