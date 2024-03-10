@@ -16,12 +16,28 @@
     },
     {
       "anchor": {
-        "x": 2.6607658350837373,
-        "y": 6.487803446362955
+        "x": 2.66,
+        "y": 6.49
       },
       "prevControl": {
-        "x": 2.2858220082730063,
-        "y": 6.418734846687294
+        "x": 2.286290822101775,
+        "y": 6.421141809821688
+      },
+      "nextControl": {
+        "x": 2.8851895672868175,
+        "y": 6.531492548129579
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.66,
+        "y": 6.5
+      },
+      "prevControl": {
+        "x": 2.5616546811410927,
+        "y": 6.481883757052307
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +46,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 1.0,
       "rotationDegrees": 180.0,
       "rotateFast": false
     }
@@ -39,7 +55,7 @@
   "eventMarkers": [
     {
       "name": "armDown",
-      "waypointRelativePos": 0.15,
+      "waypointRelativePos": 0.3,
       "command": {
         "type": "parallel",
         "data": {
@@ -62,7 +78,7 @@
     },
     {
       "name": "handoof",
-      "waypointRelativePos": 0.7,
+      "waypointRelativePos": 1.4,
       "command": {
         "type": "sequential",
         "data": {
@@ -86,11 +102,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": -150.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "mid 3 amp side",
+  "folder": "amp 4",
   "previewStartingState": {
     "rotation": -121.92873436644585,
     "velocity": 0

@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -65,6 +66,13 @@ public class RobotContainer {
     public RobotContainer() {
         ledSubsystem.setDefaultCommand(new SetLEDToRGBCommand(ledSubsystem, 255, 0, 0, 1.0, 0));
         configureBindings();
+
+        NamedCommands.registerCommand("shootBump", new SequentialCommandGroup(
+                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.52)),
+                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                new WaitCommand(.75),
+                new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
+        ));
     }
 
 

@@ -18,7 +18,12 @@ public final class AutoConstants {
 
     public enum AutoModes {
         AMP_4_THREE_PIECE("amp4ThreePiece", DEFAULT_CONSTRAINTS),
-        MID_3_THREE_PIECE("mid3ThreePiece",DEFAULT_CONSTRAINTS);
+        MID_3_THREE_PIECE("mid3ThreePiece",DEFAULT_CONSTRAINTS),
+        MID_3_TWO_PIECE("mid3TwoPiece", DEFAULT_CONSTRAINTS),
+        AMP_4_TWO_PIECE("amp4TwoPiece", DEFAULT_CONSTRAINTS),
+        MID_SUB_TWO_PIECE("midSubTwoPiece", DEFAULT_CONSTRAINTS),
+        MID_SUB_THREE_PIECE("midSubThreePiece", DEFAULT_CONSTRAINTS),
+        MID_3_ONE_PIECE("mid3OnePiece", DEFAULT_CONSTRAINTS);
 
         public final String name;
         public final PathConstraints initConstraint;
