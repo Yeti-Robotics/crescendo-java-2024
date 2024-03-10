@@ -12,6 +12,25 @@
     "data": {
       "commands": [
         {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootOut"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "mid3NoteOne"
@@ -24,13 +43,19 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "wait",
                 "data": {
                   "waitTime": 1.25
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootOut"
                 }
               }
             ]
@@ -43,13 +68,19 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "wait",
                 "data": {
                   "waitTime": 1.25
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootOut"
                 }
               }
             ]
@@ -59,6 +90,25 @@
           "type": "path",
           "data": {
             "pathName": "mid3NoteThree"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.25
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootOut"
+                }
+              }
+            ]
           }
         }
       ]
