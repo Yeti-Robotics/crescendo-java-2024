@@ -65,10 +65,10 @@ public class Robot extends TimedRobot {
         if (lastResult.valid) {
           robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
         }
-    }
+      }
     }
 
-
+  }
   @Override
   public void disabledInit() {
     SignalLogger.stop();

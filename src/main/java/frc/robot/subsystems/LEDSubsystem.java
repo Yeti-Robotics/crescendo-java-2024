@@ -20,7 +20,7 @@ public class LEDSubsystem extends SubsystemBase {
 
     public LEDStripStatus stripStatus;
 
-    public LEDSubsystem(){
+    public LEDSubsystem() {
         ledStrip = new AddressableLED(LEDConstants.ADDRESSABLE_LED);
         ledBuffer = new AddressableLEDBuffer(LEDConstants.LED_COUNT);
 
@@ -35,13 +35,13 @@ public class LEDSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // Apply brightness to the periodic update
-        setBrightness(SmartDashboard.getNumber("Brightness", brightness));
+        // setBrightness(SmartDashboard.getNumber("Brightness", brightness));
         // For demonstration, setting default color
-        setRGB(0, 255, 0, 0); // Red
-        sendData();
+        //setRGB(0, 255, 0, 0); // Red
+        // sendData();
     }
 
-    public void setHSV (int i, int hue, int saturation, int value) {
+    public void setHSV(int i, int hue, int saturation, int value) {
         ledBuffer.setHSV(i, hue, saturation, (int) (value * brightness));
     }
 
@@ -49,15 +49,19 @@ public class LEDSubsystem extends SubsystemBase {
         ledBuffer.setRGB(i, (int) (red * brightness), (int) (green * brightness), (int) (blue * brightness));
     }
 
-    public int getBufferLength () {
+    public int getBufferLength() {
         return ledBuffer.getLength();
     }
 
-    public void sendData () {
+    public void sendData() {
         ledStrip.setData(ledBuffer);
     }
 
     public void setBrightness(double brightness) {
         this.brightness = Math.max(0.0, Math.min(1.0, brightness)); // Ensure brightness is between 0 and 1
+    }
+
+    public void flashLimeLight() {
+
     }
 }

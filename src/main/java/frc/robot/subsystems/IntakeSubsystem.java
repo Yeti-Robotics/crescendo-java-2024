@@ -4,16 +4,22 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.led.BlinkLimeLightCommand;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.TalonFXConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.util.LimelightHelpers;
 
 public class IntakeSubsystem extends SubsystemBase {
-    TalonFX intakeKraken;
+    private final TalonFX intakeKraken;
 
-    DigitalInput beamBreak;
+    private final DigitalInput beamBreak;
+    private final BlinkLimeLightCommand blinkLimeLightCommand = new BlinkLimeLightCommand();
+
+    private boolean prevBreak = false;
+
     public IntakeSubsystem() {
         intakeKraken = new TalonFX(IntakeConstants.INTAKE_KRAKEN_ID, "canivoreBus");
         var intakeConfigurator = intakeKraken.getConfigurator();
@@ -30,14 +36,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (getBeamBreak()) {
-            LimelightHelpers.setLEDMode_ForceOn(VisionConstants.LIMELIGHT_NAME);
-            LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
-            LimelightHelpers.setLEDMode_ForceOn(VisionConstants.LIMELIGHT_NAME);
-            LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
-        } else {
-            LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
+        if (!prevBreak && getBeamBreak() && !blinkLimeLightCommand.isScheduled()) {
+            CommandScheduler.getInstance().schedule(blinkLimeLightCommand);
         }
+
+        prevBreak = getBeamBreak();
     }
 
     public void rollIn(double speed) {
@@ -56,7 +59,7 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeKraken.stopMotor();
     }
 
-    public Boolean getBeamBreak() {
-        return !beamBreak.get();
+    public boolean getBeamBreak() {
+        return beamBreak.get();
     }
 }
