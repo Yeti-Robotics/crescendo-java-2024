@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.ShooterConstants;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
@@ -18,6 +19,7 @@ public class ShooterStateCommand extends Command {
     private final PivotSubsystem pivotSubsystem;
     private final ShooterSubsystem shooterSubsystem;
 
+    private final IntakeSubsystem intakeSubsystem;
     private double poseY = 0;
     private double poseX = 0;
     private double rps = 0;
@@ -30,10 +32,12 @@ public class ShooterStateCommand extends Command {
 
     public ShooterStateCommand(CommandSwerveDrivetrain commandSwerveDrivetrain,
                                PivotSubsystem pivotSubsystem,
-                               ShooterSubsystem shooterSubsystem) {
+                               ShooterSubsystem shooterSubsystem,
+                               IntakeSubsystem intakeSubsystem) {
        this.commandSwerveDrivetrain = commandSwerveDrivetrain;
         this.pivotSubsystem = pivotSubsystem;
         this.shooterSubsystem = shooterSubsystem;
+        this.intakeSubsystem = intakeSubsystem;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
         addRequirements(this.commandSwerveDrivetrain, this.pivotSubsystem);
@@ -66,6 +70,7 @@ public class ShooterStateCommand extends Command {
         //commandSwerveDrivetrain.setControl(pointCmd);
         shooterSubsystem.setVelocity(rps);
         pivotSubsystem.setPivotPosition(angle);
+        intakeSubsystem.roll(-.25);
         System.out.println(distance);
     }
 
@@ -78,5 +83,6 @@ public class ShooterStateCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         shooterSubsystem.stopFlywheel();
+        intakeSubsystem.stop();
     }
 }

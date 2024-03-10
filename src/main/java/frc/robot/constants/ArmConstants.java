@@ -35,7 +35,7 @@ public final class ArmConstants {
             withForwardSoftLimitEnable
                     (true).
             withForwardSoftLimitThreshold(
-            0.1 //placeholder
+            0.0195 //placeholder
     ).withReverseSoftLimitEnable(false).withReverseSoftLimitThreshold(
             65 //placeholder
     );
