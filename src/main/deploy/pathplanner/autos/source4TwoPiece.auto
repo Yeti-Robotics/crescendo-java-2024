@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.67,
+      "y": 4.48
+    },
+    "rotation": 118.35654590737342
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source4NoteOne"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source4NoteTwo"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "source 4",
+  "choreoAuto": false
+}
