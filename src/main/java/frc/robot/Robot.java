@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-
+import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -14,12 +14,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.led.SetLEDToRGBCommand;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.util.LimelightHelpers;
 import frc.robot.constants.AutoConstants;
 
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
+  private ElevatorSubsystem elevatorSubsystem;
+  private RobotContainer m_robotContainer;
+  private SetLEDToRGBCommand blueLedCommand;
+
   AutoBuilder autoBuilder;
   private AutoConstants.AutoModes previousSelectedAuto;
 
@@ -29,6 +35,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     robotContainer = new RobotContainer();
+    SignalLogger.enableAutoLogging(true);
+
+//    new SetLEDToRGBCommand(robotContainer.ledSubsystem, 128, 0, 128, 0.75, 0).schedule();
+
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption(AutoConstants.AutoModes.MID_3_THREE_PIECE.name, AutoConstants.AutoModes.MID_3_THREE_PIECE);
     autoChooser.addOption(AutoConstants.AutoModes.AMP_4_THREE_PIECE.name, AutoConstants.AutoModes.AMP_4_THREE_PIECE);
@@ -55,22 +65,21 @@ public class Robot extends TimedRobot {
         if (lastResult.valid) {
           robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
         }
-
-      }
     }
-  }
+    }
+
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    SignalLogger.stop();
+  }
 
   @Override
   public void disabledPeriodic() {
     if(previousSelectedAuto != autoChooser.getSelected()) {
       previousSelectedAuto = autoChooser.getSelected();
     }
-
     autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
-
   }
 
   @Override
@@ -78,9 +87,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-
     autonomousCommand.schedule();
-
   }
 
   @Override
@@ -94,6 +101,9 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    SignalLogger.start();
+
   }
 
   @Override

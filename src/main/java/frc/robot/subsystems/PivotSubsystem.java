@@ -1,18 +1,21 @@
 package frc.robot.subsystems;
 
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.MotionMagicVelocityDutyCycle;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.PivotConstants;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.constants.FieldConstants;
@@ -20,6 +23,7 @@ import frc.robot.constants.CANCoderConstants;
 import frc.robot.constants.TalonFXConstants;
 import org.opencv.core.Mat;
 
+import static edu.wpi.first.units.Units.Seconds;
 import static frc.robot.constants.FieldConstants.*;
 
 public class PivotSubsystem extends SubsystemBase {
@@ -33,24 +37,39 @@ public class PivotSubsystem extends SubsystemBase {
     private double robotPoseX;
     private double hypoGroundLength;
     public double vertAngle;
+    private final VoltageOut voltageRequest = new VoltageOut(0);
+
     private PivotConstants.PivotPositions pivotPositions = PivotConstants.PivotPositions.BUMPFIRE;
+
+    private static final Measure<Velocity<Voltage>> sysIdRampRate =
+            edu.wpi.first.units.Units.Volts.of(1).per(Seconds.of(1));
+    private static final Measure<Voltage> sysIdStepAmps = edu.wpi.first.units.Units.Volts.of(7);
+    // SysID Setup
+    private final SysIdRoutine sysIdRoutine;
+
     public PivotSubsystem() {
         visionSubsystem = new VisionSubsystem();
         pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID, TalonFXConstants.CANIVORE_NAME);
         pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
+        pivotMotor1.setInverted(true);
 
         var pivotMotor1Configurator = pivotMotor1.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
+
+        talonFXConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         talonFXConfiguration.Feedback.FeedbackRemoteSensorID = pivotEncoder1.getDeviceID();
         talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         talonFXConfiguration.MotorOutput.NeutralMode = PivotConstants.PIVOT_NEUTRAL_MODE;
         talonFXConfiguration.FutureProofConfigs = true;
         talonFXConfiguration.Feedback.SensorToMechanismRatio = 1;
-        talonFXConfiguration.Feedback.RotorToSensorRatio = 12.8;
+        talonFXConfiguration.Feedback.RotorToSensorRatio = 83.79;
         talonFXConfiguration.CurrentLimits = PivotConstants.PIVOT_CURRENT_LIMIT;
         talonFXConfiguration.SoftwareLimitSwitch = PivotConstants.PIVOT_SOFT_LIMIT;
         talonFXConfiguration.Slot0 = PivotConstants.SLOT_0_CONFIGS;
+        talonFXConfiguration.MotionMagic.MotionMagicCruiseVelocity = 0;
+        talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = PivotConstants.PROFILE_A;
+        talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = PivotConstants.PROFILE_V;
 
         pivotMotor1.getRotorVelocity().waitForUpdate(PivotConstants.PIVOT_VELOCITY_STATUS_FRAME);
         pivotMotor1.getRotorPosition().waitForUpdate(PivotConstants.PIVOT_POSITION_STATUS_FRAME);
@@ -66,35 +85,51 @@ public class PivotSubsystem extends SubsystemBase {
         cancoderConfiguration.MagnetSensor.MagnetOffset = PivotConstants.MAGNET_OFFSET;
         cancoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         pivotEncoder1Configurator.apply(cancoderConfiguration);
+
+        sysIdRoutine =
+                new SysIdRoutine(
+                        // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
+                        new SysIdRoutine.Config(
+                                sysIdRampRate,
+                                sysIdStepAmps,
+                                null,
+                                state -> SignalLogger.writeString("state", state.toString())),
+                        new SysIdRoutine.Mechanism(
+                                // Tell SysId how to plumb the driving voltage to the motor(s).
+                                (Measure<Voltage> volts) -> {
+                                    pivotMotor1.setControl(
+                                            voltageRequest.withOutput(volts.in(edu.wpi.first.units.Units.Volts)));
+                                },
+                                // Tell SysId how to record a frame of data for each motor on the mechanism being
+                                // characterized.
+                                null, // Using the CTRE SignalLogger API instead
+                                // Tell SysId to make generated commands require this subsystem, suffix test state in
+                                // WPILog with this subsystem's name ("shooter")
+                                this));
     }
     @Override
     public void periodic() {
-        relativePoseY = fieldLength - visionSubsystem.getPose2d().getY();
-        relativePoseX = speakerPose - visionSubsystem.getPose2d().getX();
-        robotPoseX = visionSubsystem.getPose2d().getX();
-        robotPoseY = visionSubsystem.getPose2d().getY();
-        hypoGroundLength = Math.sqrt((relativePoseX*relativePoseX)+(relativePoseY*relativePoseY));
-        vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
+//        relativePoseY = fieldLength - visionSubsystem.getPose2d().getY();
+//        relativePoseX = speakerPose - visionSubsystem.getPose2d().getX();
+//        robotPoseX = visionSubsystem.getPose2d().getX();
+//        robotPoseY = visionSubsystem.getPose2d().getY();
+//        hypoGroundLength = Math.sqrt((relativePoseX*relativePoseX)+(relativePoseY*relativePoseY));
+//        vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
+
+
+
+
+
     }
 
-    public void setPivotPosition(double angle) {
-
-        double angleUnits = angle/PivotConstants.GEAR_RATIO/360;
-        setMotorsBrake();
-
-        double radians = Math.toRadians(getAngle());
-        double cosineScalar = Math.cos(radians);
-
-
-
-        MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(
-                angleUnits, true, PivotConstants.GRAVITY_FEEDFORWARD * cosineScalar, 0,
+    public void setPivotPosition(double position) {
+        MotionMagicExpoVoltage motionMagic = new MotionMagicExpoVoltage(
+                position, true, 0, 0,
                 false, false, false);
-
-        System.out.println(angleUnits);
-        System.out.println(motionMagicVoltage.Position);
-
-        pivotMotor1.setControl(motionMagicVoltage.withPosition(angleUnits).withSlot(0));
+        // todo: overridebreakdurneutral = false
+        System.out.println(position);
+        System.out.println(motionMagic.Position);
+        pivotMotor1.setControl(motionMagic.withPosition(position).withSlot(0));
     }
 
     public double getAngle() {
@@ -134,9 +169,21 @@ public class PivotSubsystem extends SubsystemBase {
         return pivotMotor1.getSupplyCurrent().getValue();
     }
 
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return sysIdRoutine.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return sysIdRoutine.dynamic(direction);
+    }
+
     public void stop() {
         pivotMotor1.stopMotor();
     }
+
+
+
 
 }
 

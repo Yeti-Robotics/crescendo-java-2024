@@ -12,8 +12,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.HandoffCommandGroup;
 import frc.robot.commands.ShooterStateCommand;
+import frc.robot.commands.led.SetLEDToRGBCommand;
+import frc.robot.commands.pivot.PivotHomeCommand;
 import frc.robot.constants.DriveConstants;
+import frc.robot.constants.ElevatorConstants;
+import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drivetrain.Telemetry;
@@ -25,11 +31,15 @@ import frc.robot.util.controllerUtils.MultiButton;
 
 public class RobotContainer {
 
+
+    public final LEDSubsystem ledSubsystem = new LEDSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
     public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
     public final PivotSubsystem pivotSubsystem = new PivotSubsystem();
+
+    public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final ArmSubsystem armSubsystem = new ArmSubsystem();
@@ -53,6 +63,7 @@ public class RobotContainer {
 
 
     public RobotContainer() {
+        ledSubsystem.setDefaultCommand(new SetLEDToRGBCommand(ledSubsystem, 255, 0, 0, 1.0, 0));
         configureBindings();
     }
 
@@ -60,22 +71,20 @@ public class RobotContainer {
     private void configureBindings() {
 
         buttonHelper.createButton(1, 0, new StartEndCommand(() -> intakeSubsystem.roll(.70), intakeSubsystem::stop),MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(11,0,  new StartEndCommand(() -> armSubsystem.moveUp(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() >= 0.8), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(10,0,  new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
 //        buttonHelper.createButton(1, 0, new ConditionalCommand(new RunCommand(() ->intakeSubsystem.roll(.5)), new RunCommand(() -> intakeSubsystem.roll(0)), intakeSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.70), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(3, 0, new StartEndCommand(() -> climberSubsystem.climbUp(), () -> climberSubsystem.stopClimb()), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(7, 0, new StartEndCommand(() -> climberSubsystem.climbDown(), () -> climberSubsystem.stopClimb()).until(() -> climberSubsystem.getRightEncoder() >= .200195 && climberSubsystem.getLeftEncoder() <= -0.242676), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(4, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(125), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> pivotSubsystem.moveUp(.45), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .45)), MultiButton.RunCondition.WHILE_HELD); //45 amp 52 bumpfire
         buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopNeo).until(shooterSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(10, 0, new StartEndCommand(() -> armSubsystem.moveUp(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() >= 0.75).andThen(armSubsystem::setMotorsBrake), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(5, 0, new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() <= 0.40).andThen(armSubsystem::setMotorsBrake), MultiButton.RunCondition.WHEN_PRESSED);
+//        buttonHelper.createButton(10, 0, new StartEndCommand(() -> armSubsystem.moveUp(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() >= 0.).andThen(armSubsystem::setMotorsBrake), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(5, 0, new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
+                () -> armSubsystem.getEnc() <= .6 && armSubsystem.getEnc() >= .5).alongWith(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.5))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(8,0,new InstantCommand(climberSubsystem::engageBrake),MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(9,0,new InstantCommand(climberSubsystem::disengageBrake),MultiButton.RunCondition.WHEN_PRESSED);
 
         //TO TEST
-        buttonHelper.createButton(12, 0,
-                new ShooterStateCommand(drivetrain, pivotSubsystem, shooterSubsystem, joystick::getLeftX, joystick::getLeftY),
-                MultiButton.RunCondition.WHILE_HELD);
 
 
 
@@ -95,6 +104,7 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
         joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+        //joystick.rightBumper().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.AMP)).alongWith(new StartEndCommand(() -> pivotSubsystem.moveUp(.1), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .27)));
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -103,21 +113,22 @@ public class RobotContainer {
 
         joystick.x()
                 .whileTrue(
-                        new StartEndCommand(() -> pivotSubsystem.moveUp(.1), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .3));
+                        new StartEndCommand(() -> pivotSubsystem.moveUp(.1), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() < .2));
         joystick.y()
                 .whileTrue(
                         new StartEndCommand(() -> pivotSubsystem.moveDown(.1), pivotSubsystem::stop));
-        joystick.a().onTrue(
-                new RunCommand(() -> climberSubsystem.setClimberBrake())
+        joystick.leftTrigger().whileTrue(
+                new ShooterStateCommand(drivetrain, pivotSubsystem, shooterSubsystem, intakeSubsystem)
 
 
         );
 
         joystick.rightTrigger().whileTrue(new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
-//        joystick.leftTrigger().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(.15), pivotSubsystem::stop));
-        joystick.leftTrigger().whileTrue(new RunCommand(() -> pivotSubsystem.setPivotPosition(-0.0003)));
+//        joystick.leftTrigger().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(.15), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() <= ShooterConstants.SHOOTER_MAP().get(drivetrain.getState().Pose.getX()).angle));
 
-
+        joystick.povUp().onTrue(new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2));
+//        joystick.povDown().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.DOWN)).until(elevatorSubsystem::getmagSwitch).andThen(new InstantCommand(() -> elevatorSubsystem.setRotations(0))));
+        joystick.povLeft().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.5)).until(pivotSubsystem::isMotionFinished));
 
 
     }
