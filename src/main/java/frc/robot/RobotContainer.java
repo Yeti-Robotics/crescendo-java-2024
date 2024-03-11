@@ -110,7 +110,8 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
         joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-        joystick.rightBumper().onTrue(new AmpPositionCommand(elevatorSubsystem, pivotSubsystem));
+//        joystick.rightBumper().onTrue(new AmpPositionCommand(elevatorSubsystem, pivotSubsystem));
+        joystick.rightBumper().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.AMP)).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.27))));
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -138,6 +139,7 @@ public class RobotContainer {
 
 
     }
+
 
 
 

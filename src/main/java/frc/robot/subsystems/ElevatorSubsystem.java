@@ -77,6 +77,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         MotionMagicExpoVoltage motionMagicVoltage = new MotionMagicExpoVoltage(
                 position.distanceEl, true, 0.0 , 0,
                 true, false, false);
+
         elevatorMotor.setControl(motionMagicVoltage.withPosition(position.distanceEl));
     }
 

@@ -33,7 +33,7 @@ public class AutoNamedCommands {
     NamedCommands.registerCommand("armDown", new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
             () -> armSubsystem.getEnc() <= .6 && armSubsystem.getEnc() >= .5));
     NamedCommands.registerCommand("shootBump", new SequentialCommandGroup(
-            new InstantCommand(() -> pivotSubsystem.setPivotPosition(.49)),
+            new InstantCommand(() -> pivotSubsystem.setPivotPosition(.48)),
             new InstantCommand(() -> shooterSubsystem.setVelocity(75)),
             new WaitCommand(.75),
             new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
