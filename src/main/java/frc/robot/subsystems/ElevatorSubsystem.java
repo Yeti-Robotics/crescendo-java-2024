@@ -83,6 +83,8 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-
+        if(getmagSwitch() && elevatorPositions == ElevatorPositions.DOWN) {
+            setRotations(0);
+        }
     }
 }
