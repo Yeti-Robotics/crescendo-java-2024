@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 2.7,
+        "x": 2.9,
         "y": 6.9
       },
       "prevControl": {
-        "x": 2.7,
+        "x": 2.9,
         "y": 5.721852592913365
       },
       "nextControl": null,
@@ -67,7 +67,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "midSubThreePiece",
   "previewStartingState": {
     "rotation": 179.65061119203241,
     "velocity": 0

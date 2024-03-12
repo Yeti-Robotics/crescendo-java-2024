@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.auto.AutoNamedCommands;
 import frc.robot.commands.led.SetLEDToRGBCommand;
+import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.util.LimelightHelpers;
 import frc.robot.constants.AutoConstants;
@@ -50,12 +51,14 @@ public class Robot extends TimedRobot {
     autoChooser.addOption(AutoConstants.AutoModes.MID_3_TWO_PIECE.name, AutoConstants.AutoModes.MID_3_TWO_PIECE);
     autoChooser.addOption(AutoConstants.AutoModes.MID_SUB_TWO_PIECE.name, AutoConstants.AutoModes.MID_SUB_TWO_PIECE);
     autoChooser.addOption(AutoConstants.AutoModes.MID_SUB_THREE_PIECE.name, AutoConstants.AutoModes.MID_SUB_THREE_PIECE);
+    autoChooser.addOption(AutoConstants.AutoModes.MID_SUB_FOUR_PIECE.name, AutoConstants.AutoModes.MID_SUB_FOUR_PIECE);
     autoChooser.addOption(AutoConstants.AutoModes.MID_3_ONE_PIECE.name, AutoConstants.AutoModes.MID_3_ONE_PIECE);
     autoChooser.addOption(AutoConstants.AutoModes.AMP_4_TWO_PIECE.name, AutoConstants.AutoModes.AMP_4_TWO_PIECE);
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
     previousSelectedAuto = autoChooser.getSelected();
     autonomousCommand =  AutoBuilder.buildAuto(previousSelectedAuto.name);
+    LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
 
   }
 
@@ -66,6 +69,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     SignalLogger.stop();
+    LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
   }
 
   @Override
@@ -95,6 +99,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
 
     SignalLogger.start();
 
