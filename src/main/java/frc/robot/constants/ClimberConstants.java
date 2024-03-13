@@ -10,7 +10,7 @@ public final class ClimberConstants {
     public static final int CLIMBER_ENCODER_2 = 14;
     public static final int SERVO_CHANNEL = 9;
     public static final int SERVO_CHANNEL_2 = 0;
-    public static final double CLIMB_SPEED = .3;
+    public static final double CLIMB_SPEED = .6;
 
     public static final SoftwareLimitSwitchConfigs CLIMBER_SOFT_LIMIT_2 = new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitEnable(false)

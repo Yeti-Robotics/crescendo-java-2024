@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.auto.AutoNamedCommands;
 import frc.robot.commands.led.SetLEDToRGBCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.util.LimelightHelpers;
@@ -22,6 +23,8 @@ import frc.robot.constants.AutoConstants;
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
+
+  private AutoNamedCommands namedCommands;
   private ElevatorSubsystem elevatorSubsystem;
   private RobotContainer m_robotContainer;
   private SetLEDToRGBCommand blueLedCommand;
@@ -38,11 +41,17 @@ public class Robot extends TimedRobot {
     SignalLogger.enableAutoLogging(true);
 
 //    new SetLEDToRGBCommand(robotContainer.ledSubsystem, 128, 0, 128, 0.75, 0).schedule();
-
+    namedCommands = new AutoNamedCommands(robotContainer.intakeSubsystem, robotContainer.shooterSubsystem, robotContainer.pivotSubsystem, robotContainer.armSubsystem);
+    namedCommands.registerCommands();
     autoChooser = new SendableChooser<>();
     autoChooser.setDefaultOption(AutoConstants.AutoModes.MID_3_THREE_PIECE.name, AutoConstants.AutoModes.MID_3_THREE_PIECE);
     autoChooser.addOption(AutoConstants.AutoModes.AMP_4_THREE_PIECE.name, AutoConstants.AutoModes.AMP_4_THREE_PIECE);
     autoChooser.addOption(AutoConstants.AutoModes.MID_3_THREE_PIECE.name, AutoConstants.AutoModes.MID_3_THREE_PIECE);
+    autoChooser.addOption(AutoConstants.AutoModes.MID_3_TWO_PIECE.name, AutoConstants.AutoModes.MID_3_TWO_PIECE);
+    autoChooser.addOption(AutoConstants.AutoModes.MID_SUB_TWO_PIECE.name, AutoConstants.AutoModes.MID_SUB_TWO_PIECE);
+    autoChooser.addOption(AutoConstants.AutoModes.MID_SUB_THREE_PIECE.name, AutoConstants.AutoModes.MID_SUB_THREE_PIECE);
+    autoChooser.addOption(AutoConstants.AutoModes.MID_3_ONE_PIECE.name, AutoConstants.AutoModes.MID_3_ONE_PIECE);
+    autoChooser.addOption(AutoConstants.AutoModes.AMP_4_TWO_PIECE.name, AutoConstants.AutoModes.AMP_4_TWO_PIECE);
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
     previousSelectedAuto = autoChooser.getSelected();
