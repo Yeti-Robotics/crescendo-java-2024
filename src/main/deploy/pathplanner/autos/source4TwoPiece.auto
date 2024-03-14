@@ -31,6 +31,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "armDown"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "source4NoteTwo"
@@ -62,7 +68,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shootLine"
+                  "name": "shootNearSource"
                 }
               },
               {
