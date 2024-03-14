@@ -3,43 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.62952211618709,
-        "y": 4.177945498748141
+        "x": 2.918404239090931,
+        "y": 5.562647359246215
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2567219420153135,
-        "y": 1.5832214521571912
+        "x": 2.8715608929078047,
+        "y": 6.05450249416904
       },
       "isLocked": false,
-      "linkedName": "sourceSide3start"
+      "linkedName": "fourPieceFire3"
     },
     {
       "anchor": {
-        "x": 8.2,
-        "y": 0.9
+        "x": 3.25,
+        "y": 6.85
       },
       "prevControl": {
-        "x": 6.572800174175845,
-        "y": 1.3397837367088055
+        "x": 3.273396687046264,
+        "y": 6.498673238782644
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "sourceSide3end"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.25,
-      "rotationDegrees": 180.0,
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -90.0,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "rollIn",
-      "waypointRelativePos": 0.7,
+      "name": "rollin",
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -53,40 +53,23 @@
           ]
         }
       }
-    },
-    {
-      "name": "pivotHome",
-      "waypointRelativePos": 0.1,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "pivotHandoff"
-              }
-            }
-          ]
-        }
-      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 6.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": -90.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "source 4 ",
+  "folder": "midSubFourPiece",
   "previewStartingState": {
-    "rotation": 145.0,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": false

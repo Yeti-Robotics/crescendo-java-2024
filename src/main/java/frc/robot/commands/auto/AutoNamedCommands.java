@@ -48,17 +48,29 @@ public class AutoNamedCommands {
     ));
 
         NamedCommands.registerCommand("shootNearSource", new SequentialCommandGroup(
-                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.45)),
+                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.43)),
                 new InstantCommand(() -> shooterSubsystem.setVelocity(90)),
                 new StartEndCommand(() -> intakeSubsystem.roll(-.1), intakeSubsystem::stop).withTimeout(0.2),
                 new WaitCommand(.45),
                 new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
         ));
 
+        NamedCommands.registerCommand("shootBumpCorner", new SequentialCommandGroup(
+                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.51)),
+                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                new WaitCommand(.75),
+                new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
+        ));
+
+
 
         NamedCommands.registerCommand("shootOut", new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
     NamedCommands.registerCommand("handoff", new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(1.5));
-    NamedCommands.registerCommand("pivotHandoff", new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.5)));
+    NamedCommands.registerCommand("handoffMidLine", new StartEndCommand(() -> intakeSubsystem.roll(.2), intakeSubsystem::stop)
+            .withTimeout(0.5).andThen(
+                    new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(1.5)));
+
+        NamedCommands.registerCommand("pivotHandoff", new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.5)));
     }
 
     public static Command getAutoCommand(String pathName) {

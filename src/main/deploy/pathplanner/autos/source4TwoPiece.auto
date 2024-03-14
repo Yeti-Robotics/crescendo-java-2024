@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.54,
-      "y": 4.4
+      "x": 0.7,
+      "y": 4.5
     },
-    "rotation": 118.35654590737342
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shootBump"
+                  "name": "shootBumpCorner"
                 }
               }
             ]
@@ -66,15 +66,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "shootNearSource"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
                   "waitTime": 1.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootNearSource"
                 }
               }
             ]
