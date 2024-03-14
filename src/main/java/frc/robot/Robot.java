@@ -64,7 +64,8 @@ public class Robot extends TimedRobot {
         autoChooser.addOption(AutoConstants.AutoModes.MID_SUB_TWO_PIECE.name, AutoConstants.AutoModes.MID_SUB_TWO_PIECE);
         autoChooser.addOption(AutoConstants.AutoModes.MID_SUB_THREE_PIECE.name, AutoConstants.AutoModes.MID_SUB_THREE_PIECE);
         autoChooser.addOption(AutoConstants.AutoModes.MID_SUB_FOUR_PIECE.name, AutoConstants.AutoModes.MID_SUB_FOUR_PIECE);
-        autoChooser.addOption(AutoConstants.AutoModes.MID_3_ONE_PIECE.name, AutoConstants.AutoModes.MID_3_ONE_PIECE);
+        autoChooser.addOption(AutoConstants.AutoModes.SOURCE_SIDE_2_PIECE.name, AutoConstants.AutoModes.SOURCE_SIDE_2_PIECE);
+        autoChooser.addOption(AutoConstants.AutoModes.SOURCE_SIDE_3_PIECE.name, AutoConstants.AutoModes.SOURCE_SIDE_3_PIECE);
         autoChooser.addOption(AutoConstants.AutoModes.AMP_4_TWO_PIECE.name, AutoConstants.AutoModes.AMP_4_TWO_PIECE);
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
