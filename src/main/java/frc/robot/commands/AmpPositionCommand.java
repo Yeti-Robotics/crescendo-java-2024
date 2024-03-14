@@ -25,7 +25,7 @@ public class AmpPositionCommand extends Command {
     public void initialize() {
 
         elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.AMP);
-        pivotSubsystem.setPivotPosition(.27);
+        pivotSubsystem.setPivotPosition(.23);
 
     }
 

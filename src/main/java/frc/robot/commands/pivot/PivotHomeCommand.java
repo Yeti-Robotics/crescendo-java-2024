@@ -16,34 +16,20 @@ public class PivotHomeCommand extends Command {
 
     @Override
     public void initialize() {
-
-        if(pivotSubsystem.getEncAngle() < .48) {
-            down = true;
-        } else {
-            down = false;
-        }
-
+        pivotSubsystem.setPivotPosition(0.5);
     }
 
     @Override
     public void execute() {
-        if (down) {
-            pivotSubsystem.moveUp(.15);
-        }
-
-        if (!down) {
-            pivotSubsystem.moveDown(.15);
-        }
     }
 
 
     @Override
     public boolean isFinished() {
-        return (pivotSubsystem.getEncAngle() == .50);
+        return true;
     }
 
     @Override
     public void end(boolean interrupted) {
-        pivotSubsystem.stop();
     }
 }

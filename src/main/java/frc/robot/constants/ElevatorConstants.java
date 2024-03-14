@@ -16,7 +16,7 @@ public class ElevatorConstants {
     public static final double ELEVATOR_I = 0;//set this faster
     public static final double ELEVATOR_D = 0. ;//set this slower
     public static final double ELEVATOR_F = 0; //set this kinda fatser
-    public static final double ELEVATOR_G = 0.35; //set this kinda fatser
+    public static final double ELEVATOR_G = 0.0;//set this kinda fatser
     public static final double ELEVATOR_A = 0.05; //set this kinda fatser
     public static final double ELEVATOR_V = 8.0; //set this kinda fatser
     public static final double PROFILE_V = 2.5; //set this kinda fatser
@@ -31,12 +31,12 @@ public class ElevatorConstants {
 
 
     public static final CurrentLimitsConfigs ELEVATOR_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).withSupplyCurrentThreshold(65).withSupplyCurrentLimit(75).withSupplyTimeThreshold(1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(75);
-//REPLACE THE 0's IWTH ACTUAL NUMBERSSSS ^^^^^^ VVVVVVVVV BOTH STATEMNTS ABOVE AND BELOWOWOWOWOWOWOOWWOOW
     public static final SoftwareLimitSwitchConfigs ELEVATOR_SOFT_LIMIT = new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(false).withForwardSoftLimitThreshold(0).withReverseSoftLimitEnable(false).withReverseSoftLimitThreshold(0);
 
     public enum ElevatorPositions {
         DOWN(0),
-        AMP(14);
+        AMP(8),
+        TRAP(15);
         public final double distanceEl;
         public final double sensorUnitsEl;
         ElevatorPositions(double distance) {
