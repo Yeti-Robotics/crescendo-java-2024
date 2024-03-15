@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.25,
+        "y": 5.55
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.25,
+        "y": 5.549999999999999
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.55,
+        "y": 5.55
+      },
+      "prevControl": {
+        "x": 1.5499999999999998,
+        "y": 5.55
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "rollIn",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "rollIn"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 6.0,
+    "maxAcceleration": 5.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "midSubFourPiece",
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

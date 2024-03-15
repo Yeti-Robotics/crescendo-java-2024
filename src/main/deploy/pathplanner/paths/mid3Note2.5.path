@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.7897420080585205,
-        "y": 4.552088247029153
+        "x": 2.56,
+        "y": 5.19
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.789742008058525,
-        "y": 4.052088247029153
+        "x": 2.4016875402981586,
+        "y": 5.195088802485299
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.153706593130548,
-        "y": 5.053104249061157
+        "x": 1.6770555652380903,
+        "y": 5.422117320696838
       },
       "prevControl": {
-        "x": 6.072634625026411,
-        "y": 4.141356806081766
-      },
-      "nextControl": {
-        "x": 8.341830255092159,
-        "y": 6.0551362531251645
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.0,
-        "y": 1.0
-      },
-      "prevControl": {
-        "x": 6.75,
-        "y": 2.5
+        "x": 1.969826478882628,
+        "y": 5.5040931765173085
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,11 +39,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -178.40885972880548,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "folder": "mid 3 amp side",
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }

@@ -1,0 +1,99 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.76,
+        "y": 6.6
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.4225982298118458,
+        "y": 6.837791367890429
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.6607658350837373,
+        "y": 6.487803446362955
+      },
+      "prevControl": {
+        "x": 2.2858220082730063,
+        "y": 6.418734846687294
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "armDown",
+      "waypointRelativePos": 0.15,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "armDown"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "rollIn"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "handoof",
+      "waypointRelativePos": 0.7,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "handoff"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "mid 3 amp side",
+  "previewStartingState": {
+    "rotation": -121.92873436644585,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

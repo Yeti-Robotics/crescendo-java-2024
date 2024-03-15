@@ -1,0 +1,35 @@
+{
+  "HALProvider": {
+    "DIO": {
+      "window": {
+        "visible": true
+      }
+    },
+    "Other Devices": {
+      "Pigeon 2 (v6)[1]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Pose": "Field2d",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Module 0": "Mechanism2d",
+      "/SmartDashboard/Module 1": "Mechanism2d",
+      "/SmartDashboard/Module 2": "Mechanism2d",
+      "/SmartDashboard/Module 3": "Mechanism2d"
+    }
+  },
+  "NetworkTables": {
+    "Retained Values": {
+      "open": false
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  }
+}

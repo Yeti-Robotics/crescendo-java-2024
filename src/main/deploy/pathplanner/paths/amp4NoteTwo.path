@@ -1,0 +1,126 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.66,
+        "y": 6.49
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.3196305518006723,
+        "y": 6.611540943251026
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.883798934502291,
+        "y": 7.389537860388131
+      },
+      "prevControl": {
+        "x": 7.509052165037283,
+        "y": 6.347273407813577
+      },
+      "nextControl": {
+        "x": 7.8876678255185055,
+        "y": 7.400298213526978
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.66,
+        "y": 6.49
+      },
+      "prevControl": {
+        "x": 1.9339281341615466,
+        "y": 6.5602650192746905
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "armDown",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "armDown"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rollIn",
+      "waypointRelativePos": 0.6,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "rollIn"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "handoff",
+      "waypointRelativePos": 1.3,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "handoff"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -138.26102103286985,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "amp 4",
+  "previewStartingState": {
+    "rotation": -137.23082802388774,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

@@ -1,0 +1,76 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.918404239090931,
+        "y": 5.562647359246215
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.8715608929078047,
+        "y": 6.05450249416904
+      },
+      "isLocked": false,
+      "linkedName": "fourPieceFire3"
+    },
+    {
+      "anchor": {
+        "x": 3.25,
+        "y": 6.85
+      },
+      "prevControl": {
+        "x": 3.273396687046264,
+        "y": 6.498673238782644
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -90.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "rollin",
+      "waypointRelativePos": 0.5,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "rollIn"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -90.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "midSubFourPiece",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

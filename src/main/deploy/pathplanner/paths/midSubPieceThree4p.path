@@ -1,0 +1,103 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.3,
+        "y": 5.55
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.2977299021645106,
+        "y": 6.195032532718418
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.475945499679871,
+        "y": 6.511225119454518
+      },
+      "prevControl": {
+        "x": 3.5436346484972696,
+        "y": 6.37310499335339
+      },
+      "nextControl": {
+        "x": 5.108330673152073,
+        "y": 6.604911811820771
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.25,
+        "y": 7.7
+      },
+      "prevControl": {
+        "x": 7.137462049389148,
+        "y": 7.562815235102653
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "fourPieceNote3"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "rollin",
+      "waypointRelativePos": 1.45,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "rollIn"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "pivotHandoff",
+      "waypointRelativePos": 1.3,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "pivotHandoff"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 6.0,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "midSubFourPiece",
+  "previewStartingState": {
+    "rotation": 179.65061119203241,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
