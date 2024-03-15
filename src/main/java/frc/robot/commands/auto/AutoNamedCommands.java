@@ -55,6 +55,15 @@ public class AutoNamedCommands {
                 new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
         ));
 
+        NamedCommands.registerCommand("shuttleMid", new SequentialCommandGroup(
+                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.535)),
+                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                new StartEndCommand(() -> intakeSubsystem.roll(-.1), intakeSubsystem::stop).withTimeout(0.2),
+                new WaitCommand(.45),
+                new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
+        ));
+
+
         NamedCommands.registerCommand("shootBumpCorner", new SequentialCommandGroup(
                 new InstantCommand(() -> pivotSubsystem.setPivotPosition(.51)),
                 new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
@@ -66,7 +75,7 @@ public class AutoNamedCommands {
 
         NamedCommands.registerCommand("shootOut", new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
     NamedCommands.registerCommand("handoff", new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(1.5));
-    NamedCommands.registerCommand("handoffMidLine", new StartEndCommand(() -> intakeSubsystem.roll(.2), intakeSubsystem::stop)
+    NamedCommands.registerCommand("handoffMidLine", new StartEndCommand(() -> intakeSubsystem.roll(.275), intakeSubsystem::stop)
             .withTimeout(0.5).andThen(
                     new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(1.5)));
 
