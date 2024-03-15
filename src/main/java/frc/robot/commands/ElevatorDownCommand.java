@@ -15,7 +15,7 @@ public class ElevatorDownCommand extends Command {
         this.pivotSubsystem = pivotSubsystem;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(this.elevatorSubsystem, this.pivotSubsystem);
+        addRequirements(elevatorSubsystem, pivotSubsystem);
     }
 
     /**

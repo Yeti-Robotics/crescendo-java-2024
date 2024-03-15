@@ -120,6 +120,9 @@ public class ShooterSubsystem extends SubsystemBase {
         neo.set(ShooterConstants.STAGE_SPEED);
     }
 
+    public void stageNeo() {
+        neo.set(-.2);
+    }
     public void stopNeo() {
         neo.stopMotor();
     }

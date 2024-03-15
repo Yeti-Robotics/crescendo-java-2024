@@ -86,15 +86,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "handoff"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "midSubFireThree"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "handoff"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "midSubFireThree"
+                }
+              }
+            ]
           }
         },
         {

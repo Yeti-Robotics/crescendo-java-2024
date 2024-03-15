@@ -3,50 +3,56 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.55,
-        "y": 5.55
+        "x": 8.35,
+        "y": 2.75
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5499999999999998,
-        "y": 5.55
+        "x": 8.250611626532638,
+        "y": 2.761043152607485
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "shuttle4End"
     },
     {
       "anchor": {
-        "x": 1.5,
-        "y": 5.55
+        "x": 7.75717551435103,
+        "y": 2.7232762157832022
       },
       "prevControl": {
-        "x": 2.5,
-        "y": 5.55
+        "x": 7.830768615527213,
+        "y": 2.655570562701114
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 145.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 145.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "midSubThreePiece",
+  "folder": "source 4 ",
   "previewStartingState": {
-    "rotation": -179.52053670694085,
+    "rotation": -178.69804732742122,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

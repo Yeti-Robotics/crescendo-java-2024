@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.25
+                  "waitTime": 1.15
                 }
               },
               {
@@ -99,26 +99,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "source4FireThree"
+                  "pathName": "source4Shuttle3"
                 }
               },
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "handoffMidLine"
-                      }
-                    }
-                  ]
+                  "name": "handoffMidLine"
                 }
               }
             ]
@@ -129,9 +116,52 @@
           "data": {
             "commands": [
               {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
                 "type": "named",
                 "data": {
-                  "name": "shootLine"
+                  "name": "shuttleMid"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "armDown"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source4Shuttle4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "handoffMidLine"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shuttleMid"
                 }
               }
             ]

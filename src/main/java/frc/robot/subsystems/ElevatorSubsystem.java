@@ -77,10 +77,19 @@ public class ElevatorSubsystem extends SubsystemBase{
         MotionMagicExpoVoltage motionMagicVoltage = new MotionMagicExpoVoltage(
                 position.distanceEl, true, 0.0 , 0,
                 true, false, false);
+
         elevatorMotor.setControl(motionMagicVoltage.withPosition(position.distanceEl));
     }
 
 
+    public void setDown() {
+
+        MotionMagicExpoVoltage motionMagicVoltage = new MotionMagicExpoVoltage(
+                0, true, 0.0 , 0,
+                true, false, false);
+
+        elevatorMotor.setControl(motionMagicVoltage.withPosition(0).withSlot(0));
+    }
     @Override
     public void periodic() {
         if(getmagSwitch() && elevatorPositions == ElevatorPositions.DOWN) {

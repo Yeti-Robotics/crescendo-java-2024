@@ -60,6 +60,6 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean getBeamBreak() {
-        return beamBreak.get();
+        return !beamBreak.get();
     }
 }

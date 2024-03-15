@@ -3,43 +3,53 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.62952211618709,
-        "y": 4.177945498748141
+        "x": 1.3,
+        "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2567219420153135,
-        "y": 1.5832214521571912
+        "x": 2.2977299021645106,
+        "y": 6.195032532718418
       },
       "isLocked": false,
-      "linkedName": "sourceSide3start"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.3,
-        "y": 1.0
+        "x": 4.475945499679871,
+        "y": 6.511225119454518
       },
       "prevControl": {
-        "x": 6.672800174175847,
-        "y": 1.4397837367088056
+        "x": 3.5436346484972696,
+        "y": 6.37310499335339
+      },
+      "nextControl": {
+        "x": 5.108330673152073,
+        "y": 6.604911811820771
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.25,
+        "y": 7.7
+      },
+      "prevControl": {
+        "x": 7.137462049389148,
+        "y": 7.562815235102653
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "sourceSide3end"
+      "linkedName": "fourPieceNote3"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.25,
-      "rotationDegrees": 180.0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "rollIn",
-      "waypointRelativePos": 0.7,
+      "name": "rollin",
+      "waypointRelativePos": 1.45,
       "command": {
         "type": "parallel",
         "data": {
@@ -55,10 +65,10 @@
       }
     },
     {
-      "name": "pivotHome",
-      "waypointRelativePos": 0.1,
+      "name": "pivotHandoff",
+      "waypointRelativePos": 1.3,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
@@ -84,9 +94,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "source 4 ",
+  "folder": "midSubFourPiece",
   "previewStartingState": {
-    "rotation": 145.0,
+    "rotation": 179.65061119203241,
     "velocity": 0
   },
   "useDefaultConstraints": false

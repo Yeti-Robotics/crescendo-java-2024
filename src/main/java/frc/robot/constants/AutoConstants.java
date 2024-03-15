@@ -23,7 +23,10 @@ public final class AutoConstants {
         AMP_4_TWO_PIECE("amp4TwoPiece", DEFAULT_CONSTRAINTS),
         MID_SUB_TWO_PIECE("midSubTwoPiece", DEFAULT_CONSTRAINTS),
         MID_SUB_THREE_PIECE("midSubThreePiece", DEFAULT_CONSTRAINTS),
-        MID_3_ONE_PIECE("mid3OnePiece", DEFAULT_CONSTRAINTS);
+        MID_SUB_FOUR_PIECE("midSubFourPiece", DEFAULT_CONSTRAINTS),
+        SOURCE_SIDE_2_PIECE("source4TwoPiece", DEFAULT_CONSTRAINTS),
+        SOURCE_SIDE_3_PIECE("source4ThreePiece", DEFAULT_CONSTRAINTS),
+        SOURCE_SIDE_SHUTTLE_AMP("source4ShuttleAmp", DEFAULT_CONSTRAINTS);
 
         public final String name;
         public final PathConstraints initConstraint;

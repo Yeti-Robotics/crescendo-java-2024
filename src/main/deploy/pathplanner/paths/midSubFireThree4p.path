@@ -3,37 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.55,
-        "y": 5.55
+        "x": 8.25,
+        "y": 7.7
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5499999999999998,
-        "y": 5.55
+        "x": 8.637068059930177,
+        "y": 7.74773171882396
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "fourPieceNote3"
     },
     {
       "anchor": {
-        "x": 1.5,
-        "y": 5.55
+        "x": 2.918404239090931,
+        "y": 5.562647359246215
       },
       "prevControl": {
-        "x": 2.5,
-        "y": 5.55
+        "x": 4.46423466313409,
+        "y": 6.604911811820771
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "fourPieceFire3"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 6.0,
+    "maxAcceleration": 6.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -43,9 +49,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "midSubThreePiece",
+  "folder": "midSubFourPiece",
   "previewStartingState": {
-    "rotation": -179.52053670694085,
+    "rotation": -177.1375947738884,
     "velocity": 0
   },
   "useDefaultConstraints": false
