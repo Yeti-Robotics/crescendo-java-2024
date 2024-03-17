@@ -122,12 +122,6 @@
           "data": {
             "name": "armDown"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
-          }
         }
       ]
     }
