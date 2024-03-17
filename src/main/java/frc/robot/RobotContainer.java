@@ -14,15 +14,18 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.*;
+import frc.robot.commands.led.BlinkLimeLightCommand;
 import frc.robot.commands.led.SetLEDToRGBCommand;
 import frc.robot.commands.pivot.PivotHomeCommand;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.ShooterConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drivetrain.Telemetry;
 import frc.robot.subsystems.drivetrain.generated.TunerConstants;
+import frc.robot.util.LimelightHelpers;
 import frc.robot.util.controllerUtils.ButtonHelper;
 import frc.robot.util.controllerUtils.ControllerContainer;
 import frc.robot.util.controllerUtils.MultiButton;
@@ -42,10 +45,10 @@ public class RobotContainer {
 
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final ArmSubsystem armSubsystem = new ArmSubsystem();
-    ControllerContainer controllerContainer = new ControllerContainer();
+    public ControllerContainer controllerContainer = new ControllerContainer();
     ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
 
-    private final CommandXboxController joystick = new CommandXboxController(1); // My joystick
+    public final CommandXboxController joystick = new CommandXboxController(1); // My joystick
     final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(DriveConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
@@ -76,7 +79,8 @@ public class RobotContainer {
 
     private void configureBindings() {
 
-//        buttonHelper.createButton(1, 0, new StartEndCommand(() -> intakeSubsystem.roll(.70), intakeSubsystem::stop),MultiButton.RunCondition.WHILE_HELD);
+
+        buttonHelper.createButton(1, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(100), shooterSubsystem::stopFlywheel).alongWith(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.52))),MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(10,0,  new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
 //        buttonHelper.createButton(1, 0, new ConditionalCommand(new RunCommand(() ->intakeSubsystem.roll(.5)), new RunCommand(() -> intakeSubsystem.roll(0)), intakeSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.70), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
@@ -89,8 +93,8 @@ public class RobotContainer {
 //        buttonHelper.createButton(5, 0, new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
 //                () -> armSubsystem.getEnc() <= .6 && armSubsystem.getEnc() >= .58).alongWith(new PivotHomeCommand(pivotSubsystem)), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(8,0,new InstantCommand(climberSubsystem::engageBrake),MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(11,0,new StartEndCommand(() -> shooterSubsystem.setVelocity(20), shooterSubsystem::stopFlywheel),MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(12,0,new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.TRAP)), MultiButton.RunCondition.WHEN_PRESSED);
+//        buttonHelper.createButton(11,0,new StartEndCommand(() -> shooterSubsystem.setVelocity(20), shooterSubsystem::stopFlywheel),MultiButton.RunCondition.WHILE_HELD);
+//        buttonHelper.createButton(12,0,new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.TRAP)), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(5,0,new InstantCommand(climberSubsystem::disengageBrake),MultiButton.RunCondition.WHEN_PRESSED);
 
         //TO TEST
@@ -108,7 +112,10 @@ public class RobotContainer {
                                         .withRotationalRate(-joystick.getRightX() * DriveConstants.MaFxAngularRate) // Drive counterclockwise with negative X (left)
                 ));
 
-//        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+//        intakeSubsystem.setDefaultCommand(
+//                new ConditionalCommand(new BlinkLimeLightCommand(), new InstantCommand(() -> LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME), intakeSubsystem.s))
+//        );
+//        joystick.a().whileTrue(drivetraixn.applyRequest(() -> brake));
         joystick.b().whileTrue(drivetrain
                 .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 

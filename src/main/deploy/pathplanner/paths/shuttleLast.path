@@ -3,34 +3,34 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7,
-        "y": 4.5
+        "x": 8.35,
+        "y": 2.75
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9979113901046185,
-        "y": 3.9722595159403764
+        "x": 7.251413761030089,
+        "y": 2.8925766268080317
       },
       "isLocked": false,
-      "linkedName": "startSource"
+      "linkedName": "shuttle4End"
     },
     {
       "anchor": {
-        "x": 2.5,
-        "y": 4.114515152107228
+        "x": 8.012618136505887,
+        "y": 4.145636137206654
       },
       "prevControl": {
-        "x": 1.5178163213469293,
-        "y": 4.099855694216883
+        "x": 6.806401972290392,
+        "y": 4.133925300660873
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "sourceSide2End"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.45,
+      "waypointRelativePos": 0.5,
       "rotationDegrees": 180.0,
       "rotateFast": false
     }
@@ -39,7 +39,7 @@
   "eventMarkers": [
     {
       "name": "rollIn",
-      "waypointRelativePos": 0.55,
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "parallel",
         "data": {
@@ -69,7 +69,7 @@
   "reversed": false,
   "folder": "source 4 ",
   "previewStartingState": {
-    "rotation": 120.0,
+    "rotation": 134.7315483943581,
     "velocity": 0
   },
   "useDefaultConstraints": false

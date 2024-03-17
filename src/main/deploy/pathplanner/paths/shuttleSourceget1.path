@@ -8,29 +8,29 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9979113901046185,
-        "y": 3.9722595159403764
+        "x": 0.904140353216511,
+        "y": 1.7449146453214444
       },
       "isLocked": false,
       "linkedName": "startSource"
     },
     {
       "anchor": {
-        "x": 2.5,
-        "y": 4.114515152107228
+        "x": 8.3,
+        "y": 1.0
       },
       "prevControl": {
-        "x": 1.5178163213469293,
-        "y": 4.099855694216883
+        "x": 7.300000000000001,
+        "y": 1.0
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "sourceSide2End"
+      "linkedName": "sourceSide3end"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.45,
+      "waypointRelativePos": 0.7,
       "rotationDegrees": 180.0,
       "rotateFast": false
     }
@@ -39,7 +39,7 @@
   "eventMarkers": [
     {
       "name": "rollIn",
-      "waypointRelativePos": 0.55,
+      "waypointRelativePos": 0.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -69,7 +69,7 @@
   "reversed": false,
   "folder": "source 4 ",
   "previewStartingState": {
-    "rotation": 120.0,
+    "rotation": 120.57455657429551,
     "velocity": 0
   },
   "useDefaultConstraints": false
