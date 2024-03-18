@@ -8,38 +8,32 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5,
-        "y": 5.55
+        "x": 1.7614572372001893,
+        "y": 5.497296708879134
       },
       "isLocked": false,
       "linkedName": "fourPiece3End"
     },
     {
       "anchor": {
-        "x": 2.9,
-        "y": 6.9
+        "x": 2.5,
+        "y": 4.11
       },
       "prevControl": {
-        "x": 2.9,
-        "y": 5.721852592913365
+        "x": 1.585206602400492,
+        "y": 3.777042432770532
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "threeEnd"
+      "linkedName": "midSub4End"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.55,
-      "rotationDegrees": -90.0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.4,
+      "name": "rollin",
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -63,13 +57,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "midSubFourPiece",
   "previewStartingState": {
-    "rotation": 179.65061119203241,
+    "rotation": 179.1135729542394,
     "velocity": 0
   },
   "useDefaultConstraints": false
