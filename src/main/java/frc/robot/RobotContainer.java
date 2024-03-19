@@ -93,7 +93,7 @@ public class RobotContainer {
 //        buttonHelper.createButton(5, 0, new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
 //                () -> armSubsystem.getEnc() <= .6 && armSubsystem.getEnc() >= .58).alongWith(new PivotHomeCommand(pivotSubsystem)), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(8,0,new InstantCommand(climberSubsystem::engageBrake),MultiButton.RunCondition.WHEN_PRESSED);
-//        buttonHelper.createButton(11,0,new StartEndCommand(() -> shooterSubsystem.setVelocity(20), shooterSubsystem::stopFlywheel),MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(11,0,new StartEndCommand(() -> shooterSubsystem.setVelocity(20), shooterSubsystem::stopFlywheel),MultiButton.RunCondition.WHILE_HELD);
 //        buttonHelper.createButton(12,0,new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.TRAP)), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(5,0,new InstantCommand(climberSubsystem::disengageBrake),MultiButton.RunCondition.WHEN_PRESSED);
 

@@ -93,8 +93,8 @@ public class Robot extends TimedRobot {
         LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
 //        resetCommandsAndButons();
 
-        Command disabledInitAuto = new PathPlannerAuto("bumpOnly").ignoringDisable(true);
-        disabledInitAuto.schedule();
+//        Command disabledInitAuto = new PathPlannerAuto("bumpOnly").ignoringDisable(true);
+//        disabledInitAuto.schedule();
     }
 
     @Override
