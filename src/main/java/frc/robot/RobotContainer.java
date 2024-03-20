@@ -106,9 +106,9 @@ public class RobotContainer {
                 drivetrain.applyRequest(
                         () ->
                                 drive.
-                                        withVelocityX(-joystick.getLeftY() * DriveConstants.MAX_VELOCITY_METERS_PER_SECOND) // Drive forward with
+                                        withVelocityX(-joystick.getLeftY() * TunerConstants.kSpeedAt12VoltsMps) // Drive forward with
                                         // negative Y (forward)
-                                        .withVelocityY(-joystick.getLeftX() * DriveConstants.MAX_VELOCITY_METERS_PER_SECOND) // Drive left with negative X (left)
+                                        .withVelocityY(-joystick.getLeftX() * TunerConstants.kSpeedAt12VoltsMps) // Drive left with negative X (left)
                                         .withRotationalRate(-joystick.getRightX() * DriveConstants.MaFxAngularRate) // Drive counterclockwise with negative X (left)
                 ));
 
@@ -125,7 +125,7 @@ public class RobotContainer {
         joystick.rightBumper().whileTrue(new StartEndCommand(() -> intakeSubsystem.roll(.70), intakeSubsystem::stop));
 
         joystick.leftBumper().onTrue(new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
-                () -> armSubsystem.getEnc() <= .6 && armSubsystem.getEnc() >= .5).alongWith(new PivotHomeCommand(pivotSubsystem)));
+                () -> armSubsystem.getEnc() <= .5 && armSubsystem.getEnc() >= .44).alongWith(new PivotHomeCommand(pivotSubsystem)));
 
         joystick.a().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.AMP)).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.27))));
 
@@ -152,7 +152,7 @@ public class RobotContainer {
         joystick.povUp().onTrue(new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2));
         joystick.povDown().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.DOWN)));
         joystick.povLeft().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.23)));
-        joystick.povRight().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(.515)));
+        joystick.povRight().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(.48)));
 
 
     }
