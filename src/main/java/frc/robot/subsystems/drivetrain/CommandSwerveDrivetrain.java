@@ -107,4 +107,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
+
+    @Override
+    public void periodic() {
+        if(!hasAppliedPerspective || DriverStation.isDisabled()) {
+            DriverStation.getAlliance().ifPresent((allianceColor) -> {
+                this.setOperatorPerspectiveForward(
+                        allianceColor == DriverStation.Alliance.Red ? RedPerspectiveRotation
+                                : BluePerspectiveRotation);
+                hasAppliedPerspective = true;
+            });
+        }
+    }
 }

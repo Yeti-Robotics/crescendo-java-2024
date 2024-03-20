@@ -10,6 +10,11 @@
         "header": {
           "open": true
         }
+      },
+      "Talon FX (v6)[13]": {
+        "header": {
+          "open": true
+        }
       }
     }
   },
@@ -46,6 +51,9 @@
     }
   },
   "NetworkTables Info": {
+    "Connections": {
+      "open": true
+    },
     "visible": true
   }
 }
