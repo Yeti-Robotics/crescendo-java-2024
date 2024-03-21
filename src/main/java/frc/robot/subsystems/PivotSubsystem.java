@@ -127,6 +127,8 @@ public class PivotSubsystem extends SubsystemBase {
                 position, true, 0, 0,
                 false, false, false);
         // todo: overridebreakdurneutral = false
+
+        System.out.print("Pivot position: ");
         System.out.println(position);
         System.out.println(motionMagic.Position);
         pivotMotor1.setControl(motionMagic.withPosition(position).withSlot(0));
