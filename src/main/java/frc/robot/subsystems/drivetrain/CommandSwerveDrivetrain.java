@@ -17,6 +17,9 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -33,6 +36,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    StructArrayPublisher<SwerveModuleState> publisher;
 
     private final Rotation2d BluePerspectiveRotation = Rotation2d.fromDegrees(0);
     private final Rotation2d RedPerspectiveRotation = Rotation2d.fromDegrees(180);
@@ -61,6 +65,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         setDriveVoltageLimits();
         setAzimuthCurrentLimits();
         setAzimuthVoltageLimits();
+
+        publisher = NetworkTableInstance.getDefault()
+            .getStructArrayTopic("SwerveStates", SwerveModuleState.struct).publish();
 
         if (Utils.isSimulation()) {
             startSimThread();
@@ -187,6 +194,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     @Override
     public void periodic() {
+        publisher.set(super.getState().ModuleStates);
         if(!hasAppliedPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent((allianceColor) -> {
                 this.setOperatorPerspectiveForward(

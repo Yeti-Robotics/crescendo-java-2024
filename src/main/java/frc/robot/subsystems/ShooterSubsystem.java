@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.TalonFXConstants;
@@ -78,6 +79,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putData("left shooter kraken", leftKraken);
+        SmartDashboard.putData("right shooter kraken", rightKraken);
+        SmartDashboard.putData("feeder shooter kraken", neo);
+        SmartDashboard.putData("shooter beam break", beamBreak);
 //
 //        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
 //                velocity, 0, true, ShooterConstants.SHOOTER_F, 0, false, false, false);
