@@ -11,6 +11,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.CANCoderConstants;
@@ -59,7 +60,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        SmartDashboard.putData("Arm kraken", armKraken);
+        SmartDashboard.putData("Arm encoder", armEncoder);
     }
 
 

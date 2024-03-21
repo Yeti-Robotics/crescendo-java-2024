@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.PixelFormat;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -73,6 +74,9 @@ public class Robot extends TimedRobot {
         previousSelectedAuto = autoChooser.getSelected();
         autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name).withTimeout(15);
         LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
+
+        DataLogManager.start();
+        DriverStation.startDataLog(DataLogManager.getLog());
     }
 
     @Override
