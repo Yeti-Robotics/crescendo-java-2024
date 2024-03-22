@@ -63,11 +63,13 @@ public class ShooterStateCommand extends Command {
 
 
     public void execute() {
+        System.out.print("Robot pose: ");
 
        Pose2d robotPose = commandSwerveDrivetrain.getState().Pose;
        Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
         yawTarget = Rotation2d.fromRadians(Math.atan2(relativeSpeaker.getY(), relativeSpeaker.getX()) + Math.PI);
         double distance = relativeSpeaker.getTranslation().getNorm();
+        System.out.println(distance);
         rps = ShooterConstants.SHOOTER_MAP().get(distance).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(distance).angle;
 

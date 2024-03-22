@@ -4,23 +4,23 @@
     {
       "anchor": {
         "x": 2.5,
-        "y": 4.11
+        "y": 4.15
       },
       "prevControl": null,
       "nextControl": {
         "x": 2.3185166370332744,
-        "y": 4.006010377735041
+        "y": 4.046010377735041
       },
       "isLocked": false,
       "linkedName": "midSub4End"
     },
     {
       "anchor": {
-        "x": 1.5,
+        "x": 1.3,
         "y": 5.55
       },
       "prevControl": {
-        "x": 1.6441815740774344,
+        "x": 1.4441815740774344,
         "y": 5.570593998330854
       },
       "nextControl": null,

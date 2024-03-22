@@ -16,7 +16,7 @@ public class PivotHomeCommand extends Command {
 
     @Override
     public void initialize() {
-        pivotSubsystem.setPivotPosition(0.5);
+        pivotSubsystem.setPivotPosition(0.48);
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public final class IntakeConstants {
-    public static final int INTAKE_KRAKEN_ID = 19;
+    public static final int INTAKE_KRAKEN_ID = 8;
 
     public static final InvertedValue INTAKE_INVERSION = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue INTAKE_NEUTRAL_MODE = NeutralModeValue.Brake;

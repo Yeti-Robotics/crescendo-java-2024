@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.64,
-        "y": 2.87
+        "x": 6.197438471909753,
+        "y": 1.9674205396912936
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.737869601608693,
-        "y": 2.849468534369033
+        "x": 6.295308073518447,
+        "y": 1.9468890740603264
       },
       "isLocked": false,
       "linkedName": "shuttle3End2"
     },
     {
       "anchor": {
-        "x": 8.35,
-        "y": 2.75
+        "x": 7.9774856268685435,
+        "y": 2.4241431649767726
       },
       "prevControl": {
-        "x": 8.25,
-        "y": 2.75
+        "x": 7.877485626868544,
+        "y": 2.4241431649767726
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.2,
-      "rotationDegrees": 145.0,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
@@ -63,7 +63,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 145.0,
+    "rotation": -178.31531568210355,
     "rotateFast": false
   },
   "reversed": false,
