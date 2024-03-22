@@ -13,6 +13,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.CANCoderConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.ElevatorConstants.ElevatorPositions;
@@ -95,5 +96,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         if(getmagSwitch() && elevatorPositions == ElevatorPositions.DOWN) {
             setRotations(0);
         }
+        SmartDashboard.putData("Elevator motor", elevatorMotor);
+        SmartDashboard.putData("Elevator magswitch", magSwitch);
     }
 }

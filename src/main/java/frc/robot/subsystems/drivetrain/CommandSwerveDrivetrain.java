@@ -3,6 +3,8 @@ package frc.robot.subsystems.drivetrain;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
@@ -15,11 +17,15 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.drivetrain.generated.TunerConstants;
 
 /**
@@ -30,9 +36,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    StructArrayPublisher<SwerveModuleState> publisher;
 
-    private final Rotation2d BluePerspectiveRotation = Rotation2d.fromDegrees(0);
-    private final Rotation2d RedPerspectiveRotation = Rotation2d.fromDegrees(180);
+    private final Rotation2d BluePerspectiveRotation = Rotation2d.fromDegrees(180);
+    private final Rotation2d RedPerspectiveRotation = Rotation2d.fromDegrees(0);
     private final SwerveRequest.ApplyChassisSpeeds AutoReq = new SwerveRequest.ApplyChassisSpeeds();
 
     private boolean hasAppliedPerspective = false;
@@ -40,6 +47,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         configurePathPlanner();
+
+        setDriveCurrentLimits();
+        setDriveVoltageLimits();
+        setAzimuthCurrentLimits();
+        setAzimuthVoltageLimits();
+
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -47,6 +60,15 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         configurePathPlanner();
+
+        setDriveCurrentLimits();
+        setDriveVoltageLimits();
+        setAzimuthCurrentLimits();
+        setAzimuthVoltageLimits();
+
+        publisher = NetworkTableInstance.getDefault()
+            .getStructArrayTopic("SwerveStates", SwerveModuleState.struct).publish();
+
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -107,4 +129,82 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
+
+    public void setDriveCurrentLimits() {
+        var currentLimitConfigs = new CurrentLimitsConfigs();
+
+        for(var module : Modules) {
+            var currentConfig = module.getDriveMotor().getConfigurator();
+            currentConfig.refresh(currentLimitConfigs);
+
+            currentLimitConfigs.SupplyCurrentLimit = DriveConstants.SUPPLY_CURRENT_LIMIT;
+            currentLimitConfigs.SupplyCurrentLimitEnable = DriveConstants.SUPPLY_CURRENT_LIMIT_ENABLE;
+            currentLimitConfigs.SupplyCurrentThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
+            currentLimitConfigs.SupplyTimeThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD;
+
+            currentConfig.apply(currentLimitConfigs);
+        }
+    }
+
+    public void setAzimuthCurrentLimits() {
+        var currentLimitConfigs = new CurrentLimitsConfigs();
+
+        for (var module : Modules) {
+            var currentConfig = module.getSteerMotor().getConfigurator();
+            currentConfig.refresh(currentLimitConfigs);
+
+            currentLimitConfigs.SupplyCurrentLimit = DriveConstants.SUPPLY_CURRENT_LIMIT;
+            currentLimitConfigs.SupplyCurrentLimitEnable = DriveConstants.SUPPLY_CURRENT_LIMIT_ENABLE;
+            currentLimitConfigs.SupplyCurrentThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
+            currentLimitConfigs.SupplyTimeThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD;
+
+            currentConfig.apply(currentLimitConfigs);
+        }
+    }
+
+    public void setDriveVoltageLimits() {
+            var voltageLimitConfigs = new VoltageConfigs();
+
+            for(var module : Modules) {
+                var currentConfig = module.getDriveMotor().getConfigurator();
+
+                currentConfig.refresh(voltageLimitConfigs);
+
+                voltageLimitConfigs.PeakForwardVoltage = DriveConstants.PEAK_FORWARD_VOLTAGE;
+                voltageLimitConfigs.PeakReverseVoltage = DriveConstants.PEAK_REVERSE_VOLTAGE;
+
+                currentConfig.apply(voltageLimitConfigs);
+            }
+        }
+
+    public void setAzimuthVoltageLimits() {
+        var voltageLimitConfigs = new VoltageConfigs();
+
+        for(var module : Modules) {
+            var currentConfig = module.getSteerMotor().getConfigurator();
+
+            currentConfig.refresh(voltageLimitConfigs);
+
+            voltageLimitConfigs.PeakForwardVoltage = DriveConstants.PEAK_FORWARD_VOLTAGE;
+            voltageLimitConfigs.PeakReverseVoltage = DriveConstants.PEAK_REVERSE_VOLTAGE;
+
+            currentConfig.apply(voltageLimitConfigs);
+        }
+    }
+
+    @Override
+    public void periodic() {
+        publisher.set(super.getState().ModuleStates);
+        if(!hasAppliedPerspective || DriverStation.isDisabled()) {
+            DriverStation.getAlliance().ifPresent((allianceColor) -> {
+                this.setOperatorPerspectiveForward(
+                        allianceColor == DriverStation.Alliance.Red ? RedPerspectiveRotation
+                                : BluePerspectiveRotation);
+                hasAppliedPerspective = true;
+            });
+        }
+    }
 }
+
+
+

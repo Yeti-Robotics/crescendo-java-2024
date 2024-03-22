@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.62952211618709,
-        "y": 4.177945498748141
+        "x": 0.7,
+        "y": 4.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2567219420153135,
-        "y": 1.5832214521571912
+        "x": 0.904140353216511,
+        "y": 1.7449146453214444
       },
       "isLocked": false,
-      "linkedName": "sourceSide3start"
+      "linkedName": "startSource"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 0.8
       },
       "prevControl": {
-        "x": 6.372800174175846,
-        "y": 1.2397837367088056
+        "x": 7.0,
+        "y": 0.8
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.25,
+      "waypointRelativePos": 0.7,
       "rotationDegrees": 180.0,
       "rotateFast": false
     }
@@ -39,7 +39,7 @@
   "eventMarkers": [
     {
       "name": "rollIn",
-      "waypointRelativePos": 0.55,
+      "waypointRelativePos": 0.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -48,23 +48,6 @@
               "type": "named",
               "data": {
                 "name": "rollIn"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "pivotHome",
-      "waypointRelativePos": 0.1,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "pivotHandoff"
               }
             }
           ]
@@ -86,7 +69,7 @@
   "reversed": false,
   "folder": "source 4 ",
   "previewStartingState": {
-    "rotation": 145.0,
+    "rotation": 120.57455657429551,
     "velocity": 0
   },
   "useDefaultConstraints": false
