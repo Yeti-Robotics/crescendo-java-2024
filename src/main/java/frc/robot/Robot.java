@@ -84,6 +84,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
 
        lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
+       DriverStation.refreshData();
     }
 
     @Override
@@ -101,9 +102,8 @@ public class Robot extends TimedRobot {
             previousSelectedAuto = autoChooser.getSelected();
         }
 
-        if(buildAuto) {
-            autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
-        }
+        autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
+
 
 //        var lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
 //        if (DriverStation.getAlliance().isPresent()) {
