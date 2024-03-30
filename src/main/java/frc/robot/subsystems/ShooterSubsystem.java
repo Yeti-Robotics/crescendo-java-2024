@@ -79,9 +79,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putData("left shooter kraken", leftKraken);
-        SmartDashboard.putData("right shooter kraken", rightKraken);
-        SmartDashboard.putData("feeder shooter kraken", neo);
+//        SmartDashboard.putData("left shooter kraken", leftKraken);
+//        SmartDashboard.putData("right shooter kraken", rightKraken);
+//        SmartDashboard.putData("feeder shooter kraken", neo);
         SmartDashboard.putData("shooter beam break", beamBreak);
 //
 //        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(

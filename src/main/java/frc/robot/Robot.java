@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
-        SignalLogger.enableAutoLogging(true);
+//        SignalLogger.enableAutoLogging(true);
 
         namedCommands = new AutoNamedCommands(robotContainer.intakeSubsystem, robotContainer.shooterSubsystem, robotContainer.pivotSubsystem, robotContainer.armSubsystem);
         namedCommands.registerCommands();
@@ -69,22 +69,23 @@ public class Robot extends TimedRobot {
         autoChooser.addOption(AutoConstants.AutoModes.SOURCE_SIDE_3_PIECE.name, AutoConstants.AutoModes.SOURCE_SIDE_3_PIECE);
 //        autoChooser.addOption(AutoConstants.AutoModes.AMP_4_TWO_PIECE.name, AutoConstants.AutoModes.AMP_4_TWO_PIECE);
         autoChooser.addOption(AutoConstants.AutoModes.SOURCE_SIDE_SHUTTLE_AMP.name, AutoConstants.AutoModes.SOURCE_SIDE_SHUTTLE_AMP);
+        autoChooser.addOption(AutoConstants.AutoModes.SHUTTLE_3_SOURCE.name, AutoConstants.AutoModes.SHUTTLE_3_SOURCE);
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
         previousSelectedAuto = autoChooser.getSelected();
         autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name).withTimeout(15);
         LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
 
-        DataLogManager.start();
-        DriverStation.startDataLog(DataLogManager.getLog());
+//        DataLogManager.start();
+//        DriverStation.startDataLog(DataLogManager.getLog());
     }
 
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
 
-       lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
-       DriverStation.refreshData();
+//       lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
+//       DriverStation.refreshData();
     }
 
     @Override
@@ -103,6 +104,8 @@ public class Robot extends TimedRobot {
         }
 
         autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
+//        System.out.println(previousSelectedAuto.name);
+//        System.out.println(robotContainer.intakeSubsystem.getBeamBreak());
 
 
 //        var lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
@@ -149,28 +152,28 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+
 //        LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
 
 //        SignalLogger.start();
-
     }
 
     @Override
     public void teleopPeriodic() {
 
-        if (DriverStation.getAlliance().isPresent()) {
-            if (DriverStation.getAlliance().get() == (DriverStation.Alliance.Red)) {
-                if (lastResult != null && lastResult.valid) {
-                    Pose2d llPose = lastResult.getBotPose2d_wpiRed();
-                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
-                }
-            } else {
-                if (lastResult != null && lastResult.valid) {
-                    Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
-                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
-                }
-            }
-        }
+//        if (DriverStation.getAlliance().isPresent()) {
+//            if (DriverStation.getAlliance().get() == (DriverStation.Alliance.Red)) {
+//                if (lastResult != null && lastResult.valid) {
+//                    Pose2d llPose = lastResult.getBotPose2d_wpiRed();
+//                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
+//                }
+//            } else {
+//                if (lastResult != null && lastResult.valid) {
+//                    Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
+//                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -192,10 +195,5 @@ public class Robot extends TimedRobot {
 
     @Override
     public void simulationPeriodic() {
-    }
-
-    public static void resetCommandsAndButons() {
-        CommandScheduler.getInstance().cancelAll();
-        CommandScheduler.getInstance().getActiveButtonLoop().clear();
     }
 }

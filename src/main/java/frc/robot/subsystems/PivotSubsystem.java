@@ -117,7 +117,7 @@ public class PivotSubsystem extends SubsystemBase {
 //        hypoGroundLength = Math.sqrt((relativePoseX*relativePoseX)+(relativePoseY*relativePoseY));
 //        vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
 
-        SmartDashboard.putData("Pivot kraken", pivotMotor1);
+//        SmartDashboard.putData("Pivot kraken", pivotMotor1);
         SmartDashboard.putData("Pivot encoder", pivotEncoder1);
 
 
@@ -165,6 +165,7 @@ public class PivotSubsystem extends SubsystemBase {
     public void setMotorsCoast() {
         pivotMotor1.setNeutralMode(NeutralModeValue.Coast);
     }
+
 
     public void setMotorsBrake() {
         pivotMotor1.setNeutralMode(NeutralModeValue.Brake);

@@ -47,6 +47,14 @@ public class AutoNamedCommands {
             new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
     ));
 
+        NamedCommands.registerCommand("shootLine2", new SequentialCommandGroup(
+                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.39)),
+                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                new StartEndCommand(() -> intakeSubsystem.roll(-.1), intakeSubsystem::stop).withTimeout(0.2),
+                new WaitCommand(.45),
+                new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
+        ));
+
         NamedCommands.registerCommand("shootNearSource", new SequentialCommandGroup(
                 new InstantCommand(() -> pivotSubsystem.setPivotPosition(.43)),
                 new InstantCommand(() -> shooterSubsystem.setVelocity(90)),

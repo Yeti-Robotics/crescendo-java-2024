@@ -38,7 +38,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private double m_lastSimTime;
     StructArrayPublisher<SwerveModuleState> publisher;
 
-    private final Rotation2d BluePerspectiveRotation = Rotation2d.fromDegrees(180);
+    private final Rotation2d BluePerspectiveRotation = Rotation2d.fromDegrees(0);
     private final Rotation2d RedPerspectiveRotation = Rotation2d.fromDegrees(0);
     private final SwerveRequest.ApplyChassisSpeeds AutoReq = new SwerveRequest.ApplyChassisSpeeds();
 

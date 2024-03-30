@@ -27,6 +27,7 @@ public final class AutoConstants {
         SOURCE_SIDE_2_PIECE("source4TwoPiece", DEFAULT_CONSTRAINTS),
         SOURCE_SIDE_3_PIECE("source4ThreePiece", DEFAULT_CONSTRAINTS),
         BUMP_ONLY("bumpOnly", DEFAULT_CONSTRAINTS),
+        SHUTTLE_3_SOURCE("shuttle3FromSource", DEFAULT_CONSTRAINTS),
         SOURCE_SIDE_SHUTTLE_AMP("source4ShuttleAmp", DEFAULT_CONSTRAINTS);
 
         public final String name;

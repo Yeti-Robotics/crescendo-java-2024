@@ -33,7 +33,7 @@ public final class ArmConstants {
 
     public static final SoftwareLimitSwitchConfigs ARM_SOFT_LIMIT = new SoftwareLimitSwitchConfigs().
             withForwardSoftLimitEnable
-                    (true).
+                    (false).
             withForwardSoftLimitThreshold(
             0.0195 //placeholder
     ).withReverseSoftLimitEnable(false).withReverseSoftLimitThreshold(
