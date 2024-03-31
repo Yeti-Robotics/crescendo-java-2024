@@ -99,11 +99,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-//        if (previousSelectedAuto != autoChooser.getSelected()) {
-//            previousSelectedAuto = autoChooser.getSelected();
-//        }
+        if (previousSelectedAuto != autoChooser.getSelected()) {
+            previousSelectedAuto = autoChooser.getSelected();
+        }
 
-//        autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
+        autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
 //        System.out.println(robotContainer.shooterSubsystem.getBeamBreak());
 //        System.out.println(previousSelectedAuto.name);
 //        System.out.println(robotContainer.intakeSubsystem.getBeamBreak());

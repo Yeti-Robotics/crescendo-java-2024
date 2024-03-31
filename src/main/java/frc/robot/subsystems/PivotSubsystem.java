@@ -78,6 +78,7 @@ public class PivotSubsystem extends SubsystemBase {
 
         pivotMotor1.getRotorVelocity().waitForUpdate(PivotConstants.PIVOT_VELOCITY_STATUS_FRAME);
         pivotMotor1.getRotorPosition().waitForUpdate(PivotConstants.PIVOT_POSITION_STATUS_FRAME);
+        pivotEncoder1.getAbsolutePosition().waitForUpdate(0.01);
 
 
         pivotMotor1Configurator.apply(talonFXConfiguration);

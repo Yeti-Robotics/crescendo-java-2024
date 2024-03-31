@@ -22,7 +22,8 @@ public class HandoffCommandGroup extends SequentialCommandGroup {
                                 new StartEndCommand(() -> shooterSubsystem.spinFeeder(-0.3),
                                         shooterSubsystem::stopFlywheel).alongWith(
                                         new StartEndCommand(() -> intakeSubsystem.roll(-.35), intakeSubsystem::stop))
-                        ).until(shooterSubsystem::getBeamBreak)
+                        ).until(shooterSubsystem::getBeamBreak),
+                        new PivotHomeCommand(pivotSubsystem)
                 )
         );
 

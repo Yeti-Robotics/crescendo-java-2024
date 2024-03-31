@@ -167,6 +167,8 @@ public class ShooterSubsystem extends SubsystemBase {
         leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(75));
         rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(100));
     }
+
+
     //    public void testMotionMagic(double vel) {
 //        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
 //                vel, 0, false, SHOOTER_F, 0, false, false, false);

@@ -72,8 +72,8 @@ public class RobotContainer {
         configureBindings();
 
         NamedCommands.registerCommand("shootBump", new SequentialCommandGroup(
-                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.52)),
-                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.55)),
+                new InstantCommand(() -> shooterSubsystem.bumpFire()),
                 new WaitCommand(.75),
                 new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
         ));
