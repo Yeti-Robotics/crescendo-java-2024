@@ -124,6 +124,9 @@ public class ShooterSubsystem extends SubsystemBase {
     public void spinNeo() {
         neo.set(ShooterConstants.STAGE_SPEED);
     }
+    public void spinFeeder(double speed) {
+        neo.set(speed);
+    }
 
     public void stageNeo() {
         neo.set(-.2);
@@ -158,6 +161,11 @@ public class ShooterSubsystem extends SubsystemBase {
 //        neo.set(1);
 
 
+    }
+
+    public void bumpFire() {
+        leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(75));
+        rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(100));
     }
     //    public void testMotionMagic(double vel) {
 //        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(

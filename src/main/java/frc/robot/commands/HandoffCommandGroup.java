@@ -18,10 +18,10 @@ public class HandoffCommandGroup extends SequentialCommandGroup {
 //                new StartEndCommand(() -> intakeSubsystem.roll(.60), intakeSubsystem::stop).withTimeout(.2),
                 new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.5)).andThen(
                         new StartEndCommand(() -> armSubsystem.moveUp(.7), armSubsystem::stop).until(() ->
-                                armSubsystem.getEnc() <= .075).andThen(
-                                new StartEndCommand(() -> shooterSubsystem.spinNeo(),
+                                armSubsystem.getEnc() <= .015).andThen(
+                                new StartEndCommand(() -> shooterSubsystem.spinFeeder(-0.3),
                                         shooterSubsystem::stopFlywheel).alongWith(
-                                        new StartEndCommand(() -> intakeSubsystem.roll(-.20), intakeSubsystem::stop))
+                                        new StartEndCommand(() -> intakeSubsystem.roll(-.35), intakeSubsystem::stop))
                         ).until(shooterSubsystem::getBeamBreak)
                 )
         );

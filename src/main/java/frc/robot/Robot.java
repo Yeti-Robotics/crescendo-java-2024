@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
 
-//       lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
+       lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
 //       DriverStation.refreshData();
     }
 
@@ -99,11 +99,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        if (previousSelectedAuto != autoChooser.getSelected()) {
-            previousSelectedAuto = autoChooser.getSelected();
-        }
+//        if (previousSelectedAuto != autoChooser.getSelected()) {
+//            previousSelectedAuto = autoChooser.getSelected();
+//        }
 
-        autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
+//        autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
+//        System.out.println(robotContainer.shooterSubsystem.getBeamBreak());
 //        System.out.println(previousSelectedAuto.name);
 //        System.out.println(robotContainer.intakeSubsystem.getBeamBreak());
 
@@ -161,19 +162,19 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
 
-//        if (DriverStation.getAlliance().isPresent()) {
-//            if (DriverStation.getAlliance().get() == (DriverStation.Alliance.Red)) {
-//                if (lastResult != null && lastResult.valid) {
-//                    Pose2d llPose = lastResult.getBotPose2d_wpiRed();
-//                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
-//                }
-//            } else {
-//                if (lastResult != null && lastResult.valid) {
-//                    Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
-//                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
-//                }
-//            }
-//        }
+        if (DriverStation.getAlliance().isPresent()) {
+            if (DriverStation.getAlliance().get() == (DriverStation.Alliance.Red)) {
+                if (lastResult != null && lastResult.valid) {
+                    Pose2d llPose = lastResult.getBotPose2d_wpiRed();
+                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
+                }
+            } else {
+                if (lastResult != null && lastResult.valid) {
+                    Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
+                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
+                }
+            }
+        }
     }
 
     @Override

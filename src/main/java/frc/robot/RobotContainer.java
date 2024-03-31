@@ -95,16 +95,17 @@ public class RobotContainer {
     private void configureBindings() {
 
 
-        buttonHelper.createButton(1, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(75), shooterSubsystem::stopFlywheel).alongWith(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.48))),MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(5, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(125), shooterSubsystem::stopFlywheel).alongWith(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.44))),MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(1, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(125), shooterSubsystem::stopFlywheel).alongWith(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.48))),MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(5, 0, new StartEndCommand(() -> shooterSubsystem.bumpFire(), shooterSubsystem::stopFlywheel).alongWith(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.55))),MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(10,0,  new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
 //        buttonHelper.createButton(1, 0, new ConditionalCommand(new RunCommand(() ->intakeSubsystem.roll(.5)), new RunCommand(() -> intakeSubsystem.roll(0)), intakeSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.70), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.65), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(3, 0, new StartEndCommand(() -> climberSubsystem.climbUp(), () -> climberSubsystem.stopClimb()), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(7, 0, new StartEndCommand(() -> climberSubsystem.climbDown(), () -> climberSubsystem.stopClimb()).until(() -> climberSubsystem.getRightEncoder() >= .200195 && climberSubsystem.getLeftEncoder() <= -0.242676), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(4, 0,  new StartEndCommand(() -> elevatorSubsystem.goDown(0.2), elevatorSubsystem::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.DOWN)).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.5)))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopNeo).until(shooterSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(9, 0, new StartEndCommand(() -> armSubsystem.moveUp(0.3), armSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(9, 0, new StartEndCommand(() -> shooterSubsystem.spinFeeder(-0.25), shooterSubsystem::stopNeo).until(shooterSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
+//        buttonHelper.createButton(9, 0, new StartEndCommand(() -> armSubsystem.moveUp(0.3), armSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
 //        buttonHelper.createButton(10, 0, new StartEndCommand(() -> armSubsystem.moveUp(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() >= 0.).andThen(armSubsystem::setMotorsBrake), MultiButton.RunCondition.WHEN_PRESSED);
 //        buttonHelper.createButton(5, 0, new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
 //                () -> armSubsystem.getEnc() <= .6 && armSubsystem.getEnc() >= .58).alongWith(new PivotHomeCommand(pivotSubsystem)), MultiButton.RunCondition.WHEN_PRESSED);
@@ -142,7 +143,7 @@ public class RobotContainer {
         joystick.rightBumper().whileTrue(new StartEndCommand(() -> intakeSubsystem.roll(.70), intakeSubsystem::stop));
 
         joystick.leftBumper().onTrue(new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
-                () -> armSubsystem.getEnc() <= .5 && armSubsystem.getEnc() >= .44).alongWith(new PivotHomeCommand(pivotSubsystem)));
+                () -> armSubsystem.getEnc() <= .54 && armSubsystem.getEnc() >= .52).alongWith(new PivotHomeCommand(pivotSubsystem)));
 
         joystick.leftTrigger().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.AMP)).andThen(new StartEndCommand(() -> pivotSubsystem.moveDown(0.25), pivotSubsystem::stop).unless(
                 () -> pivotSubsystem.getEncAngle() < 0.4).withTimeout(0.6).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.23)).unless(() -> !elevatorSubsystem.getmagSwitch()))));
@@ -167,8 +168,9 @@ public class RobotContainer {
 
         joystick.povUp().onTrue(new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2));
         joystick.povDown().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.DOWN)));
-        joystick.povLeft().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.23)));
-        joystick.povRight().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(.5)));
+        joystick.povLeft().onTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(0.1), pivotSubsystem::stop));
+        joystick.povLeft().onTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(-0.1), pivotSubsystem::stop));
+//        joystick.povRight().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(.5)));
 
 
     }

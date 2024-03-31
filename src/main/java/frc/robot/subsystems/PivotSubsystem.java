@@ -31,6 +31,8 @@ public class PivotSubsystem extends SubsystemBase {
 
     private final TalonFX pivotMotor1;
     private final CANcoder pivotEncoder1;
+    private DigitalInput forwardLimitSwitch;
+    private DigitalInput reverseLimitSwitch;
     private final VisionSubsystem visionSubsystem;
     private double relativePoseY;
     private double relativePoseX;
@@ -50,6 +52,8 @@ public class PivotSubsystem extends SubsystemBase {
 
     public PivotSubsystem() {
         visionSubsystem = new VisionSubsystem();
+        reverseLimitSwitch = new DigitalInput(PivotConstants.PIVOT_LIMIT_SWITCH_REVERSE);
+        forwardLimitSwitch = new DigitalInput(PivotConstants.PIVOT_LIMIT_SWITCH_FORWARD);
         pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID, TalonFXConstants.CANIVORE_NAME);
         pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
         pivotMotor1.setInverted(true);
