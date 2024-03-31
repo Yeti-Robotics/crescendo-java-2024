@@ -29,10 +29,10 @@ import static frc.robot.constants.FieldConstants.*;
 
 public class PivotSubsystem extends SubsystemBase {
 
-    private final TalonFX pivotMotor1;
-    private final CANcoder pivotEncoder1;
-    private DigitalInput forwardLimitSwitch;
-    private DigitalInput reverseLimitSwitch;
+    public final TalonFX pivotMotor1;
+    public final CANcoder pivotEncoder1;
+    public DigitalInput forwardLimitSwitch;
+    public DigitalInput reverseLimitSwitch;
     private final VisionSubsystem visionSubsystem;
     private double relativePoseY;
     private double relativePoseX;
@@ -123,8 +123,6 @@ public class PivotSubsystem extends SubsystemBase {
 
 //        SmartDashboard.putData("Pivot kraken", pivotMotor1);
         SmartDashboard.putData("Pivot encoder", pivotEncoder1);
-
-
 
 
     }
