@@ -76,8 +76,8 @@ public class Robot extends TimedRobot {
         autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name).withTimeout(15);
         LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
 
-//        DataLogManager.start();
-//        DriverStation.startDataLog(DataLogManager.getLog());
+        DataLogManager.start();
+        DriverStation.startDataLog(DataLogManager.getLog());
     }
 
     @Override

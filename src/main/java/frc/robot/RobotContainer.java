@@ -153,12 +153,6 @@ public class RobotContainer {
         }
         drivetrain.registerTelemetry(logger::telemeterize);
 
-//        joystick.x()
-//                .whileTrue(
-//                        new StartEndCommand(() -> pivotSubsystem.moveUp(.1), pivotSubsystem::stop).unless(() -> pivotSubsystem.getEncAngle() < .2));
-//        joystick.y()
-//                .whileTrue(
-//                        new StartEndCommand(() -> pivotSubsystem.moveDown(.1), pivotSubsystem::stop));
         joystick.a().onTrue(
                 new StartEndCommand(() -> shooterSubsystem.setVelocity(45), shooterSubsystem::stopFlywheel).withTimeout(0.5)
         );
