@@ -35,7 +35,7 @@ public class ElevatorConstants {
 
     public enum ElevatorPositions {
         DOWN(0),
-        AMP(10),
+        AMP(18),
         TRAP(15);
         public final double distanceEl;
         public final double sensorUnitsEl;

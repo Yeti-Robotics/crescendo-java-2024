@@ -164,8 +164,13 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void bumpFire() {
-        leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(75));
+        leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(60));
         rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(100));
+    }
+
+    public void shootAmp() {
+        leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(40));
+        rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(15));
     }
 
 
