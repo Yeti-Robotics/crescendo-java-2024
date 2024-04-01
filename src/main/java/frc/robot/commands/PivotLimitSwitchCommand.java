@@ -9,14 +9,12 @@ import frc.robot.subsystems.PivotSubsystem;
 public  class PivotLimitSwitchCommand extends Command
 {
     private final PivotSubsystem pivotSubsystem;
-    public boolean moveUpTrue;
-    public boolean moveDownTrue;
+    private boolean moveUpTrue;
+    private boolean moveDownTrue;
 
  public PivotLimitSwitchCommand(PivotSubsystem pivotSubsystem)
     {
         this.pivotSubsystem = pivotSubsystem;
-        this.pivotSubsystem.forwardLimitSwitch = pivotSubsystem.forwardLimitSwitch;
-        this.pivotSubsystem.reverseLimitSwitch = pivotSubsystem.reverseLimitSwitch;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
         addRequirements(this.pivotSubsystem);
