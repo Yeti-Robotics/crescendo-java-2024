@@ -12,10 +12,13 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
 import frc.robot.commands.led.BlinkLimeLightCommand;
 import frc.robot.commands.led.SetLEDToRGBCommand;
@@ -36,7 +39,8 @@ import frc.robot.util.controllerUtils.MultiButton;
 
 public class RobotContainer {
 
-
+    public EventLoop eventLoop;
+    private BooleanEvent limitSwitchTriggered;
     public final LEDSubsystem ledSubsystem = new LEDSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
@@ -45,7 +49,7 @@ public class RobotContainer {
     public final PivotSubsystem pivotSubsystem = new PivotSubsystem();
 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-
+//    private PivotLimitSwitchCommand pivotLimitSwitchCommand;
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final ArmSubsystem armSubsystem = new ArmSubsystem();
     public ControllerContainer controllerContainer = new ControllerContainer();
@@ -89,6 +93,7 @@ public class RobotContainer {
         PathPlannerLogging.setLogActivePathCallback((poses) -> {
             field.getObject("path").setPoses(poses);
         });
+//        limitSwitchTriggered = new BooleanEvent(eventLoop, () -> pivotSubsystem.forwardLimitSwitch.get() || pivotSubsystem.reverseLimitSwitch.get()).rising();
     }
 
 
@@ -114,7 +119,7 @@ public class RobotContainer {
 //        buttonHelper.createButton(12,0,new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.TRAP)), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(
                 12,0,new InstantCommand(climberSubsystem::disengageBrake),MultiButton.RunCondition.WHEN_PRESSED);
-
+//        limitSwitchTriggered.castTo(Trigger::new).onTrue(pivotLimitSwitchCommand);
         //TO TEST
 
 
@@ -134,6 +139,7 @@ public class RobotContainer {
 //                new ConditionalCommand(new BlinkLimeLightCommand(), new InstantCommand(() -> LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME), intakeSubsystem.s))
 //        );
 //        joystick.a().whileTrue(drivetraixn.applyRequest(() -> brake));
+        joystick.x().whileTrue(new AutoAimCommand(drivetrain,joystick::getLeftX,joystick::getLeftY));
         joystick.b().whileTrue(drivetrain
                 .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
