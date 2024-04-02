@@ -48,7 +48,7 @@ public class AutoAimCommand extends Command {
     public void execute() {
 
         drivetrain.setControl(
-                poseAimRequest
+                poseAimRequest.withVelocityX(xVelSupplier.getAsDouble()).withVelocityY(yVelSupplier.getAsDouble())
         );
     }
 
