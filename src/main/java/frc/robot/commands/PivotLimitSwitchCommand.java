@@ -23,18 +23,18 @@ public  class PivotLimitSwitchCommand extends Command
     @Override
     public void initialize()
     {
-        moveUpTrue = pivotSubsystem.forwardLimitSwitch.get();
-        moveDownTrue = pivotSubsystem.reverseLimitSwitch.get();
+        moveUpTrue = pivotSubsystem.getForwardLimitSwitch();
+        moveDownTrue = pivotSubsystem.getReverseLimitSwitch();
     }
 
     @Override
     public void execute()
     {
         if (moveUpTrue){
-            pivotSubsystem.moveUp(0.05);
+            pivotSubsystem.moveDown(0.05);
         }
         if(moveDownTrue){
-            pivotSubsystem.moveDown(0.05);
+            pivotSubsystem.moveUp(0.05);
         }
     }
 
@@ -42,7 +42,7 @@ public  class PivotLimitSwitchCommand extends Command
     public boolean isFinished()
     {
         // TODO: Make this return true when this Command no longer needs to run execute()
-        return !moveUpTrue && !moveDownTrue;
+        return !pivotSubsystem.getForwardLimitSwitch() && !pivotSubsystem.getReverseLimitSwitch();
     }
 
     @Override

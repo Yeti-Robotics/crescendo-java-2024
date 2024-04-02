@@ -123,6 +123,8 @@ public class PivotSubsystem extends SubsystemBase {
 
 //        SmartDashboard.putData("Pivot kraken", pivotMotor1);
         SmartDashboard.putData("Pivot encoder", pivotEncoder1);
+        SmartDashboard.putData("Forward limit switch pivot", forwardLimitSwitch);
+        SmartDashboard.putData("Reverse limit switch pivot", reverseLimitSwitch);
 
 
     }
@@ -162,6 +164,12 @@ public class PivotSubsystem extends SubsystemBase {
     public void moveDown(double speed) {
         setMotorsBrake();
         pivotMotor1.set(-Math.abs(speed));
+    }
+    public boolean getForwardLimitSwitch(){
+        return !forwardLimitSwitch.get();
+    }
+    public boolean getReverseLimitSwitch(){
+        return !reverseLimitSwitch.get();
     }
 
     public void setMotorsCoast() {
