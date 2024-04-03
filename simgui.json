@@ -21,10 +21,12 @@
       "/SmartDashboard/Elevator magswitch": "Digital Input",
       "/SmartDashboard/Elevator motor": "Motor Controller",
       "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Forward limit switch pivot": "Digital Input",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
       "/SmartDashboard/Module 3": "Mechanism2d",
+      "/SmartDashboard/Reverse limit switch pivot": "Digital Input",
       "/SmartDashboard/intake beam break": "Digital Input",
       "/SmartDashboard/intake kraken": "Motor Controller",
       "/SmartDashboard/shooter beam break": "Digital Input"
