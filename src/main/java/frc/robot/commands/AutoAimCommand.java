@@ -1,6 +1,7 @@
  package frc.robot.commands;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.FieldConstants;
@@ -34,7 +35,7 @@ public class AutoAimCommand extends Command {
 
         poseAimRequest = new TurnToPoint();
         poseAimRequest.HeadingController.setPID(5,0,0);
-        poseAimRequest.HeadingController.enableContinuousInput(-180,180);
+        poseAimRequest.HeadingController.enableContinuousInput(-Math.PI,Math.PI);
     }
 
     @Override
