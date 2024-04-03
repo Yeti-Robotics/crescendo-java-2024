@@ -139,7 +139,7 @@ public class RobotContainer {
 //                new ConditionalCommand(new BlinkLimeLightCommand(), new InstantCommand(() -> LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME), intakeSubsystem.s))
 //        );
 //        joystick.a().whileTrue(drivetraixn.applyRequest(() -> brake));
-        joystick.x().whileTrue(new AutoAimCommand(drivetrain,joystick::getLeftX,joystick::getLeftY));
+        joystick.x().whileTrue(new AutoAimCommand(drivetrain,() -> -joystick.getLeftY(), () -> -joystick.getLeftX()));
         joystick.b().whileTrue(drivetrain
                 .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
@@ -151,8 +151,8 @@ public class RobotContainer {
         joystick.leftBumper().onTrue(new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
                 () -> armSubsystem.getEnc() <= .54 && armSubsystem.getEnc() >= .52).alongWith(new PivotHomeCommand(pivotSubsystem)));
 
-        joystick.leftTrigger().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.AMP)).andThen(new StartEndCommand(() -> pivotSubsystem.moveDown(0.25), pivotSubsystem::stop).unless(
-                () -> pivotSubsystem.getEncAngle() < 0.4).withTimeout(0.6).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.23)).unless(() -> !elevatorSubsystem.getmagSwitch()))));
+        joystick.leftTrigger().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition2(ElevatorConstants.ElevatorPositions.AMP)).andThen(new StartEndCommand(() -> pivotSubsystem.moveDown(0.25), pivotSubsystem::stop).unless(
+                () -> pivotSubsystem.getEncAngle() < 0.4).withTimeout(0.6).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.26)).unless(() -> !elevatorSubsystem.getmagSwitch()))));
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));

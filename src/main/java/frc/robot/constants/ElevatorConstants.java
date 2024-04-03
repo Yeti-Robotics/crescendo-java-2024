@@ -12,14 +12,14 @@ public class ElevatorConstants {
     public static final double ELEVATOR_DISTANCE_PER_PULSE = 1; //PLACEHOLDER
     public static int ELEVATOR_ID = 10;
     public static int ELEVATOR_CAN_ID = 0;
-    public static final double ELEVATOR_P = 20;//set this poportion
+    public static final double ELEVATOR_P = 12;//set this poportion
     public static final double ELEVATOR_I = 0;//set this faster
     public static final double ELEVATOR_D = 0. ;//set this slower
     public static final double ELEVATOR_F = 0; //set this kinda fatser
     public static final double ELEVATOR_G = 0.0;//set this kinda fatser
     public static final double ELEVATOR_A = 0.05; //set this kinda fatser
     public static final double ELEVATOR_V = 8.0; //set this kinda fatser
-    public static final double PROFILE_V = 2.5; //set this kinda fatser
+    public static final double PROFILE_V = 2.0; //set this kinda fatser
     public static final double PROFILE_A = .5; //set this kinda fatser
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().withKP(ELEVATOR_P).withKI(ELEVATOR_I).withKD(ELEVATOR_D)

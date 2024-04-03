@@ -57,6 +57,7 @@ public final class ShooterConstants {
         map.put(2.0, new ShooterStateData(0.46,100));
         map.put(2.638109, new ShooterStateData(0.415, 125));
         map.put(3.0, new ShooterStateData(0.40, 125));
+            
 //        map.put(3.0, new ShooterStateData(.44, 125)); //protected shot
 //        map.put(4.5, new ShooterStateData(0.48,125));
         map.put(5.88, new ShooterStateData(0.395,125));

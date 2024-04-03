@@ -89,7 +89,7 @@ public class ElevatorSubsystem extends SubsystemBase{
                 position.distanceEl, true, 4.0 , 0,
                 true, false, false);
 
-        elevatorMotor.setControl(motionMagicVoltage.withPosition(position.distanceEl).withFeedForward(6));
+        elevatorMotor.setControl(motionMagicVoltage.withPosition(position.distanceEl).withFeedForward(10));
     }
 
     public void setDown() {

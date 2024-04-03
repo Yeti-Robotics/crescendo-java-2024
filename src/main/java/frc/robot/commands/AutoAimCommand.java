@@ -1,11 +1,13 @@
-package frc.robot.commands;
+ package frc.robot.commands;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.FieldConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.LimelightHelpers;
 
 import java.util.function.DoubleSupplier;
 
@@ -16,6 +18,7 @@ public class AutoAimCommand extends Command {
     private DoubleSupplier xVelSupplier;
     private TurnToPoint poseAimRequest;
     private DoubleSupplier yVelSupplier;
+    double currentTag;
     private double poseY = 0;
 
     public AutoAimCommand(
@@ -31,11 +34,14 @@ public class AutoAimCommand extends Command {
 
         poseAimRequest = new TurnToPoint();
         poseAimRequest.HeadingController.setPID(5,0,0);
-        poseAimRequest.HeadingController.enableContinuousInput(-180.0,180.0);
+        poseAimRequest.HeadingController.enableContinuousInput(-180,180);
     }
 
     @Override
     public void initialize() {
+
+        currentTag = LimelightHelpers.getFiducialID(VisionConstants.LIMELIGHT_NAME);
+
         poseY = drivetrain.getState().Pose.getX();
         Translation2d speakerCenter = AllianceFlipUtil.apply(
                 FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()
@@ -46,10 +52,13 @@ public class AutoAimCommand extends Command {
 
     @Override
     public void execute() {
-
-        drivetrain.setControl(
-                poseAimRequest.withVelocityX(xVelSupplier.getAsDouble()).withVelocityY(yVelSupplier.getAsDouble())
-        );
+        if(LimelightHelpers.getFiducialID(VisionConstants.LIMELIGHT_NAME) == currentTag) {
+            drivetrain.setControl(
+                    poseAimRequest.withVelocityX(xVelSupplier.getAsDouble()).withVelocityY(yVelSupplier.getAsDouble())
+            );
+        } else {
+            end(true);
+        }
     }
 
 
