@@ -34,8 +34,8 @@ public class AutoNamedCommands {
     NamedCommands.registerCommand("armDown", new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
                     () -> armSubsystem.getEnc() <= .5 && armSubsystem.getEnc() >= .44).alongWith(new PivotHomeCommand(pivotSubsystem)));
     NamedCommands.registerCommand("shootBump", new SequentialCommandGroup(
-            new InstantCommand(() -> pivotSubsystem.setPivotPosition(.48)),
-            new InstantCommand(() -> shooterSubsystem.setVelocity(75)),
+            new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.55)),
+            new InstantCommand(() -> shooterSubsystem.bumpFire()),
             new WaitCommand(.75),
             new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
     ));
@@ -80,8 +80,8 @@ public class AutoNamedCommands {
         ));
 
         NamedCommands.registerCommand("shootBumpLast", new SequentialCommandGroup(
-                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.48)),
-                new InstantCommand(() -> shooterSubsystem.setVelocity(75)),
+                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.55)),
+                new InstantCommand(() -> shooterSubsystem.bumpFire()),
                 new WaitCommand(.25),
                 new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
         ));

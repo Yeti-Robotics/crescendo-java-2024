@@ -18,10 +18,13 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.auto.AutoNamedCommands;
 import frc.robot.commands.led.SetLEDToRGBCommand;
 import frc.robot.constants.VisionConstants;
@@ -99,11 +102,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-//        if (previousSelectedAuto != autoChooser.getSelected()) {
-//            previousSelectedAuto = autoChooser.getSelected();
-//        }
+        if (previousSelectedAuto != autoChooser.getSelected()) {
+            previousSelectedAuto = autoChooser.getSelected();
+        }
 
-//        autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
+        autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
 //        System.out.println(robotContainer.shooterSubsystem.getBeamBreak());
 //        System.out.println(previousSelectedAuto.name);
 //        System.out.println(robotContainer.intakeSubsystem.getBeamBreak());
@@ -175,6 +178,7 @@ public class Robot extends TimedRobot {
                 }
             }
         }
+
     }
 
     @Override

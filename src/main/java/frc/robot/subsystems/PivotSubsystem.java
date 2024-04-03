@@ -79,6 +79,7 @@ public class PivotSubsystem extends SubsystemBase {
 
         pivotMotor1.getRotorVelocity().waitForUpdate(PivotConstants.PIVOT_VELOCITY_STATUS_FRAME);
         pivotMotor1.getRotorPosition().waitForUpdate(PivotConstants.PIVOT_POSITION_STATUS_FRAME);
+        pivotEncoder1.getAbsolutePosition().waitForUpdate(0.01);
 
 
         pivotMotor1Configurator.apply(talonFXConfiguration);
@@ -89,7 +90,7 @@ public class PivotSubsystem extends SubsystemBase {
 
         cancoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         cancoderConfiguration.MagnetSensor.MagnetOffset = PivotConstants.MAGNET_OFFSET;
-        cancoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        cancoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         pivotEncoder1Configurator.apply(cancoderConfiguration);
 
         sysIdRoutine =
@@ -139,7 +140,7 @@ public class PivotSubsystem extends SubsystemBase {
         System.out.print("Pivot position: ");
         System.out.println(position);
         System.out.println(motionMagic.Position);
-        pivotMotor1.setControl(motionMagic.withPosition(position).withSlot(0));
+        pivotMotor1.setControl(motionMagic.withPosition(position).withSlot(0).withUpdateFreqHz(200));
     }
 
     public double getAngle() {

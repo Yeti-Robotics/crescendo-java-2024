@@ -95,5 +95,6 @@ public class ShooterStateCommand extends Command {
     public void end(boolean interrupted) {
         shooterSubsystem.stopFlywheel();
         intakeSubsystem.stop();
+        pivotSubsystem.setPivotPosition(0.5);
     }
 }
