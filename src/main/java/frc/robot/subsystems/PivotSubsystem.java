@@ -29,10 +29,10 @@ import static frc.robot.constants.FieldConstants.*;
 
 public class PivotSubsystem extends SubsystemBase {
 
-    private final TalonFX pivotMotor1;
-    private final CANcoder pivotEncoder1;
-    private DigitalInput forwardLimitSwitch;
-    private DigitalInput reverseLimitSwitch;
+    public final TalonFX pivotMotor1;
+    public final CANcoder pivotEncoder1;
+    public DigitalInput forwardLimitSwitch;
+    public DigitalInput reverseLimitSwitch;
     private final VisionSubsystem visionSubsystem;
     private double relativePoseY;
     private double relativePoseX;
@@ -57,6 +57,7 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID, TalonFXConstants.CANIVORE_NAME);
         pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
         pivotMotor1.setInverted(true);
+        pivotMotor1.setNeutralMode(NeutralModeValue.Brake);
 
         var pivotMotor1Configurator = pivotMotor1.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
@@ -124,8 +125,8 @@ public class PivotSubsystem extends SubsystemBase {
 
 //        SmartDashboard.putData("Pivot kraken", pivotMotor1);
         SmartDashboard.putData("Pivot encoder", pivotEncoder1);
-
-
+        SmartDashboard.putData("Forward limit switch pivot", forwardLimitSwitch);
+        SmartDashboard.putData("Reverse limit switch pivot", reverseLimitSwitch);
 
 
     }
@@ -159,21 +160,16 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public void moveUp(double speed) {
-        setMotorsBrake();
         pivotMotor1.set(Math.abs(speed));
     }
     public void moveDown(double speed) {
-        setMotorsBrake();
         pivotMotor1.set(-Math.abs(speed));
     }
-
-    public void setMotorsCoast() {
-        pivotMotor1.setNeutralMode(NeutralModeValue.Coast);
+    public boolean getForwardLimitSwitch(){
+        return !forwardLimitSwitch.get();
     }
-
-
-    public void setMotorsBrake() {
-        pivotMotor1.setNeutralMode(NeutralModeValue.Brake);
+    public boolean getReverseLimitSwitch(){
+        return !reverseLimitSwitch.get();
     }
 
     public double getSuppliedCurrent() {
