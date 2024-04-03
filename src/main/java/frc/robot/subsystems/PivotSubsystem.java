@@ -57,6 +57,7 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID, TalonFXConstants.CANIVORE_NAME);
         pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
         pivotMotor1.setInverted(true);
+        pivotMotor1.setNeutralMode(NeutralModeValue.Brake);
 
         var pivotMotor1Configurator = pivotMotor1.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
@@ -158,11 +159,9 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public void moveUp(double speed) {
-        setMotorsBrake();
         pivotMotor1.set(Math.abs(speed));
     }
     public void moveDown(double speed) {
-        setMotorsBrake();
         pivotMotor1.set(-Math.abs(speed));
     }
     public boolean getForwardLimitSwitch(){
@@ -170,15 +169,6 @@ public class PivotSubsystem extends SubsystemBase {
     }
     public boolean getReverseLimitSwitch(){
         return !reverseLimitSwitch.get();
-    }
-
-    public void setMotorsCoast() {
-        pivotMotor1.setNeutralMode(NeutralModeValue.Coast);
-    }
-
-
-    public void setMotorsBrake() {
-        pivotMotor1.setNeutralMode(NeutralModeValue.Brake);
     }
 
     public double getSuppliedCurrent() {

@@ -48,6 +48,11 @@ public  class PivotLimitSwitchCommand extends Command
     @Override
     public void end(boolean interrupted)
     {
-        pivotSubsystem.stop();
+        if (moveUpTrue) {
+            pivotSubsystem.moveDown(0.01);
+        } else{
+            pivotSubsystem.stop();
+        }
     }
+
 }

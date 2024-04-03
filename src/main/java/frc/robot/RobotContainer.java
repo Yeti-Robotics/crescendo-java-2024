@@ -23,6 +23,7 @@ import frc.robot.commands.*;
 import frc.robot.commands.led.BlinkLimeLightCommand;
 import frc.robot.commands.led.SetLEDToRGBCommand;
 import frc.robot.commands.pivot.PivotHomeCommand;
+import frc.robot.commands.pivot.PivotMoveCommand;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.ShooterConstants;
@@ -92,7 +93,7 @@ public class RobotContainer {
         PathPlannerLogging.setLogActivePathCallback((poses) -> {
             field.getObject("path").setPoses(poses);
         });
-       limitSwitchTriggered = new BooleanEvent(eventLoop, () -> pivotSubsystem.getForwardLimitSwitch() || pivotSubsystem.getReverseLimitSwitch()).rising();
+       limitSwitchTriggered = new BooleanEvent(eventLoop, () -> pivotSubsystem.getForwardLimitSwitch() || pivotSubsystem.getReverseLimitSwitch());
        configureBindings();
     }
 
