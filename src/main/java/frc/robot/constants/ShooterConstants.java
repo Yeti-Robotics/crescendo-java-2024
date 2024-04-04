@@ -60,6 +60,7 @@ public final class ShooterConstants {
         map.put(2.81, new ShooterStateData(.4575, 125));
         map.put(3.0, new ShooterStateData(.4575, 125));
         map.put(3.62, new ShooterStateData(.45, 125));
+        map.put(3.7, new ShooterStateData(.45, 125));
         //map.put(4.747, new ShooterStateData(.442, 250)); from the edge of the wing
         return map;
     }
