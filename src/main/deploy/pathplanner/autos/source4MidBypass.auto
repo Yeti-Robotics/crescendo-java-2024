@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7,
+      "y": 4.5
+    },
+    "rotation": 120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shootBumpLast"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "armDown"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shuttleSourceget1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "handoff"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bypassShootTwo"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "source 4",
+  "choreoAuto": false
+}

@@ -73,6 +73,15 @@ public class AutoNamedCommands {
 
 
 
+        NamedCommands.registerCommand("shootFar", new SequentialCommandGroup(
+                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.45)),
+                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                new WaitCommand(.75),
+                new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
+        ));
+
+
+
         NamedCommands.registerCommand("shootOut", new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
     NamedCommands.registerCommand("handoff", new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(1.5));
     NamedCommands.registerCommand("handoffMidLine", new StartEndCommand(() -> intakeSubsystem.roll(.275), intakeSubsystem::stop)

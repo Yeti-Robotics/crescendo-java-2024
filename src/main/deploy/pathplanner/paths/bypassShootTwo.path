@@ -8,29 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.118938446192278,
-        "y": 0.7080263213917485
+        "x": 7.4,
+        "y": 0.8000000000000002
       },
       "isLocked": false,
       "linkedName": "sourceSide3end"
     },
     {
       "anchor": {
-        "x": 6.197438471909753,
-        "y": 1.9674205396912936
+        "x": 3.4763566268987174,
+        "y": 2.6747081063084432
       },
       "prevControl": {
-        "x": 6.759558626107266,
-        "y": 1.5458304240431593
+        "x": 3.0537383651580177,
+        "y": 1.7684003192717932
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "shuttle3End2"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "shootfar",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -39,13 +50,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 145.0,
+    "rotation": 140.3558250428552,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "source 4 ",
   "previewStartingState": {
-    "rotation": 179.79796392957414,
+    "rotation": -176.75250111505443,
     "velocity": 0
   },
   "useDefaultConstraints": true

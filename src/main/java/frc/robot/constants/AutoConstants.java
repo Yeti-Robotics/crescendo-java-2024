@@ -26,7 +26,8 @@ public final class AutoConstants {
         MID_SUB_FOUR_PIECE("midSubFourPiece", DEFAULT_CONSTRAINTS),
         SOURCE_SIDE_2_PIECE("source4TwoPiece", DEFAULT_CONSTRAINTS),
         SOURCE_SIDE_3_PIECE("source4ThreePiece", DEFAULT_CONSTRAINTS),
-        SOURCE_SIDE_SHUTTLE_AMP("source4ShuttleAmp", DEFAULT_CONSTRAINTS);
+        SOURCE_SIDE_SHUTTLE_AMP("source4ShuttleAmp", DEFAULT_CONSTRAINTS),
+        SOURCE_4_MID_BYPASS("source4MidBypass", DEFAULT_CONSTRAINTS);
 
         public final String name;
         public final PathConstraints initConstraint;
