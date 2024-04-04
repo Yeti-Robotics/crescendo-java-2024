@@ -15,6 +15,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -23,6 +24,7 @@ import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.constants.DriveConstants;
@@ -203,6 +205,14 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 hasAppliedPerspective = true;
             });
         }
+        Pose2d speakerPose = DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)
+                ? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
+                : new Pose2d(0.0, 2.45, Rotation2d.fromRotations(0));
+
+        Pose2d robotPose = this.getState().Pose;
+        Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
+        double distance = relativeSpeaker.getTranslation().getNorm();
+        SmartDashboard.putNumber("distance", distance);
     }
 }
 

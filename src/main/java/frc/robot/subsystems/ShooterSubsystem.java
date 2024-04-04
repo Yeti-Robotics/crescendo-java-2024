@@ -83,6 +83,8 @@ public class ShooterSubsystem extends SubsystemBase {
 //        SmartDashboard.putData("right shooter kraken", rightKraken);
 //        SmartDashboard.putData("feeder shooter kraken", neo);
         SmartDashboard.putData("shooter beam break", beamBreak);
+        SmartDashboard.putNumber("left rps:", leftKraken.getVelocity().getValue());
+        SmartDashboard.putNumber("right rps:", rightKraken.getVelocity().getValue());
 //
 //        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
 //                velocity, 0, true, ShooterConstants.SHOOTER_F, 0, false, false, false);

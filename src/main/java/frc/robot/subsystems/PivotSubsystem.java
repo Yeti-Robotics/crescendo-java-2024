@@ -160,10 +160,14 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public void moveUp(double speed) {
-        pivotMotor1.set(Math.abs(speed));
+        if (!getForwardLimitSwitch()) {
+            pivotMotor1.set(Math.abs(speed));
+        }
     }
     public void moveDown(double speed) {
-        pivotMotor1.set(-Math.abs(speed));
+        if (!getReverseLimitSwitch()) {
+            pivotMotor1.set(-Math.abs(speed));
+        }
     }
     public boolean getForwardLimitSwitch(){
         return !forwardLimitSwitch.get();

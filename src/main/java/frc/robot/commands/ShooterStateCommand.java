@@ -46,7 +46,7 @@ public class ShooterStateCommand extends Command {
         this.intakeSubsystem = intakeSubsystem;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(this.commandSwerveDrivetrain, this.pivotSubsystem);
+        addRequirements(this.pivotSubsystem);
     }
 
     @Override
@@ -72,6 +72,7 @@ public class ShooterStateCommand extends Command {
         System.out.println(distance);
         rps = ShooterConstants.SHOOTER_MAP().get(distance).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(distance).angle;
+        SmartDashboard.putNumber("shooter angle", angle);
 
        /* SwerveRequest pointCmd = new SwerveRequest.FieldCentricFacingAngle()
                 .withVelocityX(velocityX)
