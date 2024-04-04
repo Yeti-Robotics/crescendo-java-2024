@@ -124,7 +124,7 @@ public class RobotContainer {
         buttonHelper.createButton(
                 12,0,new InstantCommand(climberSubsystem::disengageBrake),MultiButton.RunCondition.WHEN_PRESSED);
         limitSwitchTriggered.castTo(Trigger::new).onTrue(new PivotLimitSwitchCommand(pivotSubsystem));
-        buttonHelper.createButton(11, 0,new StartEndCommand(shooterSubsystem::shootAmp, shooterSubsystem::stopFlywheel),MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(11, 0,new StartEndCommand(shooterSubsystem::shootTrap, shooterSubsystem::stopFlywheel),MultiButton.RunCondition.WHILE_HELD);
 //        buttonHelper.createButton(12,0,new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.TRAP)), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(
                 12,0,new InstantCommand(climberSubsystem::disengageBrake),MultiButton.RunCondition.WHEN_PRESSED);

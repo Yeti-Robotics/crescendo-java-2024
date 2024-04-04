@@ -166,20 +166,20 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
 
         if (DriverStation.getAlliance().isPresent()) {
-            if (DriverStation.getAlliance().get() == (DriverStation.Alliance.Red)) {
-                if (lastResult != null && lastResult.valid) {
-                    Pose2d llPose = lastResult.getBotPose2d_wpiRed();
-                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
-                }
-            } else {
-                if (lastResult != null && lastResult.valid) {
+//            if (DriverStation.getAlliance().get() == (DriverStation.Alliance.Red)) {
+//                if (lastResult != null && lastResult.valid) {
+//                    Pose2d llPose = lastResult.getBotPose2d_wpiRed();
+//                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
+//                }
+//            } else {
+                if (lastResult != null && lastResult.valid && robotContainer.drivetrain.getPigeon2().getRate() < 720) {
                     Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
                     robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
                 }
             }
         }
 
-    }
+
 
     @Override
     public void teleopExit() {

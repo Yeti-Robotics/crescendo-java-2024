@@ -55,7 +55,7 @@ public class AutoAimCommand extends Command {
     public void execute() {
         if(LimelightHelpers.getFiducialID(VisionConstants.LIMELIGHT_NAME) == currentTag) {
             drivetrain.setControl(
-                    poseAimRequest.withVelocityX(xVelSupplier.getAsDouble()).withVelocityY(yVelSupplier.getAsDouble())
+                    poseAimRequest.withVelocityX(xVelSupplier.getAsDouble() * 2).withVelocityY(yVelSupplier.getAsDouble() * 2)
             );
         } else {
             end(true);

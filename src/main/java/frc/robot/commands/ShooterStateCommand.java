@@ -55,9 +55,7 @@ public class ShooterStateCommand extends Command {
         poseX = commandSwerveDrivetrain.getState().Pose.getX();
         rps = ShooterConstants.SHOOTER_MAP().get(poseY).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(poseY).angle;
-        speakerPose = DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)
-                ? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
-                : new Pose2d(0.0, 2.45, Rotation2d.fromRotations(0));
+        speakerPose = AllianceFlipUtil.apply(new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0)));
     }
 
 
