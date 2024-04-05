@@ -10,11 +10,6 @@
         "header": {
           "open": true
         }
-      },
-      "Talon FX (v6)[13]": {
-        "header": {
-          "open": true
-        }
       }
     }
   },
@@ -23,10 +18,18 @@
       "/FMSInfo": "FMSInfo",
       "/Pose": "Field2d",
       "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Elevator magswitch": "Digital Input",
+      "/SmartDashboard/Elevator motor": "Motor Controller",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Forward limit switch pivot": "Digital Input",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
-      "/SmartDashboard/Module 3": "Mechanism2d"
+      "/SmartDashboard/Module 3": "Mechanism2d",
+      "/SmartDashboard/Reverse limit switch pivot": "Digital Input",
+      "/SmartDashboard/intake beam break": "Digital Input",
+      "/SmartDashboard/intake kraken": "Motor Controller",
+      "/SmartDashboard/shooter beam break": "Digital Input"
     },
     "windows": {
       "/Pose": {
@@ -47,6 +50,9 @@
       "open": false
     },
     "Retained Values": {
+      "open": false
+    },
+    "Transitory Values": {
       "open": false
     }
   },

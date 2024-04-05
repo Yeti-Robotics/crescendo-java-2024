@@ -46,7 +46,7 @@ public class ShooterStateCommand extends Command {
         this.intakeSubsystem = intakeSubsystem;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(this.commandSwerveDrivetrain, this.pivotSubsystem);
+        addRequirements(this.pivotSubsystem);
     }
 
     @Override
@@ -55,9 +55,7 @@ public class ShooterStateCommand extends Command {
         poseX = commandSwerveDrivetrain.getState().Pose.getX();
         rps = ShooterConstants.SHOOTER_MAP().get(poseY).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(poseY).angle;
-        speakerPose = DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)
-                ? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
-                : new Pose2d(0.0, 2.45, Rotation2d.fromRotations(0));
+        speakerPose = AllianceFlipUtil.apply(new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0)));
     }
 
 
@@ -72,6 +70,7 @@ public class ShooterStateCommand extends Command {
         System.out.println(distance);
         rps = ShooterConstants.SHOOTER_MAP().get(distance).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(distance).angle;
+        SmartDashboard.putNumber("shooter angle", angle);
 
        /* SwerveRequest pointCmd = new SwerveRequest.FieldCentricFacingAngle()
                 .withVelocityX(velocityX)
@@ -95,5 +94,6 @@ public class ShooterStateCommand extends Command {
     public void end(boolean interrupted) {
         shooterSubsystem.stopFlywheel();
         intakeSubsystem.stop();
+        pivotSubsystem.setPivotPosition(0.5);
     }
 }

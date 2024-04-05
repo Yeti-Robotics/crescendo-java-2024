@@ -61,13 +61,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.25
+                  "waitTime": 1.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shootBump"
+                  "name": "shootBumpLast"
                 }
               }
             ]
@@ -111,13 +111,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.25
+                  "waitTime": 1.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shootBump"
+                  "name": "shootBumpLast"
                 }
               }
             ]
