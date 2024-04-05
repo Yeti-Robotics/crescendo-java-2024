@@ -60,8 +60,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putData("Arm kraken", armKraken);
-        SmartDashboard.putData("Arm encoder", armEncoder);
     }
 
 
