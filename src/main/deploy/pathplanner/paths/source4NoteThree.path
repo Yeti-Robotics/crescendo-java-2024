@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 8.3,
-        "y": 1.0
+        "x": 8.4,
+        "y": 0.8
       },
       "prevControl": {
-        "x": 6.672800174175847,
-        "y": 1.4397837367088056
+        "x": 6.772800174175846,
+        "y": 1.2397837367088056
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,7 +39,7 @@
   "eventMarkers": [
     {
       "name": "rollIn",
-      "waypointRelativePos": 0.7,
+      "waypointRelativePos": 0.6,
       "command": {
         "type": "parallel",
         "data": {

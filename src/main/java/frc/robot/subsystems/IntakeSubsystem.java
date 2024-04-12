@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.led.BlinkLimeLightCommand;
@@ -36,6 +37,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putData("intake kraken", intakeKraken);
+        SmartDashboard.putData("intake beam break", beamBreak);
         if (!prevBreak && getBeamBreak() && !blinkLimeLightCommand.isScheduled()) {
             CommandScheduler.getInstance().schedule(blinkLimeLightCommand);
         }

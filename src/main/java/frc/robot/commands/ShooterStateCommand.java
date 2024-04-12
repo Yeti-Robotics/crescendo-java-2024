@@ -3,15 +3,19 @@ package frc.robot.commands;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
+import frc.robot.util.AllianceFlipUtil;
 
+import java.lang.reflect.Field;
 import java.util.function.DoubleSupplier;
 
 
@@ -27,6 +31,7 @@ public class ShooterStateCommand extends Command {
     private double angle = 0;
     private final double botAngle = 0;
     private Pose2d speakerPose;
+    private Translation2d speakerCenter;
     private Rotation2d yawTarget;
     DoubleSupplier xVel;
     DoubleSupplier yVel;
@@ -41,7 +46,7 @@ public class ShooterStateCommand extends Command {
         this.intakeSubsystem = intakeSubsystem;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(this.commandSwerveDrivetrain, this.pivotSubsystem);
+        addRequirements(this.pivotSubsystem);
     }
 
     @Override
@@ -50,20 +55,23 @@ public class ShooterStateCommand extends Command {
         poseX = commandSwerveDrivetrain.getState().Pose.getX();
         rps = ShooterConstants.SHOOTER_MAP().get(poseY).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(poseY).angle;
-        speakerPose = DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)
-                ? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
-                : new Pose2d(16.5, 5.55, Rotation2d.fromRotations(0));
+        speakerPose = AllianceFlipUtil.apply(new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0)));
     }
 
 
+
     public void execute() {
+        System.out.print("Robot pose: ");
 
        Pose2d robotPose = commandSwerveDrivetrain.getState().Pose;
        Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
         yawTarget = Rotation2d.fromRadians(Math.atan2(relativeSpeaker.getY(), relativeSpeaker.getX()) + Math.PI);
         double distance = relativeSpeaker.getTranslation().getNorm();
+        System.out.println(distance);
         rps = ShooterConstants.SHOOTER_MAP().get(distance).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(distance).angle;
+        SmartDashboard.putNumber("calc shooter angle", angle);
+
        /* SwerveRequest pointCmd = new SwerveRequest.FieldCentricFacingAngle()
                 .withVelocityX(velocityX)
                 .withVelocityY(velocityY)
@@ -86,5 +94,6 @@ public class ShooterStateCommand extends Command {
     public void end(boolean interrupted) {
         shooterSubsystem.stopFlywheel();
         intakeSubsystem.stop();
+        pivotSubsystem.setPivotPosition(0.5);
     }
 }

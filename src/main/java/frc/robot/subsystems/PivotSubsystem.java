@@ -13,6 +13,7 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -28,8 +29,10 @@ import static frc.robot.constants.FieldConstants.*;
 
 public class PivotSubsystem extends SubsystemBase {
 
-    private final TalonFX pivotMotor1;
-    private final CANcoder pivotEncoder1;
+    public final TalonFX pivotMotor1;
+    public final CANcoder pivotEncoder1;
+    public DigitalInput forwardLimitSwitch;
+    public DigitalInput reverseLimitSwitch;
     private final VisionSubsystem visionSubsystem;
     private double relativePoseY;
     private double relativePoseX;
@@ -49,9 +52,12 @@ public class PivotSubsystem extends SubsystemBase {
 
     public PivotSubsystem() {
         visionSubsystem = new VisionSubsystem();
+        reverseLimitSwitch = new DigitalInput(PivotConstants.PIVOT_LIMIT_SWITCH_REVERSE);
+        forwardLimitSwitch = new DigitalInput(PivotConstants.PIVOT_LIMIT_SWITCH_FORWARD);
         pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID, TalonFXConstants.CANIVORE_NAME);
         pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
         pivotMotor1.setInverted(true);
+        pivotMotor1.setNeutralMode(NeutralModeValue.Brake);
 
         var pivotMotor1Configurator = pivotMotor1.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
@@ -73,6 +79,7 @@ public class PivotSubsystem extends SubsystemBase {
 
         pivotMotor1.getRotorVelocity().waitForUpdate(PivotConstants.PIVOT_VELOCITY_STATUS_FRAME);
         pivotMotor1.getRotorPosition().waitForUpdate(PivotConstants.PIVOT_POSITION_STATUS_FRAME);
+        pivotEncoder1.getAbsolutePosition().waitForUpdate(0.01);
 
 
         pivotMotor1Configurator.apply(talonFXConfiguration);
@@ -83,7 +90,7 @@ public class PivotSubsystem extends SubsystemBase {
 
         cancoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         cancoderConfiguration.MagnetSensor.MagnetOffset = PivotConstants.MAGNET_OFFSET;
-        cancoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        cancoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         pivotEncoder1Configurator.apply(cancoderConfiguration);
 
         sysIdRoutine =
@@ -116,8 +123,10 @@ public class PivotSubsystem extends SubsystemBase {
 //        hypoGroundLength = Math.sqrt((relativePoseX*relativePoseX)+(relativePoseY*relativePoseY));
 //        vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
 
-
-
+//        SmartDashboard.putData("Pivot kraken", pivotMotor1);
+        SmartDashboard.putData("Pivot encoder", pivotEncoder1);
+        SmartDashboard.putData("Forward limit switch pivot", forwardLimitSwitch);
+        SmartDashboard.putData("Reverse limit switch pivot", reverseLimitSwitch);
 
 
     }
@@ -127,9 +136,11 @@ public class PivotSubsystem extends SubsystemBase {
                 position, true, 0, 0,
                 false, false, false);
         // todo: overridebreakdurneutral = false
+
+        System.out.print("Pivot position: ");
         System.out.println(position);
         System.out.println(motionMagic.Position);
-        pivotMotor1.setControl(motionMagic.withPosition(position).withSlot(0));
+        pivotMotor1.setControl(motionMagic.withPosition(position).withSlot(0).withUpdateFreqHz(200));
     }
 
     public double getAngle() {
@@ -149,20 +160,20 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public void moveUp(double speed) {
-        setMotorsBrake();
-        pivotMotor1.set(Math.abs(speed));
+        if (!getForwardLimitSwitch()) {
+            pivotMotor1.set(Math.abs(speed));
+        }
     }
     public void moveDown(double speed) {
-        setMotorsBrake();
-        pivotMotor1.set(-Math.abs(speed));
+        if (!getReverseLimitSwitch()) {
+            pivotMotor1.set(-Math.abs(speed));
+        }
     }
-
-    public void setMotorsCoast() {
-        pivotMotor1.setNeutralMode(NeutralModeValue.Coast);
+    public boolean getForwardLimitSwitch(){
+        return !forwardLimitSwitch.get();
     }
-
-    public void setMotorsBrake() {
-        pivotMotor1.setNeutralMode(NeutralModeValue.Brake);
+    public boolean getReverseLimitSwitch(){
+        return !reverseLimitSwitch.get();
     }
 
     public double getSuppliedCurrent() {

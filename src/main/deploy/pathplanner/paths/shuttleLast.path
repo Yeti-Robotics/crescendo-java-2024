@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.76,
-        "y": 6.6
+        "x": 7.9774856268685435,
+        "y": 2.4241431649767726
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4225982298118458,
-        "y": 6.837791367890429
+        "x": 6.878899387898633,
+        "y": 2.5667197917848044
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "shuttle4End"
     },
     {
       "anchor": {
-        "x": 2.6607658350837373,
-        "y": 6.487803446362955
+        "x": 6.080330106451938,
+        "y": 1.8268905011419148
       },
       "prevControl": {
-        "x": 2.2858220082730063,
-        "y": 6.418734846687294
+        "x": 6.829823645381955,
+        "y": 1.6278062798636284
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,18 +38,12 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "armDown",
-      "waypointRelativePos": 0.15,
+      "name": "rollIn",
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "parallel",
         "data": {
           "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "armDown"
-              }
-            },
             {
               "type": "named",
               "data": {
@@ -59,28 +53,11 @@
           ]
         }
       }
-    },
-    {
-      "name": "handoof",
-      "waypointRelativePos": 0.7,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "handoff"
-              }
-            }
-          ]
-        }
-      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 6.0,
+    "maxAcceleration": 6.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -90,9 +67,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "mid 3 amp side",
+  "folder": "source 4 ",
   "previewStartingState": {
-    "rotation": -121.92873436644585,
+    "rotation": 134.7315483943581,
     "velocity": 0
   },
   "useDefaultConstraints": false

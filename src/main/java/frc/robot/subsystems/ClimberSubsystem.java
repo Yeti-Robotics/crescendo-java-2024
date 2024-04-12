@@ -9,6 +9,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ClimberConstants;
 
@@ -65,6 +66,12 @@ public class ClimberSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+//        SmartDashboard.putData("climber kraken 1", climberFalcon1);
+//        SmartDashboard.putData("climber kraken 2", climberFalcon2);
+        SmartDashboard.putData("climber encoder 1", canCoder1);
+        SmartDashboard.putData("climber encoder 2", canCoder2);
+//        SmartDashboard.putNumber("climber brake servo 1", climberBrake1.get());
+//        SmartDashboard.putNumber("climber brake servo 2", climberBrake2.get());
     }
 
     public void climbUp() {

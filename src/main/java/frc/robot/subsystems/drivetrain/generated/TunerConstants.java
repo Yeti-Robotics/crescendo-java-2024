@@ -35,7 +35,7 @@ public class TunerConstants {
 
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
-    private static final double kSlipCurrentA = 300.0;
+    private static final double kSlipCurrentA = 80.0;
 
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot
@@ -91,7 +91,7 @@ public class TunerConstants {
     private static final int kFrontLeftDriveMotorId = 9;
     private static final int kFrontLeftSteerMotorId = 4;
     private static final int kFrontLeftEncoderId = 1;
-    private static final double kFrontLeftEncoderOffset = -0.234375;
+    private static final double kFrontLeftEncoderOffset = -0.233887;
 
     private static final double kFrontLeftXPosInches = 11.125;
     private static final double kFrontLeftYPosInches = 11.125;
@@ -100,7 +100,7 @@ public class TunerConstants {
     private static final int kFrontRightDriveMotorId = 11;
     private static final int kFrontRightSteerMotorId = 3;
     private static final int kFrontRightEncoderId = 3;
-    private static final double kFrontRightEncoderOffset = -0.41015625;
+    private static final double kFrontRightEncoderOffset = -0.393066;
 
     private static final double kFrontRightXPosInches = 11.125;
     private static final double kFrontRightYPosInches = -11.125;
@@ -109,7 +109,7 @@ public class TunerConstants {
     private static final int kBackLeftDriveMotorId = 1;
     private static final int kBackLeftSteerMotorId = 0;
     private static final int kBackLeftEncoderId = 2;
-    private static final double kBackLeftEncoderOffset = 0.49609375;
+    private static final double kBackLeftEncoderOffset = -0.497559;
 
     private static final double kBackLeftXPosInches = -11.125;
     private static final double kBackLeftYPosInches = 11.125;
@@ -118,7 +118,7 @@ public class TunerConstants {
     private static final int kBackRightDriveMotorId = 6;
     private static final int kBackRightSteerMotorId = 2;
     private static final int kBackRightEncoderId = 0;
-    private static final double kBackRightEncoderOffset = -0.23828125;
+    private static final double kBackRightEncoderOffset = -0.019043;
 
     private static final double kBackRightXPosInches = -11.125;
     private static final double kBackRightYPosInches = -11.125;

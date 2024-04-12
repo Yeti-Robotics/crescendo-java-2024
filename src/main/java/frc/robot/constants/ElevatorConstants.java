@@ -19,7 +19,7 @@ public class ElevatorConstants {
     public static final double ELEVATOR_G = 0.0;//set this kinda fatser
     public static final double ELEVATOR_A = 0.05; //set this kinda fatser
     public static final double ELEVATOR_V = 8.0; //set this kinda fatser
-    public static final double PROFILE_V = 2.5; //set this kinda fatser
+    public static final double PROFILE_V = 2.0; //set this kinda fatser
     public static final double PROFILE_A = .5; //set this kinda fatser
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().withKP(ELEVATOR_P).withKI(ELEVATOR_I).withKD(ELEVATOR_D)
@@ -35,7 +35,7 @@ public class ElevatorConstants {
 
     public enum ElevatorPositions {
         DOWN(0),
-        AMP(8),
+        AMP(18),
         TRAP(15);
         public final double distanceEl;
         public final double sensorUnitsEl;
