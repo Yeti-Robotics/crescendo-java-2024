@@ -24,10 +24,7 @@ import frc.robot.commands.led.BlinkLimeLightCommand;
 import frc.robot.commands.led.SetLEDToRGBCommand;
 import frc.robot.commands.pivot.PivotHomeCommand;
 import frc.robot.commands.pivot.PivotMoveCommand;
-import frc.robot.constants.DriveConstants;
-import frc.robot.constants.ElevatorConstants;
-import frc.robot.constants.ShooterConstants;
-import frc.robot.constants.VisionConstants;
+import frc.robot.constants.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drivetrain.Telemetry;
@@ -184,6 +181,23 @@ public class RobotContainer {
         joystick.back().onTrue(new InstantCommand(climberSubsystem::engageBrake));
 //        joystick.rightTrigger().whileTrue(new StartEndCommand(() -> shooterSubsystem.setVelocity(250), () -> shooterSubsystem.stopFlywheel()));
 //        joystick.povRight().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(.5)));
+        joystick.y().onTrue(new SequentialCommandGroup(
+                new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.42)).andThen(
+                        new StartEndCommand(() -> armSubsystem.moveUp(.7), armSubsystem::stop).until(() ->
+                                armSubsystem.getEnc() <= ArmConstants.ARM_HANDOFF_POSITION).andThen(
+                                new StartEndCommand(() -> shooterSubsystem.spinFeeder(-0.3),
+                                        shooterSubsystem::stopFlywheel).alongWith(
+                                        new StartEndCommand(() -> intakeSubsystem.roll(-.2), intakeSubsystem::stop))
+                        ).until(shooterSubsystem::getBeamBreak),
+                        new PivotHomeCommand(pivotSubsystem)
+                ),
+                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                new StartEndCommand(() -> intakeSubsystem.roll(-.1), intakeSubsystem::stop).withTimeout(0.2),
+                new WaitCommand(.45),
+                new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1),
+                        new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2)
+                )
+        ));
 
 
     }
