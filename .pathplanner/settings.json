@@ -4,13 +4,10 @@
   "holonomicMode": true,
   "pathFolders": [
     "midSubFourPiece",
-    "amp 4",
-    "mid 3 amp side",
     "midSubThreePiece",
     "source 4 "
   ],
   "autoFolders": [
-    "amp 4",
     "mid 3 amp side",
     "source 4"
   ],

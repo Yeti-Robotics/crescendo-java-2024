@@ -56,6 +56,7 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         robotContainer = new RobotContainer();
 //        SignalLogger.enableAutoLogging(true);
+        System.out.println("ROBOT INIT START");
 
         namedCommands = new AutoNamedCommands(robotContainer.intakeSubsystem, robotContainer.shooterSubsystem, robotContainer.pivotSubsystem, robotContainer.armSubsystem);
         namedCommands.registerCommands();
@@ -79,14 +80,15 @@ public class Robot extends TimedRobot {
         autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name).withTimeout(15);
         LimelightHelpers.setLEDMode_ForceOff(VisionConstants.LIMELIGHT_NAME);
 
+
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
+        System.out.println("ROBOT INIT END");
     }
 
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
-        robotContainer.eventLoop.poll();
        lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
 //       DriverStation.refreshData();
     }
@@ -104,9 +106,9 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
         if (previousSelectedAuto != autoChooser.getSelected()) {
             previousSelectedAuto = autoChooser.getSelected();
+            autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
         }
 
-        autonomousCommand = AutoBuilder.buildAuto(previousSelectedAuto.name);
 //        System.out.println(robotContainer.shooterSubsystem.getBeamBreak());
 //        System.out.println(previousSelectedAuto.name);
 //        System.out.println(robotContainer.intakeSubsystem.getBeamBreak());
@@ -127,6 +129,7 @@ public class Robot extends TimedRobot {
 //            }
 //        }
 
+        System.out.println(previousSelectedAuto.name);
     }
 
     @Override
@@ -152,6 +155,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        robotContainer.eventLoop.poll();
 //        resetCommandsAndButons();
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
