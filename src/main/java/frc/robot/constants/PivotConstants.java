@@ -44,13 +44,13 @@ public class PivotConstants {
     public static final CurrentLimitsConfigs PIVOT_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).withSupplyCurrentThreshold(55).
             withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);
 
-    public static final SoftwareLimitSwitchConfigs PIVOT_SOFT_LIMIT = new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(false).withForwardSoftLimitThreshold(
-            .3 //placeholder
-    ).withReverseSoftLimitEnable(false).withReverseSoftLimitThreshold(
-            65 //placeholder
+    public static final SoftwareLimitSwitchConfigs PIVOT_SOFT_LIMIT = new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(true).withForwardSoftLimitThreshold(
+            .53
+    ).withReverseSoftLimitEnable(true).withReverseSoftLimitThreshold(
+            .31
     );
 
-    public static final double MAGNET_OFFSET = -0.78564453125; //placeholder
+    public static final double MAGNET_OFFSET = 0.289794; //placeholder
 
     public static final double GEAR_RATIO = 1.0/144.0;
 
