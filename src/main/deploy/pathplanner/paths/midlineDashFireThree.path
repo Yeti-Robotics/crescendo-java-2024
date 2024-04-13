@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.942353117231199,
-        "y": 4.063660281386183
+        "x": 8.003849084621248,
+        "y": 4.114515152107228
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.836955588319164,
-        "y": 4.063660281386183
+        "x": 7.8984515557092125,
+        "y": 4.114515152107228
       },
       "isLocked": false,
       "linkedName": "midlinedash3end"
@@ -42,25 +42,6 @@
               "type": "named",
               "data": {
                 "name": "handoff"
-              }
-            },
-            {
-              "type": "deadline",
-              "data": {
-                "commands": [
-                  {
-                    "type": "named",
-                    "data": {
-                      "name": "shootLine"
-                    }
-                  },
-                  {
-                    "type": "wait",
-                    "data": {
-                      "waitTime": 0.5
-                    }
-                  }
-                ]
               }
             }
           ]

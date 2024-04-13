@@ -40,7 +40,7 @@ public class AutoNamedCommands {
             new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
     ));
     NamedCommands.registerCommand("shootLine", new SequentialCommandGroup(
-            new InstantCommand(() -> pivotSubsystem.setPivotPosition(.47)),
+            new InstantCommand(() -> pivotSubsystem.setPivotPosition(.475)),
             new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
             new StartEndCommand(() -> intakeSubsystem.roll(-.1), intakeSubsystem::stop).withTimeout(0.2),
             new WaitCommand(.45),
