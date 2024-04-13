@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.25,
+        "x": 2.55,
         "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.25,
-        "y": 5.549999999999999
+        "x": 3.55,
+        "y": 5.55
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "midlinedash2end"
     },
     {
       "anchor": {
-        "x": 2.55,
-        "y": 5.55
+        "x": 7.942353117231199,
+        "y": 4.063660281386183
       },
       "prevControl": {
-        "x": 1.5499999999999998,
-        "y": 5.55
+        "x": 4.967776380020622,
+        "y": 3.7594155730410193
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "midlinedash2end"
+      "linkedName": "midlinedash3end"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "rollIn",
-      "waypointRelativePos": 0.55,
+      "waypointRelativePos": 0.7,
       "command": {
         "type": "parallel",
         "data": {
@@ -47,11 +47,28 @@
           ]
         }
       }
+    },
+    {
+      "name": "armDown",
+      "waypointRelativePos": 0.5,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "armDown"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 5.5,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -61,10 +78,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "midSubFourPiece",
+  "folder": "midlineDash",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": 179.6786299144982,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

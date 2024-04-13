@@ -1,0 +1,61 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.25,
+      "y": 5.55
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shootBump"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "armDown"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "midSubPieceTwo4p"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "handoff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootLine"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "midlineDashNoteThree"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "midlineDashFireThree"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
