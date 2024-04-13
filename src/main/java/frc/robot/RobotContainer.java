@@ -184,8 +184,7 @@ public class RobotContainer {
         joystick.back().onTrue(new InstantCommand(climberSubsystem::engageBrake));
 //        joystick.rightTrigger().whileTrue(new StartEndCommand(() -> shooterSubsystem.setVelocity(250), () -> shooterSubsystem.stopFlywheel()));
 //        joystick.povRight().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(.5)));
-
-
+        joystick.x().whileTrue(new StartEndCommand(() -> shooterSubsystem.spinFeeder(0.3), shooterSubsystem::stopNeo));
     }
 
 

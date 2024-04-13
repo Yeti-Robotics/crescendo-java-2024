@@ -213,6 +213,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
         double distance = relativeSpeaker.getTranslation().getNorm();
         SmartDashboard.putNumber("distance", distance);
+        SmartDashboard.putNumber("gyro spin rate", getPigeon2().getRate());
     }
 }
 
