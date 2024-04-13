@@ -73,7 +73,8 @@ public class PivotSubsystem extends SubsystemBase {
         talonFXConfiguration.CurrentLimits = PivotConstants.PIVOT_CURRENT_LIMIT;
         talonFXConfiguration.SoftwareLimitSwitch = PivotConstants.PIVOT_SOFT_LIMIT;
         talonFXConfiguration.Slot0 = PivotConstants.SLOT_0_CONFIGS;
-        talonFXConfiguration.MotionMagic.MotionMagicCruiseVelocity = 0;
+        talonFXConfiguration.MotionMagic.MotionMagicCruiseVelocity = 2;
+        talonFXConfiguration.MotionMagic.MotionMagicAcceleration = 2;
         talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = PivotConstants.PROFILE_A;
         talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = PivotConstants.PROFILE_V;
 
