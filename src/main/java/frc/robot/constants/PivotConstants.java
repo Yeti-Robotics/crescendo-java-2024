@@ -50,7 +50,7 @@ public class PivotConstants {
             .31
     );
 
-    public static final double MAGNET_OFFSET = 0.289794; //placeholder
+    public static final double MAGNET_OFFSET = 0.433838;
 
     public static final double GEAR_RATIO = 1.0/144.0;
 
