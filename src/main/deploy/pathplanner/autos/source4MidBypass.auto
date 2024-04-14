@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.76,
-      "y": 6.6
+      "x": 0.7,
+      "y": 4.5
     },
-    "rotation": -122.78173264301024
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -18,28 +18,47 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 1.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shootOut"
+                  "name": "shootBumpCorner"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": null
+            "name": "armDown"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "shuttleSourceget1"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "bypassShootTwo"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "handoff"
+                }
+              }
+            ]
           }
         },
         {
@@ -49,13 +68,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.25
+                  "waitTime": 1.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shootOut"
+                  "name": "shootLine2"
                 }
               }
             ]
@@ -64,56 +83,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.25
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shootOut"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.25
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shootOut"
-                }
-              }
-            ]
+            "pathName": "bypassNoteThree"
           }
         }
       ]
     }
   },
-  "folder": "mid 3 amp side",
+  "folder": "source 4",
   "choreoAuto": false
 }
