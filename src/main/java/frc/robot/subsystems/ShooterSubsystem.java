@@ -124,7 +124,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void spinNeo() {
-        neo.set(1);
+        neo.set(-1);
     }
     public void spinFeeder(double speed) {
         neo.set(speed);
