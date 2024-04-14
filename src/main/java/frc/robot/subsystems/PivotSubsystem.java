@@ -65,7 +65,7 @@ public class PivotSubsystem extends SubsystemBase {
         talonFXConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         talonFXConfiguration.Feedback.FeedbackRemoteSensorID = pivotEncoder1.getDeviceID();
-        talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
+        talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         talonFXConfiguration.MotorOutput.NeutralMode = PivotConstants.PIVOT_NEUTRAL_MODE;
         talonFXConfiguration.FutureProofConfigs = true;
         talonFXConfiguration.Feedback.SensorToMechanismRatio = 1;
