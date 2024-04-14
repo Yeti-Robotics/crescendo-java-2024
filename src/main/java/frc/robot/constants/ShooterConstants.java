@@ -9,8 +9,8 @@ import frc.robot.util.ShooterStateData;
 
 public final class ShooterConstants {
 
-    public static final int SHOOTER_LEFT_MOTOR = 15; //id
-    public static final int SHOOTER_RIGHT_MOTOR = 5; //id
+    public static final int SHOOTER_LEFT_MOTOR = 5; //id
+    public static final int SHOOTER_RIGHT_MOTOR = 15; //id
     public static final CurrentLimitsConfigs SHOOTER_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
             withSupplyCurrentThreshold(55).withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);
     public static final InvertedValue SHOOTER_INVERSION = InvertedValue.CounterClockwise_Positive;
@@ -50,8 +50,18 @@ public final class ShooterConstants {
 
     public static InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
         InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
-        map.put(0.0, new ShooterStateData(52, 100));
-        map.put(4.0, new ShooterStateData(45, 125));
+        // TODO: decrease angles by aroun 0.05 to tune
+        map.put(1.11, new ShooterStateData(.53, 125));
+        map.put(2.1, new ShooterStateData(.48, 125));
+        map.put(2.25, new ShooterStateData(.4775, 125));
+        map.put(2.4, new ShooterStateData(.4675, 125));
+        map.put(2.5, new ShooterStateData(.4675, 125));
+        map.put(2.67, new ShooterStateData(.46, 125));
+        map.put(2.81, new ShooterStateData(.4575, 125));
+        map.put(3.0, new ShooterStateData(.4575, 125));
+        map.put(3.62, new ShooterStateData(.45, 125));
+        map.put(3.7, new ShooterStateData(.45, 125));
+        //map.put(4.747, new ShooterStateData(.442, 250)); from the edge of the wing
         return map;
     }
 }

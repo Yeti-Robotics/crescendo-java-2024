@@ -73,6 +73,15 @@ public class DriveConstants {
     public static final double AZIMUTH_MOTOR_KV = 0.35; //placeholder from borealis 0.7
     public static final double AZIMUTH_MOTOR_KA = 0.0; //placeholder from borealis
 
+    public static final double SUPPLY_CURRENT_LIMIT = 60;
+    public static final boolean SUPPLY_CURRENT_LIMIT_ENABLE = true;
+    public static final double SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD = 65;
+    public static final double SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD = 0.1;
+
+    public static final double PEAK_FORWARD_VOLTAGE = 12.0;
+    public static final double PEAK_REVERSE_VOLTAGE = -12.0;
+
+
     public static final double DEGREES_TO_FALCON = 20.64 * 2048 / 360.0;
     public static final double SWERVE_X_REDUCTION = 1.0 / 6.75;
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(4); //0.1016

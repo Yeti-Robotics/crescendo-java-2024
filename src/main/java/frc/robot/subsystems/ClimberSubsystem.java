@@ -4,15 +4,13 @@ package frc.robot.subsystems;
 //import com.ctre.phoenix6.StatusSignal;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.CANCoderConstants;
 import frc.robot.constants.ClimberConstants;
 
 public class ClimberSubsystem extends SubsystemBase {
@@ -20,6 +18,7 @@ public class ClimberSubsystem extends SubsystemBase {
     private final TalonFX climberFalcon2;
     private final Servo climberBrake1;
     private final Servo climberBrake2;
+
     private final CANcoder canCoder1;
     private final CANcoder canCoder2;
 
@@ -54,7 +53,6 @@ public class ClimberSubsystem extends SubsystemBase {
         motorConfig2.Feedback.withFeedbackRemoteSensorID(canCoder2.getDeviceID());
 
         var encoderConfig = new CANcoderConfiguration();
-        // Fix sammy perlmen's issue :)
         talon1Config.apply(motorConfig1);
         talon2Config.apply(motorConfig2);
     }
@@ -68,6 +66,12 @@ public class ClimberSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+//        SmartDashboard.putData("climber kraken 1", climberFalcon1);
+//        SmartDashboard.putData("climber kraken 2", climberFalcon2);
+        SmartDashboard.putData("climber encoder 1", canCoder1);
+        SmartDashboard.putData("climber encoder 2", canCoder2);
+//        SmartDashboard.putNumber("climber brake servo 1", climberBrake1.get());
+//        SmartDashboard.putNumber("climber brake servo 2", climberBrake2.get());
     }
 
     public void climbUp() {
@@ -85,16 +89,26 @@ public class ClimberSubsystem extends SubsystemBase {
         climberFalcon2.set(0);
     }
 
+    public void engageBrake() {
+        climberBrake1.set(0.2);
+        climberBrake2.set(0.2);
+    }
+
+    public void disengageBrake() {
+        climberBrake1.set(0.4);
+        climberBrake2.set(0.4);
+    }
+
     public double getServo() {
         return climberBrake1.getAngle();
     }
 
-    public double getLeftEncoder() {
-        return climberFalcon2.getRotorPosition().getValue();
+    public double getRightEncoder() {
+        return canCoder1.getAbsolutePosition().getValue();
     }
 
-    public double getRightEncoder() {
-        return climberFalcon1.getRotorPosition().getValue();
+    public double getLeftEncoder() {
+        return canCoder2.getAbsolutePosition().getValue();
     }
 
     public double getAverageEncoder() {
@@ -104,6 +118,7 @@ public class ClimberSubsystem extends SubsystemBase {
     public boolean atEncoderLimit() {
         return getAverageEncoder() <= ClimberConstants.CLIMBER_TALON_1;
     }
+
 
 }
 

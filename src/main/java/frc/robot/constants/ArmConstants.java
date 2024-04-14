@@ -9,7 +9,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public final class ArmConstants {
-    public static final int ARM_KRAKEN_ID = 8;
+    public static final int ARM_KRAKEN_ID = 21;
     public static final int ARM_CANCODER_ID = 5;
     public static final int BEAM_BREAK_PORT = 1;
 
@@ -17,6 +17,7 @@ public final class ArmConstants {
     public static final NeutralModeValue ARM_NEUTRAL_MODE = NeutralModeValue.Brake;
     public static final double ARM_POSITION_STATUS_FRAME = 0.05;
     public static final double ARM_VELOCITY_STATUS_FRAME = 0.01;
+    public static final double ARM_HANDOFF_POSITION = 0.015;
 
     public static final double GRAVITY_FEEDFORWARD = 0.05;
 
@@ -35,11 +36,11 @@ public final class ArmConstants {
             withForwardSoftLimitEnable
                     (true).
             withForwardSoftLimitThreshold(
-            0.1 //placeholder
+            0.0195 //placeholder
     ).withReverseSoftLimitEnable(false).withReverseSoftLimitThreshold(
             65 //placeholder
     );
-    public static final double MAGNET_OFFSET = 0; //placeholder
+    public static final double MAGNET_OFFSET = -1; //placeholder
 
 
     public static final double GEAR_RATIO = 1.0 / (50.463 / 12.0);

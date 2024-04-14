@@ -9,5 +9,5 @@ public final class VisionConstants {
     public static final String TABLE_NAME = "table";
     public static final String LIMELIGHT_NAME = "limelight";
 
-
+    public static final String CAMERA_NAME = "camera";
     }

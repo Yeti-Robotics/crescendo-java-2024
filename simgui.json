@@ -1,20 +1,65 @@
 {
+  "HALProvider": {
+    "DIO": {
+      "window": {
+        "visible": true
+      }
+    },
+    "Other Devices": {
+      "Pigeon 2 (v6)[1]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Pose": "Field2d",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Elevator magswitch": "Digital Input",
+      "/SmartDashboard/Elevator motor": "Motor Controller",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Forward limit switch pivot": "Digital Input",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
-      "/SmartDashboard/Module 3": "Mechanism2d"
+      "/SmartDashboard/Module 3": "Mechanism2d",
+      "/SmartDashboard/Reverse limit switch pivot": "Digital Input",
+      "/SmartDashboard/intake beam break": "Digital Input",
+      "/SmartDashboard/intake kraken": "Motor Controller",
+      "/SmartDashboard/shooter beam break": "Digital Input"
+    },
+    "windows": {
+      "/Pose": {
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
     "Retained Values": {
+      "open": false
+    },
+    "Transitory Values": {
       "open": false
     }
   },
   "NetworkTables Info": {
+    "Connections": {
+      "open": true
+    },
     "visible": true
   }
 }

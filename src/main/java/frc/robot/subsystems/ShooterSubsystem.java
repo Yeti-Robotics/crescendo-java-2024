@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.TalonFXConstants;
@@ -78,6 +79,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+//        SmartDashboard.putData("left shooter kraken", leftKraken);
+//        SmartDashboard.putData("right shooter kraken", rightKraken);
+//        SmartDashboard.putData("feeder shooter kraken", neo);
+        SmartDashboard.putData("shooter beam break", beamBreak);
+        SmartDashboard.putNumber("left rps:", leftKraken.getVelocity().getValue());
+        SmartDashboard.putNumber("right rps:", rightKraken.getVelocity().getValue());
 //
 //        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
 //                velocity, 0, true, ShooterConstants.SHOOTER_F, 0, false, false, false);
@@ -119,7 +126,13 @@ public class ShooterSubsystem extends SubsystemBase {
     public void spinNeo() {
         neo.set(1);
     }
+    public void spinFeeder(double speed) {
+        neo.set(speed);
+    }
 
+    public void stageNeo() {
+        neo.set(-.2);
+    }
     public void stopNeo() {
         neo.stopMotor();
     }
@@ -151,6 +164,24 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     }
+
+    public void bumpFire() {
+        leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(60));
+        rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(100));
+    }
+
+    public void shootTrap() {
+        leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(35));
+        rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(80));
+    }
+
+
+    public void shootAmp() {
+        leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(40));
+        rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(15));
+    }
+
+
     //    public void testMotionMagic(double vel) {
 //        MotionMagicVelocityVoltage motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(
 //                vel, 0, false, SHOOTER_F, 0, false, false, false);

@@ -1,11 +1,14 @@
 package frc.robot.commands.led;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LEDSubsystem;
 
+import java.util.Optional;
+
 public class AmpSignalCommand extends Command {
 
-   private final LEDSubsystem ledSubsystem;
+    private final LEDSubsystem ledSubsystem;
 
     public AmpSignalCommand(LEDSubsystem ledSubsystem) {
         this.ledSubsystem = ledSubsystem;
@@ -18,10 +21,10 @@ public class AmpSignalCommand extends Command {
 
     @Override
     public void execute() {
-//        if (AmpReady) {
-//            ledSubsystem.setRGB(0, 255, 0, 255);
-//        }
-      }
+        ledSubsystem.setRGB(0, 0, 255, 0);
+        ledSubsystem.setBrightness(1);
+        ledSubsystem.sendData();
+    }
 
     @Override
     public boolean isFinished() {
@@ -30,12 +33,11 @@ public class AmpSignalCommand extends Command {
     }
 
     @Override
-    public boolean runsWhenDisabled(){
+    public boolean runsWhenDisabled() {
         return true;
     }
 
     @Override
     public void end(boolean interrupted) {
-
     }
 }
