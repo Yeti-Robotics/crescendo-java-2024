@@ -58,21 +58,6 @@ public final class ShooterConstants {
         map.put(2.65, new ShooterStateData(.455, 125));
         map.put(3.0, new ShooterStateData(0.455, 125));
         map.put(3.8, new ShooterStateData(0.443, 125));
-        /*map.put(1.11, new ShooterStateData(.53, 125));
-        map.put(2.14, new ShooterStateData(.475, 125));
-        map.put(1.676, new ShooterStateData(0.485,125));
-        map.put(2.25, new ShooterStateData(.4775, 125));
-        map.put(2.4, new ShooterStateData(.4675, 125));
-        map.put(2.5, new ShooterStateData(.4675, 125));
-        map.put(2.67, new ShooterStateData(.46, 125));
-        map.put(2.91, new ShooterStateData(0.457, 125));
-        map.put(3.0, new ShooterStateData(.4575, 125));
-        map.put(3.6178, new ShooterStateData(0.439, 125));
-        map.put(3.7, new ShooterStateData(.45, 125));
-        map.put(3.051, new ShooterStateData(0.454, 125));
-        map.put(4.3, new ShooterStateData(0.441, 125));
-        map.put(3.21, new ShooterStateData(0.451, 125));*/
-        //map.put(4.747, new ShooterStateData(.442, 250)); from the edge of the wing
         return map;
     }
 }
