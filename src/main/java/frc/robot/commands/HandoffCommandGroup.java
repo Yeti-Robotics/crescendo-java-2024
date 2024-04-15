@@ -22,7 +22,7 @@ public class HandoffCommandGroup extends SequentialCommandGroup {
                                 armSubsystem.getEnc() <= ArmConstants.ARM_HANDOFF_POSITION).andThen(
                                 new StartEndCommand(() -> shooterSubsystem.spinFeeder(-0.3),
                                         shooterSubsystem::stopFlywheel).alongWith(
-                                        new StartEndCommand(() -> intakeSubsystem.roll(-.2), intakeSubsystem::stop))
+                                        new StartEndCommand(() -> intakeSubsystem.roll(-.35), intakeSubsystem::stop))
                         ).until(shooterSubsystem::getBeamBreak),
                         new PivotHomeCommand(pivotSubsystem)
                 )
