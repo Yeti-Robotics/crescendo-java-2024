@@ -84,6 +84,7 @@ public class Robot extends TimedRobot {
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
         System.out.println("ROBOT INIT END");
+        SmartDashboard.putNumber("shooterstate-position", 0.5);
     }
 
     @Override
@@ -91,6 +92,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
        lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
 //       DriverStation.refreshData();
+
     }
 
     @Override

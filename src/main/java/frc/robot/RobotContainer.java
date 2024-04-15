@@ -20,19 +20,14 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
-import frc.robot.commands.led.BlinkLimeLightCommand;
 import frc.robot.commands.led.SetLEDToRGBCommand;
 import frc.robot.commands.pivot.PivotHomeCommand;
-import frc.robot.commands.pivot.PivotMoveCommand;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ElevatorConstants;
-import frc.robot.constants.ShooterConstants;
-import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drivetrain.Telemetry;
 import frc.robot.subsystems.drivetrain.generated.TunerConstants;
-import frc.robot.util.LimelightHelpers;
 import frc.robot.util.controllerUtils.ButtonHelper;
 import frc.robot.util.controllerUtils.ControllerContainer;
 import frc.robot.util.controllerUtils.MultiButton;
@@ -44,8 +39,6 @@ public class RobotContainer {
     private final BooleanEvent limitSwitchTriggered;
     public final LEDSubsystem ledSubsystem = new LEDSubsystem();
     public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-
-    public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
     public final PivotSubsystem pivotSubsystem = new PivotSubsystem();
 
@@ -107,8 +100,6 @@ public class RobotContainer {
         buttonHelper.createButton(10,0,  new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
 //        buttonHelper.createButton(1, 0, new ConditionalCommand(new RunCommand(() ->intakeSubsystem.roll(.5)), new RunCommand(() -> intakeSubsystem.roll(0)), intakeSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.65), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(3, 0, new StartEndCommand(() -> climberSubsystem.climbUp(), () -> climberSubsystem.stopClimb()), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(7, 0, new StartEndCommand(() -> climberSubsystem.climbDown(), () -> climberSubsystem.stopClimb()).until(() -> climberSubsystem.getRightEncoder() >= .200195 && climberSubsystem.getLeftEncoder() <= -0.242676), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(4, 0,  new StartEndCommand(() -> elevatorSubsystem.goDown(0.2), elevatorSubsystem::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.DOWN)).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.5)))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopNeo).until(shooterSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(8, 0, new StartEndCommand(() -> shooterSubsystem.spinFeeder(-0.25), shooterSubsystem::stopNeo), MultiButton.RunCondition.WHILE_HELD);
@@ -123,13 +114,8 @@ public class RobotContainer {
                         () -> pivotSubsystem.getEncAngle() < 0.4).withTimeout(0.6).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.26)).unless(() -> !elevatorSubsystem.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
 //        buttonHelper.createButton(11, 0,new StartEndCommand(shooterSubsystem::shootAmp, shooterSubsystem::stopFlywheel),MultiButton.RunCondition.WHILE_HELD);
 //        buttonHelper.createButton(12,0,new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.TRAP)), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(
-                12,0,new InstantCommand(climberSubsystem::disengageBrake),MultiButton.RunCondition.WHEN_PRESSED);
-        limitSwitchTriggered.castTo(Trigger::new).onTrue(new PivotLimitSwitchCommand(pivotSubsystem));
         buttonHelper.createButton(11, 0,new StartEndCommand(shooterSubsystem::shootTrap, shooterSubsystem::stopFlywheel),MultiButton.RunCondition.WHILE_HELD);
 //        buttonHelper.createButton(12,0,new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.TRAP)), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(
-                12,0,new InstantCommand(climberSubsystem::disengageBrake),MultiButton.RunCondition.WHEN_PRESSED);
         limitSwitchTriggered.castTo(Trigger::new).onTrue(new PivotLimitSwitchCommand(pivotSubsystem));
         //TO TEST
 
@@ -174,14 +160,13 @@ public class RobotContainer {
                 new StartEndCommand(() -> shooterSubsystem.setVelocity(45), shooterSubsystem::stopFlywheel).withTimeout(0.5)
         );
 
-        joystick.rightTrigger().whileTrue(new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
+        joystick.rightTrigger().whileTrue(new StartEndCommand(shooterSubsystem::spinNeo, shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
 //        joystick.leftTrigger().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(.15), pivotSubsystem::stop).until(() -> pivotSubsystem.getEncAngle() <= ShooterConstants.SHOOTER_MAP().get(drivetrain.getState().Pose.getX()).angle));
 
         joystick.povUp().onTrue(new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2));
         joystick.povDown().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.DOWN)));
         joystick.povLeft().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(0.05), () -> pivotSubsystem.moveDown(0.01)));
         joystick.povRight().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveDown(0.05), () -> pivotSubsystem.moveDown(0.01)));
-        joystick.back().onTrue(new InstantCommand(climberSubsystem::engageBrake));
 //        joystick.rightTrigger().whileTrue(new StartEndCommand(() -> shooterSubsystem.setVelocity(250), () -> shooterSubsystem.stopFlywheel()));
 //        joystick.povRight().onTrue(new InstantCommand(() -> pivotSubsystem.setPivotPosition(.5)));
         joystick.x().whileTrue(new StartEndCommand(() -> shooterSubsystem.spinFeeder(0.3), shooterSubsystem::stopNeo));

@@ -51,17 +51,13 @@ public final class ShooterConstants {
     public static InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
         InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
         // TODO: decrease angles by aroun 0.05 to tune
-        map.put(1.11, new ShooterStateData(.53, 125));
-        map.put(2.1, new ShooterStateData(.48, 125));
-        map.put(2.25, new ShooterStateData(.4775, 125));
-        map.put(2.4, new ShooterStateData(.4675, 125));
-        map.put(2.5, new ShooterStateData(.4675, 125));
-        map.put(2.67, new ShooterStateData(.46, 125));
-        map.put(2.81, new ShooterStateData(.4575, 125));
-        map.put(3.0, new ShooterStateData(.4575, 125));
-        map.put(3.62, new ShooterStateData(.45, 125));
-        map.put(3.7, new ShooterStateData(.45, 125));
-        //map.put(4.747, new ShooterStateData(.442, 250)); from the edge of the wing
+        map.put(1.375, new ShooterStateData(0.5, 125));
+        map.put(1.7, new ShooterStateData(.485, 125));
+        map.put(2.0, new ShooterStateData(0.478, 125));
+        map.put(2.3, new ShooterStateData(0.47, 125));
+        map.put(2.65, new ShooterStateData(.455, 125));
+        map.put(3.0, new ShooterStateData(0.455, 125));
+        map.put(3.8, new ShooterStateData(0.443, 125));
         return map;
     }
 }
