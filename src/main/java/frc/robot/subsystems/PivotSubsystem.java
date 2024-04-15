@@ -141,7 +141,10 @@ public class PivotSubsystem extends SubsystemBase {
         System.out.print("Pivot position: ");
         System.out.println(position);
         System.out.println(motionMagic.Position);
-        pivotMotor1.setControl(motionMagic.withPosition(position).withSlot(0).withUpdateFreqHz(200));
+        pivotMotor1.setControl(motionMagic.withPosition(position).
+                withLimitForwardMotion(getForwardLimitSwitch())
+                .withLimitReverseMotion(getReverseLimitSwitch()).
+                withSlot(0).withUpdateFreqHz(200));
         SmartDashboard.putNumber("pivot position setpoint:", position);
     }
 
