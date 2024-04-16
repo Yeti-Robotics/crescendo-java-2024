@@ -18,13 +18,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.25
+                  "waitTime": 1.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shootBumpLast"
+                  "name": "shootBumpCorner"
                 }
               }
             ]
@@ -74,7 +74,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.5
+                  "waitTime": 1.0
                 }
               },
               {
@@ -84,6 +84,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bypassNoteThree"
           }
         }
       ]

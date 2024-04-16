@@ -73,7 +73,8 @@ public class PivotSubsystem extends SubsystemBase {
         talonFXConfiguration.CurrentLimits = PivotConstants.PIVOT_CURRENT_LIMIT;
         talonFXConfiguration.SoftwareLimitSwitch = PivotConstants.PIVOT_SOFT_LIMIT;
         talonFXConfiguration.Slot0 = PivotConstants.SLOT_0_CONFIGS;
-        talonFXConfiguration.MotionMagic.MotionMagicCruiseVelocity = 0;
+        talonFXConfiguration.MotionMagic.MotionMagicCruiseVelocity = 2;
+        talonFXConfiguration.MotionMagic.MotionMagicAcceleration = 2;
         talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = PivotConstants.PROFILE_A;
         talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = PivotConstants.PROFILE_V;
 
@@ -132,7 +133,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public void setPivotPosition(double position) {
-        MotionMagicExpoVoltage motionMagic = new MotionMagicExpoVoltage(
+        MotionMagicVoltage motionMagic = new MotionMagicVoltage(
                 position, true, 0, 0,
                 false, false, false);
         // todo: overridebreakdurneutral = false
@@ -140,7 +141,11 @@ public class PivotSubsystem extends SubsystemBase {
         System.out.print("Pivot position: ");
         System.out.println(position);
         System.out.println(motionMagic.Position);
-        pivotMotor1.setControl(motionMagic.withPosition(position).withSlot(0).withUpdateFreqHz(200));
+        pivotMotor1.setControl(motionMagic.withPosition(position).
+                withLimitForwardMotion(getForwardLimitSwitch())
+                .withLimitReverseMotion(getReverseLimitSwitch()).
+                withSlot(0).withUpdateFreqHz(200));
+        SmartDashboard.putNumber("pivot position setpoint:", position);
     }
 
     public double getAngle() {

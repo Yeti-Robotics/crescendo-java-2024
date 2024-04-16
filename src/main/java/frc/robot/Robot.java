@@ -86,6 +86,7 @@ public class Robot extends TimedRobot {
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
         System.out.println("ROBOT INIT END");
+        SmartDashboard.putNumber("shooterstate-position", 0.5);
     }
 
     @Override
@@ -93,6 +94,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
        lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
 //       DriverStation.refreshData();
+
     }
 
     @Override
@@ -172,11 +174,12 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
 
         if (DriverStation.getAlliance().isPresent()) {
-            if (lastResult != null && lastResult.valid && robotContainer.drivetrain.getPigeon2().getRate() < 720) {
+            if (lastResult != null && lastResult.valid && Math.abs(robotContainer.drivetrain.getPigeon2().getRate()) < 230) {
                 Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
                 robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
             }
         }
+
     }
 
 

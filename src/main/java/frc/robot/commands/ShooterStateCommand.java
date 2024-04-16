@@ -71,6 +71,8 @@ public class ShooterStateCommand extends Command {
         rps = ShooterConstants.SHOOTER_MAP().get(distance).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(distance).angle;
         SmartDashboard.putNumber("calc shooter angle", angle);
+//        angle = SmartDashboard.getNumber("shooterstate-position", 0.5);
+
 
        /* SwerveRequest pointCmd = new SwerveRequest.FieldCentricFacingAngle()
                 .withVelocityX(velocityX)

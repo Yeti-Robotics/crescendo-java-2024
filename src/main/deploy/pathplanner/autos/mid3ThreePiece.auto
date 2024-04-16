@@ -33,13 +33,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "mid3NoteOne"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "mid3NoteTwo"
+            "pathName": null
           }
         },
         {
@@ -64,7 +64,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "mid3Note2.5"
+            "pathName": null
           }
         },
         {
@@ -89,7 +89,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "mid3NoteThree"
+            "pathName": null
           }
         },
         {
