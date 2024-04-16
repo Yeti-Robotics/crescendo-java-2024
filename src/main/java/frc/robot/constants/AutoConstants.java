@@ -30,7 +30,8 @@ public final class AutoConstants {
         SHUTTLE_3_SOURCE("shuttle3FromSource", DEFAULT_CONSTRAINTS),
         SOURCE_SIDE_SHUTTLE_AMP("source4ShuttleAmp", DEFAULT_CONSTRAINTS),
         MIDLINE_DASH_THREE_PIECE("midlineDashThreePiece", DEFAULT_CONSTRAINTS),
-        CLEAR_AUTO("1160 Auto", DEFAULT_CONSTRAINTS);
+        CLEAR_AUTO("1160 Auto", DEFAULT_CONSTRAINTS),
+        SOURCE_BYPASS_AUTO("source4MidBypass",DEFAULT_CONSTRAINTS);
 
         public final String name;
         public final PathConstraints initConstraint;
