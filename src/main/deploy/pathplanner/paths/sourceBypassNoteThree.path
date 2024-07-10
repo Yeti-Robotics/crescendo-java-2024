@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4763566268987174,
-        "y": 2.6747081063084432
+        "x": 2.0283806616115356,
+        "y": 3.548383473371797
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.307414894430358,
-        "y": 0.9251560871167382
+        "x": 4.569632192046122,
+        "y": 1.1125294718492438
       },
       "isLocked": false,
       "linkedName": "shootFar"
@@ -73,8 +73,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -89,5 +89,5 @@
     "rotation": 134.57775046132843,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

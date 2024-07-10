@@ -81,7 +81,7 @@ public class ShooterStateCommand extends Command {
         //commandSwerveDrivetrain.setControl(pointCmd);
         shooterSubsystem.setVelocity(rps);
         pivotSubsystem.setPivotPosition(angle);
-        intakeSubsystem.roll(-.25);
+        intakeSubsystem.roll(-.2);
         SmartDashboard.putNumber("distance", distance);
         SmartDashboard.putNumber("angle", angle);
     }

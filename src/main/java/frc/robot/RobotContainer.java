@@ -97,7 +97,7 @@ public class RobotContainer {
 
 
         buttonHelper.createButton(1, 0, new ShooterStateCommand(drivetrain, pivotSubsystem, shooterSubsystem, intakeSubsystem),MultiButton.RunCondition.WHILE_HELD);
-//        buttonHelper.createButton(5, 0, new StartEndCommand(() -> shooterSubsystem.bumpFire(), shooterSubsystem::stopFlywheel).alongWith(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.53))),MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(8, 0, new StartEndCommand(() -> shooterSubsystem.bumpFire(), shooterSubsystem::stopFlywheel).alongWith(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.53))),MultiButton.RunCondition.WHILE_HELD);
 
         buttonHelper.createButton(5,0,new SequentialCommandGroup(
                 new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.42)).andThen(
@@ -122,7 +122,7 @@ public class RobotContainer {
         buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.65), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(4, 0,  new StartEndCommand(() -> elevatorSubsystem.goDown(0.2), elevatorSubsystem::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.DOWN)).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.5)))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopNeo).until(shooterSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(8, 0, new StartEndCommand(() -> shooterSubsystem.spinFeeder(-0.25), shooterSubsystem::stopNeo), MultiButton.RunCondition.WHILE_HELD);
+//        buttonHelper.createButton(8, 0, new StartEndCommand(() -> shooterSubsystem.spinFeeder(-0.25), shooterSubsystem::stopNeo), MultiButton.RunCondition.WHILE_HELD);
 //        buttonHelper.createButton(9, 0, new StartEndCommand(() -> armSubsystem.moveUp(0.3), armSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
 //        buttonHelper.createButton(10, 0, new StartEndCommand(() -> armSubsystem.moveUp
 //        (.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() >= 0.).andThen(armSubsystem::setMotorsBrake), MultiButton.RunCondition.WHEN_PRESSED);
@@ -161,7 +161,7 @@ public class RobotContainer {
                 .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
         // reset the field-centric heading on left bumper press
-        joystick.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+        joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
         joystick.rightBumper().whileTrue(new StartEndCommand(() -> intakeSubsystem.roll(.70), intakeSubsystem::stop));
 

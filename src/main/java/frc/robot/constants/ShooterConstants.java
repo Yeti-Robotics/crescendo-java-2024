@@ -55,8 +55,9 @@ public final class ShooterConstants {
         map.put(1.7, new ShooterStateData(.485, 125));
         map.put(2.0, new ShooterStateData(0.478, 125));
         map.put(2.3, new ShooterStateData(0.47, 125));
-        map.put(2.65, new ShooterStateData(.455, 125));
-        map.put(3.0, new ShooterStateData(0.455, 125));
+        map.put(2.65, new ShooterStateData(.465, 125));
+        map.put(2.8, new ShooterStateData(.4625, 125));
+        map.put(3.0, new ShooterStateData(0.46, 125));
         map.put(3.8, new ShooterStateData(0.443, 125));
         return map;
     }
