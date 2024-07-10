@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.76,
-      "y": 6.6
+      "x": 0.7,
+      "y": 4.5
     },
-    "rotation": -122.03292047141447
+    "rotation": 120.18325565742944
   },
   "command": {
     "type": "sequential",
@@ -18,13 +18,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.5
+                  "waitTime": 1.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shootBump"
+                  "name": "shootBumpCorner"
                 }
               }
             ]
@@ -33,31 +33,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "mid3NoteOne"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "mid3NoteTwo"
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "shootLine"
-                }
-              }
-            ]
+            "pathName": "1160 Path"
           }
         }
       ]
     }
   },
-  "folder": "mid 3 amp side",
+  "folder": null,
   "choreoAuto": false
 }

@@ -34,13 +34,13 @@ public class AutoNamedCommands {
     NamedCommands.registerCommand("armDown", new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
                     () -> armSubsystem.getEnc() <= .5 && armSubsystem.getEnc() >= .44).alongWith(new PivotHomeCommand(pivotSubsystem)));
     NamedCommands.registerCommand("shootBump", new SequentialCommandGroup(
-            new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.55)),
+            new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.53)),
             new InstantCommand(() -> shooterSubsystem.bumpFire()),
             new WaitCommand(.75),
             new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
     ));
     NamedCommands.registerCommand("shootLine", new SequentialCommandGroup(
-            new InstantCommand(() -> pivotSubsystem.setPivotPosition(.47)),
+            new InstantCommand(() -> pivotSubsystem.setPivotPosition(.475)),
             new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
             new StartEndCommand(() -> intakeSubsystem.roll(-.1), intakeSubsystem::stop).withTimeout(0.2),
             new WaitCommand(.45),
@@ -73,7 +73,7 @@ public class AutoNamedCommands {
 
 
         NamedCommands.registerCommand("shootBumpCorner", new SequentialCommandGroup(
-                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.53)),
+                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.55)),
                 new InstantCommand(() -> shooterSubsystem.bumpFire()),
                 new WaitCommand(.75),
                 new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
@@ -83,6 +83,15 @@ public class AutoNamedCommands {
                 new InstantCommand(() -> pivotSubsystem.setPivotPosition(.55)),
                 new InstantCommand(() -> shooterSubsystem.bumpFire()),
                 new WaitCommand(.25),
+                new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
+        ));
+
+
+
+        NamedCommands.registerCommand("shootFar", new SequentialCommandGroup(
+                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.45)),
+                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                new WaitCommand(.75),
                 new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
         ));
 

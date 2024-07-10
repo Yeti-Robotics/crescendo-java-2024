@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.4,
-        "y": 0.8
+        "x": 1.68,
+        "y": 5.42
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.118938446192278,
-        "y": 0.7080263213917485
+        "x": 1.5216875402981584,
+        "y": 5.425088802485298
       },
       "isLocked": false,
-      "linkedName": "sourceSide3end"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.197438471909753,
-        "y": 1.9674205396912936
+        "x": 2.56,
+        "y": 3.8879977331994606
       },
       "prevControl": {
-        "x": 6.759558626107266,
-        "y": 1.5458304240431593
+        "x": 1.290597959227301,
+        "y": 4.20419031993556
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "shuttle3End2"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 155.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 145.0,
+    "rotation": 143.95777769486935,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "source 4 ",
+  "folder": "mid 3 amp side",
   "previewStartingState": {
-    "rotation": 179.79796392957414,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

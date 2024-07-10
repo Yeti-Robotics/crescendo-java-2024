@@ -74,6 +74,9 @@ public class Robot extends TimedRobot {
 //        autoChooser.addOption(AutoConstants.AutoModes.AMP_4_TWO_PIECE.name, AutoConstants.AutoModes.AMP_4_TWO_PIECE);
         autoChooser.addOption(AutoConstants.AutoModes.SOURCE_SIDE_SHUTTLE_AMP.name, AutoConstants.AutoModes.SOURCE_SIDE_SHUTTLE_AMP);
         autoChooser.addOption(AutoConstants.AutoModes.SHUTTLE_3_SOURCE.name, AutoConstants.AutoModes.SHUTTLE_3_SOURCE);
+        autoChooser.addOption(AutoConstants.AutoModes.MIDLINE_DASH_THREE_PIECE.name, AutoConstants.AutoModes.MIDLINE_DASH_THREE_PIECE);
+        autoChooser.addOption(AutoConstants.AutoModes.CLEAR_AUTO.name, AutoConstants.AutoModes.CLEAR_AUTO);
+        autoChooser.addOption(AutoConstants.AutoModes.SOURCE_BYPASS_AUTO.name, AutoConstants.AutoModes.SOURCE_BYPASS_AUTO);
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
         previousSelectedAuto = autoChooser.getSelected();
