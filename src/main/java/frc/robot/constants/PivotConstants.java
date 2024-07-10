@@ -7,8 +7,8 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class PivotConstants {
-    public static final int PIVOT_LIMIT_SWITCH_FORWARD = 6;
-    public static final int PIVOT_LIMIT_SWITCH_REVERSE = 7;
+    public static final int PIVOT_LIMIT_SWITCH_FORWARD = 7;
+    public static final int PIVOT_LIMIT_SWITCH_REVERSE = 6;
     public static final String PIVOT_ONE_MOTOR = "pivotMotor1";
     public static final String PIVOT_TWO_MOTOR = "pivotMotor2";
     public static final int PIVOT_ONE_MOTOR_ID = 29; //placeholder
