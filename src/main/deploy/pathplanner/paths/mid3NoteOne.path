@@ -3,47 +3,69 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7,
-        "y": 4.5
+        "x": 0.76,
+        "y": 6.6
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.904140353216511,
-        "y": 1.7449146453214444
+        "x": 1.4225982298118458,
+        "y": 6.837791367890429
       },
       "isLocked": false,
-      "linkedName": "startSource"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.93,
-        "y": 0.6
+        "x": 2.66,
+        "y": 6.49
       },
       "prevControl": {
-        "x": 6.93,
-        "y": 0.6
+        "x": 2.286290822101775,
+        "y": 6.421141809821688
+      },
+      "nextControl": {
+        "x": 2.8851895672868175,
+        "y": 6.531492548129579
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.66,
+        "y": 6.5
+      },
+      "prevControl": {
+        "x": 2.5616546811410927,
+        "y": 6.481883757052307
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "edgeNote"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 1.0,
       "rotationDegrees": 180.0,
-      "rotateFast": true
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "rollIn",
-      "waypointRelativePos": 0.45,
+      "name": "armDown",
+      "waypointRelativePos": 0.3,
       "command": {
         "type": "parallel",
         "data": {
           "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "armDown"
+              }
+            },
             {
               "type": "named",
               "data": {
@@ -55,16 +77,16 @@
       }
     },
     {
-      "name": "arm down",
-      "waypointRelativePos": 0.3,
+      "name": "handoof",
+      "waypointRelativePos": 1.4,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
               "type": "named",
               "data": {
-                "name": "armDown"
+                "name": "handoff"
               }
             }
           ]
@@ -73,20 +95,20 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 6.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": -150.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "source 4 ",
+  "folder": "amp 4",
   "previewStartingState": {
-    "rotation": 120.57455657429551,
+    "rotation": -121.92873436644585,
     "velocity": 0
   },
   "useDefaultConstraints": false

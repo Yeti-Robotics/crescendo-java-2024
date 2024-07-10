@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7,
-      "y": 4.5
+      "x": 1.25,
+      "y": 5.55
     },
-    "rotation": 120.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -18,13 +18,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.25
+                  "waitTime": 1.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shootBumpCorner"
+                  "name": "shootBump"
                 }
               }
             ]
@@ -39,26 +39,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "source4NoteTwo"
+            "pathName": "midSubPieceTwo4p"
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "source4FireTwo"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "handoff"
-                }
-              }
-            ]
+            "name": "handoff"
           }
         },
         {
@@ -68,7 +55,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.25
+                  "waitTime": 1.3
                 }
               },
               {
@@ -81,47 +68,15 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "armDown"
+            "pathName": "midlineDashNoteThree"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "source4NoteThree"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "source4FireThree"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "handoffMidLine"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "pathName": "midlineDashFireThree"
           }
         },
         {
@@ -131,7 +86,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.5
+                  "waitTime": 1.0
                 }
               },
               {
@@ -146,6 +101,6 @@
       ]
     }
   },
-  "folder": "source 4",
+  "folder": null,
   "choreoAuto": false
 }

@@ -3,35 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7,
-        "y": 4.5
+        "x": 3.4763566268987174,
+        "y": 2.6747081063084432
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.904140353216511,
-        "y": 1.7449146453214444
+        "x": 4.838981432599097,
+        "y": 2.072818068603326
       },
       "isLocked": false,
-      "linkedName": "startSource"
+      "linkedName": "bypassshoottwoend"
     },
     {
       "anchor": {
-        "x": 7.93,
-        "y": 0.6
+        "x": 7.883798934502291,
+        "y": 2.389010655339427
       },
       "prevControl": {
-        "x": 6.93,
-        "y": 0.6
+        "x": 5.377679913705047,
+        "y": 1.1945053276697124
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "edgeNote"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 180.0,
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": 179.15785607768072,
       "rotateFast": true
     }
   ],
@@ -39,7 +39,7 @@
   "eventMarkers": [
     {
       "name": "rollIn",
-      "waypointRelativePos": 0.45,
+      "waypointRelativePos": 0.7,
       "command": {
         "type": "parallel",
         "data": {
@@ -55,8 +55,8 @@
       }
     },
     {
-      "name": "arm down",
-      "waypointRelativePos": 0.3,
+      "name": "armDown",
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -73,8 +73,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 6.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -86,8 +86,8 @@
   "reversed": false,
   "folder": "source 4 ",
   "previewStartingState": {
-    "rotation": 120.57455657429551,
+    "rotation": 142.50731113240127,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

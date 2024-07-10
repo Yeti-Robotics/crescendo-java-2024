@@ -70,7 +70,9 @@ public class ShooterStateCommand extends Command {
         System.out.println(distance);
         rps = ShooterConstants.SHOOTER_MAP().get(distance).rps;
         angle = ShooterConstants.SHOOTER_MAP().get(distance).angle;
-        SmartDashboard.putNumber("shooter angle", angle);
+        SmartDashboard.putNumber("calc shooter angle", angle);
+//        angle = SmartDashboard.getNumber("shooterstate-position", 0.5);
+
 
        /* SwerveRequest pointCmd = new SwerveRequest.FieldCentricFacingAngle()
                 .withVelocityX(velocityX)
@@ -79,7 +81,7 @@ public class ShooterStateCommand extends Command {
         //commandSwerveDrivetrain.setControl(pointCmd);
         shooterSubsystem.setVelocity(rps);
         pivotSubsystem.setPivotPosition(angle);
-        intakeSubsystem.roll(-.25);
+        intakeSubsystem.roll(-.2);
         SmartDashboard.putNumber("distance", distance);
         SmartDashboard.putNumber("angle", angle);
     }

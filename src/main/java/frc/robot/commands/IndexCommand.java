@@ -4,16 +4,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-
 public class IndexCommand extends Command {
 
     private IntakeSubsystem intakeSubsystem;
     private ShooterSubsystem shooterSubsystem;
 
     public IndexCommand(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
-        // each subsystem used by the command must be passed into the
-        // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(intakeSubsystem);
+        this.shooterSubsystem = shooterSubsystem;
+        this.intakeSubsystem = intakeSubsystem;
+
+        addRequirements(intakeSubsystem, shooterSubsystem);
     }
 
     @Override
@@ -23,11 +23,11 @@ public class IndexCommand extends Command {
 
     @Override
     public void execute() {
-
-        shooterSubsystem.spinNeo();
-        intakeSubsystem.roll(-.4);
-
-
+        // Ensure the subsystems are not null before accessing their methods
+        if (shooterSubsystem != null && intakeSubsystem != null) {
+            shooterSubsystem.spinNeo();
+            intakeSubsystem.roll(-0.4);
+        }
     }
 
     @Override
@@ -38,9 +38,12 @@ public class IndexCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-
-        intakeSubsystem.stop();
-        shooterSubsystem.stopNeo();
-
+        // Ensure the subsystems are not null before accessing their methods
+        if (intakeSubsystem != null) {
+            intakeSubsystem.stop();
+        }
+        if (shooterSubsystem != null) {
+            shooterSubsystem.stopNeo();
+        }
     }
 }

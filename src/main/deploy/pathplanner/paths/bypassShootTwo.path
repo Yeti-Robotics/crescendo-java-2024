@@ -3,37 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.25,
-        "y": 5.55
+        "x": 7.93,
+        "y": 0.6
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5114572372001893,
-        "y": 5.497296708879134
+        "x": 6.93,
+        "y": 0.6000000000000002
       },
       "isLocked": false,
-      "linkedName": "fourPiece3End"
+      "linkedName": "edgeNote"
     },
     {
       "anchor": {
-        "x": 2.5,
-        "y": 4.15
+        "x": 2.0283806616115356,
+        "y": 3.548383473371797
       },
       "prevControl": {
-        "x": 1.0798029014032335,
-        "y": 3.5649618002802335
+        "x": 2.0911026107301685,
+        "y": 2.688855031659488
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "midSub4End"
+      "linkedName": "shootFar"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "rollin",
-      "waypointRelativePos": 0.5,
+      "name": "hand-off",
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "parallel",
         "data": {
@@ -41,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "rollIn"
+                "name": "handoff"
               }
             }
           ]
@@ -57,13 +57,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 141.49829188846414,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "midSubFourPiece",
+  "folder": "source 4 ",
   "previewStartingState": {
-    "rotation": 179.1135729542394,
+    "rotation": -176.75250111505443,
     "velocity": 0
   },
   "useDefaultConstraints": false

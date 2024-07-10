@@ -82,7 +82,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "midSubPieceThree4p"
+            "pathName": "midSubPieceFour4p2"
           }
         },
         {
@@ -98,7 +98,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "midSubFireThree4p2"
+                  "pathName": "midSubFireFour"
                 }
               }
             ]
@@ -132,7 +132,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "midSubPieceFour4p2"
+            "pathName": "midSubPieceThree4p"
           }
         },
         {
@@ -142,7 +142,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "midSubFireFour"
+                  "pathName": "midSubFireThree4p2"
                 }
               },
               {

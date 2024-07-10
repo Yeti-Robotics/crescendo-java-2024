@@ -74,6 +74,9 @@ public class Robot extends TimedRobot {
 //        autoChooser.addOption(AutoConstants.AutoModes.AMP_4_TWO_PIECE.name, AutoConstants.AutoModes.AMP_4_TWO_PIECE);
         autoChooser.addOption(AutoConstants.AutoModes.SOURCE_SIDE_SHUTTLE_AMP.name, AutoConstants.AutoModes.SOURCE_SIDE_SHUTTLE_AMP);
         autoChooser.addOption(AutoConstants.AutoModes.SHUTTLE_3_SOURCE.name, AutoConstants.AutoModes.SHUTTLE_3_SOURCE);
+        autoChooser.addOption(AutoConstants.AutoModes.MIDLINE_DASH_THREE_PIECE.name, AutoConstants.AutoModes.MIDLINE_DASH_THREE_PIECE);
+        autoChooser.addOption(AutoConstants.AutoModes.CLEAR_AUTO.name, AutoConstants.AutoModes.CLEAR_AUTO);
+        autoChooser.addOption(AutoConstants.AutoModes.SOURCE_BYPASS_AUTO.name, AutoConstants.AutoModes.SOURCE_BYPASS_AUTO);
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
         previousSelectedAuto = autoChooser.getSelected();
@@ -84,6 +87,7 @@ public class Robot extends TimedRobot {
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
         System.out.println("ROBOT INIT END");
+        SmartDashboard.putNumber("shooterstate-position", 0.5);
     }
 
     @Override
@@ -91,6 +95,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
        lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
 //       DriverStation.refreshData();
+
     }
 
     @Override
@@ -170,12 +175,13 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
 
         if (DriverStation.getAlliance().isPresent()) {
-                if (lastResult != null && lastResult.valid && robotContainer.drivetrain.getPigeon2().getRate() < 720) {
-                    Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
-                    robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
-                }
+            if (lastResult != null && lastResult.valid && Math.abs(robotContainer.drivetrain.getPigeon2().getRate()) < 230) {
+                Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
+                robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
             }
         }
+
+    }
 
 
 

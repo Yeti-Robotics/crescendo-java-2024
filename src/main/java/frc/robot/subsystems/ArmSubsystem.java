@@ -60,6 +60,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Arm encoder: ", armEncoder.getAbsolutePosition().getValue());
     }
 
 
@@ -75,6 +76,8 @@ public class ArmSubsystem extends SubsystemBase {
                 true, false, false);
 
         armKraken.setControl(motionMagicVoltage);
+
+        SmartDashboard.putNumber("arm set point: ", position.sensorUnits);
 
     }
 
