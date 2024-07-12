@@ -16,28 +16,33 @@ public final class AutoConstants {
             MAX_THETA_VELOCITY,
             MAX_THETA_ACCEL);
 
-    public enum AutoModes {
-        AMP_4_THREE_PIECE("amp4ThreePiece", DEFAULT_CONSTRAINTS),
-        MID_3_THREE_PIECE("mid3ThreePiece",DEFAULT_CONSTRAINTS),
-        MID_3_TWO_PIECE("mid3TwoPiece", DEFAULT_CONSTRAINTS),
-        AMP_4_TWO_PIECE("amp4TwoPiece", DEFAULT_CONSTRAINTS),
-        MID_SUB_TWO_PIECE("midSubTwoPiece", DEFAULT_CONSTRAINTS),
-        MID_SUB_THREE_PIECE("midSubThreePiece", DEFAULT_CONSTRAINTS),
-        MID_SUB_FOUR_PIECE("midSubFourPiece", DEFAULT_CONSTRAINTS),
-        SOURCE_SIDE_2_PIECE("source4TwoPiece", DEFAULT_CONSTRAINTS),
-        SOURCE_SIDE_3_PIECE("source4ThreePiece", DEFAULT_CONSTRAINTS),
-        BUMP_ONLY("bumpOnly", DEFAULT_CONSTRAINTS),
-        SHUTTLE_3_SOURCE("shuttle3FromSource", DEFAULT_CONSTRAINTS),
-        SOURCE_SIDE_SHUTTLE_AMP("source4ShuttleAmp", DEFAULT_CONSTRAINTS),
-        MIDLINE_DASH_THREE_PIECE("midlineDashThreePiece", DEFAULT_CONSTRAINTS),
-        CLEAR_AUTO("1160 Auto", DEFAULT_CONSTRAINTS),
-        SOURCE_BYPASS_AUTO("source4MidBypass",DEFAULT_CONSTRAINTS);
+    public enum AutoMode {
+        //AMP_4_TWO_PIECE("amp4TwoPiece"), // unused
+        //AMP_4_THREE_PIECE("amp4ThreePiece"), // unused
+        BUMP_ONLY("bumpOnly"),
+        CLEAR_AUTO("1160 Auto"),
+        //MID_3_TWO_PIECE("mid3TwoPiece"), // unused
+        //MID_3_THREE_PIECE("mid3ThreePiece"), // unused
+        // also unused: leaveAuto, mid3OnePiece
+        MID_SUB_TWO_PIECE("midSubTwoPiece"),
+        MID_SUB_THREE_PIECE("midSubThreePiece"),
+        MID_SUB_FOUR_PIECE("midSubFourPiece"),
+        MIDLINE_DASH_THREE_PIECE("midlineDashThreePiece"),
+        SHUTTLE_3_SOURCE("shuttle3FromSource"),
+        SOURCE_BYPASS_AUTO("source4MidBypass"),
+        SOURCE_SIDE_2_PIECE("source4TwoPiece"),
+        SOURCE_SIDE_3_PIECE("source4ThreePiece"),
+        SOURCE_SIDE_SHUTTLE_AMP("source4ShuttleAmp");
 
         public final String name;
         public final PathConstraints initConstraint;
         public final PathConstraints[] pathConstraints;
 
-        AutoModes(String name, PathConstraints initConstraint, PathConstraints... pathConstraints) {
+        AutoMode(String name) {
+            this(name, DEFAULT_CONSTRAINTS);
+        }
+
+        AutoMode(String name, PathConstraints initConstraint, PathConstraints... pathConstraints) {
             this.name = name;
             this.initConstraint = initConstraint;
             this.pathConstraints = pathConstraints;

@@ -105,10 +105,4 @@ public class AutoNamedCommands {
 
         NamedCommands.registerCommand("pivotHandoff", new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.5)));
     }
-
-    public static Command getAutoCommand(String pathName) {
-        PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
-        return AutoBuilder.followPath(path);
-    }
-
 }
