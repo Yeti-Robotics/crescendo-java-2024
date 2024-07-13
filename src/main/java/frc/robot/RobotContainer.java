@@ -120,11 +120,13 @@ public class RobotContainer {
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(
                         () ->
-                                drive.
-                                        withVelocityX(-joystick.getLeftY() * TunerConstants.kSpeedAt12VoltsMps) // Drive forward with
-                                        // negative Y (forward)
-                                        .withVelocityY(-joystick.getLeftX() * TunerConstants.kSpeedAt12VoltsMps) // Drive left with negative X (left)
-                                        .withRotationalRate(-joystick.getRightX() * DriveConstants.MaFxAngularRate) // Drive counterclockwise with negative X (left)
+                                drive
+                                        // +X in velocity = forward, -Y in joystick = forward
+                                        .withVelocityX(-joystick.getLeftY() * TunerConstants.kSpeedAt12VoltsMps)
+                                        // +Y in velocity = left, -X in joystick = left
+                                        .withVelocityY(-joystick.getLeftX() * TunerConstants.kSpeedAt12VoltsMps)
+                                        // +rotational rate = counterclockwise (left), -X in joystick = left
+                                        .withRotationalRate(-joystick.getRightX() * DriveConstants.MaFxAngularRate)
                 ));
 
         joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()));
