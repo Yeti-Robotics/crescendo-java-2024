@@ -40,11 +40,11 @@ public class AutoNamedCommands {
             new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
     ));
     NamedCommands.registerCommand("shootLine", new SequentialCommandGroup(
-            new InstantCommand(() -> pivotSubsystem.setPivotPosition(.475)),
+            new InstantCommand(() -> pivotSubsystem.setPivotPosition(.47)),
             new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
-            new StartEndCommand(() -> intakeSubsystem.roll(-.1), intakeSubsystem::stop).withTimeout(0.2),
+            new StartEndCommand(() -> intakeSubsystem.roll(-.1), intakeSubsystem::stop).withTimeout(0.25),
             new WaitCommand(.45),
-            new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
+            new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1.7))
     ));
 
         NamedCommands.registerCommand("shootLine2", new SequentialCommandGroup(
@@ -56,7 +56,7 @@ public class AutoNamedCommands {
         ));
 
         NamedCommands.registerCommand("shootNearSource", new SequentialCommandGroup(
-                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.43)),
+                new InstantCommand(() -> pivotSubsystem.setPivotPosition(.48)),
                 new InstantCommand(() -> shooterSubsystem.setVelocity(90)),
                 new StartEndCommand(() -> intakeSubsystem.roll(-.1), intakeSubsystem::stop).withTimeout(0.2),
                 new WaitCommand(.45),
