@@ -7,12 +7,17 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -21,9 +26,11 @@ import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.HandoffCommandGroup;
 import frc.robot.commands.PivotLimitSwitchCommand;
 import frc.robot.commands.ShooterStateCommand;
+import frc.robot.commands.auto.AutoNamedCommands;
 import frc.robot.commands.led.SetLEDToRGBCommand;
 import frc.robot.commands.pivot.PivotHomeCommand;
 import frc.robot.constants.ArmConstants;
+import frc.robot.constants.AutoConstants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.*;
@@ -44,6 +51,8 @@ public class RobotContainer {
     public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
     public final ArmSubsystem armSubsystem = new ArmSubsystem();
     public final CommandXboxController joystick = new CommandXboxController(1); // My joystick
+    public final VisionSubsystem visionSubsystem = new VisionSubsystem();
+
     final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(DriveConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
@@ -53,8 +62,10 @@ public class RobotContainer {
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     private final Telemetry logger = new Telemetry(DriveConstants.MAX_VELOCITY_METERS_PER_SECOND);
     public ControllerContainer controllerContainer = new ControllerContainer();
+    public SendableChooser<AutoConstants.AutoMode> autoChooser;
     ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
-
+    private boolean autoNeedsRebuild = true;
+    private Command auto;
 
     public RobotContainer() {
         ledSubsystem.setDefaultCommand(new SetLEDToRGBCommand(ledSubsystem, 255, 0, 0, 1.0, 0));
@@ -78,9 +89,23 @@ public class RobotContainer {
             field.getObject("path").setPoses(poses);
         });
 
-        configureBindings();
-    }
 
+        if (Utils.isSimulation()) {
+            drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+        }
+        drivetrain.registerTelemetry(logger::telemeterize);
+
+        configureBindings();
+
+        buildAutoChooser();
+        rebuildAutoIfNecessary();
+
+        visionSubsystem.ledOff();
+
+        DataLogManager.start();
+        DriverStation.startDataLog(DataLogManager.getLog());
+        SmartDashboard.putNumber("shooterstate-position", 0.5);
+    }
 
     private void configureBindings() {
         buttonHelper.createButton(1, 0, new ShooterStateCommand(drivetrain, pivotSubsystem, shooterSubsystem, intakeSubsystem), MultiButton.RunCondition.WHILE_HELD);
@@ -129,38 +154,78 @@ public class RobotContainer {
                                         .withRotationalRate(-joystick.getRightX() * DriveConstants.MaFxAngularRate)
                 ));
 
+        // Lock on to speaker
         joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()));
+        // Swerve lock
         joystick.b().whileTrue(drivetrain
                 .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
-        // reset the field-centric heading on left bumper press
+        // Reset the field-centric heading
         joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
+        // Suck in note
         joystick.rightBumper().whileTrue(new StartEndCommand(() -> intakeSubsystem.roll(.70), intakeSubsystem::stop));
 
+        // Arm down
         joystick.leftBumper().onTrue(new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
                 () -> armSubsystem.getEnc() <= .54 && armSubsystem.getEnc() >= .52).alongWith(new PivotHomeCommand(pivotSubsystem)));
 
-
-        if (Utils.isSimulation()) {
-            drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-        }
-        drivetrain.registerTelemetry(logger::telemeterize);
-
+        // (This is unassigned on the gamepad map??)
         joystick.a().onTrue(
                 new StartEndCommand(() -> shooterSubsystem.setVelocity(45), shooterSubsystem::stopFlywheel).withTimeout(0.5)
         );
-
+        // Shoot
         joystick.rightTrigger().whileTrue(new StartEndCommand(shooterSubsystem::spinNeo, shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
+        // Handoff
         joystick.povUp().onTrue(new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2));
+        // Move elevator down
         joystick.povDown().onTrue(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.DOWN)));
+        // (These are also unassigned on the gamepad map?)
         joystick.povLeft().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(0.05), () -> pivotSubsystem.moveDown(0.01)));
         joystick.povRight().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveDown(0.05), () -> pivotSubsystem.moveDown(0.01)));
+        // Spin feeder
         joystick.x().whileTrue(new StartEndCommand(() -> shooterSubsystem.spinFeeder(0.3), shooterSubsystem::stopNeo));
     }
 
-    // Unused since Robot.java creates the autonomous commands for now
+    public void updateOdometryVision() {
+        var visionResult = visionSubsystem.getTargetingResults();
+
+        if (DriverStation.getAlliance().isPresent()) { // why is this here in the first place?
+            if (visionResult != null && visionResult.valid && Math.abs(drivetrain.getPigeon2().getRate()) < 230) {
+                Pose2d llPose = visionResult.getBotPose2d_wpiBlue();
+                drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
+            }
+        }
+    }
+
+    public void buildAutoChooser() {
+
+        var namedCommands = new AutoNamedCommands(intakeSubsystem, shooterSubsystem, pivotSubsystem, armSubsystem);
+        namedCommands.registerCommands();
+
+        var autoChooser = new SendableChooser<>();
+
+        for (var autoMode : AutoConstants.AutoMode.values()) {
+            autoChooser.addOption(autoMode.name, autoMode);
+        }
+        // note: setDefaultOption overwrites the name in the map, so we won't have duplicate options
+        autoChooser.setDefaultOption(AutoConstants.AutoMode.BUMP_ONLY.name, AutoConstants.AutoMode.BUMP_ONLY);
+
+        autoChooser.onChange(obj -> autoNeedsRebuild = true);
+
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+    }
+
+    public void rebuildAutoIfNecessary() {
+        if (autoNeedsRebuild) {
+            // why is there a timeout here? can't we use the FMS/practice mode timeout?
+            auto = AutoBuilder.buildAuto(autoChooser.getSelected().name).withTimeout(15);
+            System.out.println("AUTO NAME: " + auto);
+            autoNeedsRebuild = false;
+        }
+    }
+
     public Command getAutonomousCommand() {
-        return new InstantCommand();
+        return auto;
     }
 }
