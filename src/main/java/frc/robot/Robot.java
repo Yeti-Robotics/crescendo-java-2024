@@ -95,7 +95,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        robotContainer.eventLoop.poll();
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }

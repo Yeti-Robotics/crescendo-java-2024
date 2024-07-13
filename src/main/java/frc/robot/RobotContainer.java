@@ -12,8 +12,6 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
-import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
@@ -47,7 +45,6 @@ public class RobotContainer {
     public final ArmSubsystem armSubsystem = new ArmSubsystem();
     public final CommandXboxController joystick = new CommandXboxController(1); // My joystick
     final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
-    private final BooleanEvent limitSwitchTriggered;
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(DriveConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
             .withRotationalDeadband(DriveConstants.MaFxAngularRate * 0.1) // Add a 10% deadband
@@ -55,7 +52,6 @@ public class RobotContainer {
 
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     private final Telemetry logger = new Telemetry(DriveConstants.MAX_VELOCITY_METERS_PER_SECOND);
-    public EventLoop eventLoop = new EventLoop();
     public ControllerContainer controllerContainer = new ControllerContainer();
     ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
 
@@ -82,7 +78,6 @@ public class RobotContainer {
             field.getObject("path").setPoses(poses);
         });
 
-        limitSwitchTriggered = new BooleanEvent(eventLoop, () -> pivotSubsystem.getForwardLimitSwitch() || pivotSubsystem.getReverseLimitSwitch());
         configureBindings();
     }
 
@@ -118,7 +113,9 @@ public class RobotContainer {
                         () -> pivotSubsystem.getEncAngle() < 0.4).withTimeout(0.6).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.26)).unless(() -> !elevatorSubsystem.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
 
         buttonHelper.createButton(11, 0, new StartEndCommand(shooterSubsystem::shootTrap, shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
-        limitSwitchTriggered.castTo(Trigger::new).onTrue(new PivotLimitSwitchCommand(pivotSubsystem));
+
+        // Triggers automatically add themselves to the event loop
+        new Trigger(() -> pivotSubsystem.getForwardLimitSwitch() || pivotSubsystem.getReverseLimitSwitch()).onTrue(new PivotLimitSwitchCommand(pivotSubsystem));
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(
