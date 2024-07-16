@@ -109,8 +109,8 @@ public class RobotContainer {
 
     private void configureBindings() {
         buttonHelper.createButton(1, 0, new ShooterStateCommand(drivetrain, pivotSubsystem, shooterSubsystem, intakeSubsystem), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(8, 0, new StartEndCommand(() -> shooterSubsystem.bumpFire(), shooterSubsystem::stopFlywheel).alongWith(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.53))), MultiButton.RunCondition.WHILE_HELD);
-
+        buttonHelper.createButton(8, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(-70), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(7, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(15), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(5, 0, new SequentialCommandGroup(
                 new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.42)).andThen(
                         new StartEndCommand(() -> armSubsystem.moveUp(.7), armSubsystem::stop).until(() ->
@@ -132,14 +132,12 @@ public class RobotContainer {
         buttonHelper.createButton(10, 0, new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.65), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevatorSubsystem.goDown(0.2), elevatorSubsystem::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.DOWN)).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.5)))), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopNeo).until(shooterSubsystem::getBeamBreak), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinFeeder(-0.1), shooterSubsystem::stopNeo).alongWith(new StartEndCommand(() -> intakeSubsystem.rollOut(0.5), intakeSubsystem::stop)), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(9,
                 0, new InstantCommand(() -> elevatorSubsystem.setPosition2(ElevatorConstants.ElevatorPositions.AMP)).andThen(new StartEndCommand(() -> pivotSubsystem.moveDown(0.25), pivotSubsystem::stop).unless(
-                        () -> pivotSubsystem.getEncAngle() < 0.4).withTimeout(0.6).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.26)).unless(() -> !elevatorSubsystem.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
-
+                        () -> pivotSubsystem.getEncAngle() < 0.4).withTimeout(0.6).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.03)).unless(() -> !elevatorSubsystem.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(11, 0, new StartEndCommand(shooterSubsystem::shootTrap, shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
 
-        // Triggers automatically add themselves to the event loop
         new Trigger(() -> pivotSubsystem.getForwardLimitSwitch() || pivotSubsystem.getReverseLimitSwitch()).onTrue(new PivotLimitSwitchCommand(pivotSubsystem));
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -156,6 +154,7 @@ public class RobotContainer {
 
         // Lock on to speaker
         joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()));
+
         // Swerve lock
         joystick.b().whileTrue(drivetrain
                 .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
