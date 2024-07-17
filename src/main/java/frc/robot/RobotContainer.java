@@ -202,7 +202,7 @@ public class RobotContainer {
         var namedCommands = new AutoNamedCommands(intakeSubsystem, shooterSubsystem, pivotSubsystem, armSubsystem);
         namedCommands.registerCommands();
 
-        var autoChooser = new SendableChooser<>();
+        autoChooser = new SendableChooser<>();
 
         for (var autoMode : AutoConstants.AutoMode.values()) {
             autoChooser.addOption(autoMode.name, autoMode);
