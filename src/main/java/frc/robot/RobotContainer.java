@@ -70,9 +70,9 @@ public class RobotContainer {
     public RobotContainer() {
         ledSubsystem.setDefaultCommand(new SetLEDToRGBCommand(ledSubsystem, 255, 0, 0, 1.0, 0));
 
-        NamedCommands.registerCommand("shootBump", new SequentialCommandGroup(
+        NamedCommands.registerCommand("shootBump", Commands.sequence(
                 new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.55)),
-                new InstantCommand(() -> shooterSubsystem.bumpFire()),
+                shooterSubsystem.bumpFireCmd(),
                 new WaitCommand(.75),
                 new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
         ));
