@@ -116,21 +116,20 @@ public class RobotContainer {
                         new StartEndCommand(() -> arm.moveUp(.7), arm::stop).until(() ->
                                 arm.getEnc() <= ArmConstants.ARM_HANDOFF_POSITION).andThen(
                                 new StartEndCommand(() -> shooter.spinFeeder(-0.3),
-                                        shooter::stopFlywheel).alongWith(
-                                        new StartEndCommand(() -> intake.roll(-.2), intake::stop))
+                                        shooter::stopFlywheel).alongWith(intake.rollCmd(-.2))
                         ).until(shooter::getBeamBreak),
                         new PivotHomeCommand(pivot)
                 ),
                 shooter.setVelocityInstantCommand(100),
-                new StartEndCommand(() -> intake.roll(-.1), intake::stop).withTimeout(0.2),
-                new WaitCommand(.45),
+                intake.rollCmd(-.1).withTimeout(0.2),
+                Commands.waitSeconds(.45),
                 shooter.spinNeoCmd().alongWith(new StartEndCommand(() -> intake.roll(-1), intake::stop).withTimeout(1),
                         new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2)
                 )
         ), MultiButton.RunCondition.WHEN_PRESSED);
 
         buttonHelper.createButton(10, 0, new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(2, 0, new StartEndCommand(() -> intake.roll(-.65), intake::stop), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(2, 0, intake.rollCmd(-.65), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevator.goDown(0.2), elevator::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevator.setPosition(ElevatorConstants.ElevatorPositions.DOWN)).andThen(new InstantCommand(() -> pivot.setPivotPosition(0.5)))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(6, 0, shooter.spinFeederCmd(-.1).alongWith(new StartEndCommand(() -> intake.rollOut(0.5), intake::stop)), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(9,
@@ -163,7 +162,7 @@ public class RobotContainer {
         joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
         // Suck in note
-        joystick.rightBumper().whileTrue(new StartEndCommand(() -> intake.roll(.70), intake::stop));
+        joystick.rightBumper().whileTrue(intake.rollCmd(.7));
 
         // Arm down
         joystick.leftBumper().onTrue(new StartEndCommand(() -> arm.moveDown(.5), arm::stop).until(
