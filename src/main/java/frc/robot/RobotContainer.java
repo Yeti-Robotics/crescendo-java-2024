@@ -189,7 +189,7 @@ public class RobotContainer {
     public void updateOdometryVision() {
         var visionResult = visionSubsystem.getTargetingResults();
 
-        if (DriverStation.getAlliance().isPresent()) { // why is this here in the first place?
+        if (DriverStation.getAlliance().isPresent()) { // this is here because it's sometimes not present during simulation
             if (visionResult != null && visionResult.valid && Math.abs(drivetrain.getPigeon2().getRate()) < 230) {
                 Pose2d llPose = visionResult.getBotPose2d_wpiBlue();
                 drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
