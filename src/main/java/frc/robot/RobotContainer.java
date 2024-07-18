@@ -73,8 +73,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("shootBump", Commands.sequence(
                 new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.55)),
                 shooterSubsystem.bumpFireCmd(),
-                new WaitCommand(.75),
-                new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
+                Commands.waitSeconds(.75), // is this waiting for a specific speed or something? should prob be replaced
+                shooterSubsystem.spinNeoCmd().alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1))
         ));
         var field = new Field2d();
         SmartDashboard.putData("Field", field);
@@ -109,8 +109,8 @@ public class RobotContainer {
 
     private void configureBindings() {
         buttonHelper.createButton(1, 0, new ShooterStateCommand(drivetrain, pivotSubsystem, shooterSubsystem, intakeSubsystem), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(8, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(-70), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(7, 0, new StartEndCommand(() -> shooterSubsystem.setVelocity(15), shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(8, 0, shooterSubsystem.setVelocityCmd(-70), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(7, 0, shooterSubsystem.setVelocityCmd(15), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(5, 0, new SequentialCommandGroup(
                 new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.42)).andThen(
                         new StartEndCommand(() -> armSubsystem.moveUp(.7), armSubsystem::stop).until(() ->
@@ -121,10 +121,10 @@ public class RobotContainer {
                         ).until(shooterSubsystem::getBeamBreak),
                         new PivotHomeCommand(pivotSubsystem)
                 ),
-                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                shooterSubsystem.setVelocityInstantCommand(100),
                 new StartEndCommand(() -> intakeSubsystem.roll(-.1), intakeSubsystem::stop).withTimeout(0.2),
                 new WaitCommand(.45),
-                new StartEndCommand(() -> shooterSubsystem.spinNeo(), shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1),
+                shooterSubsystem.spinNeoCmd().alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop).withTimeout(1),
                         new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2)
                 )
         ), MultiButton.RunCondition.WHEN_PRESSED);
@@ -132,11 +132,11 @@ public class RobotContainer {
         buttonHelper.createButton(10, 0, new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(2, 0, new StartEndCommand(() -> intakeSubsystem.roll(-.65), intakeSubsystem::stop), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevatorSubsystem.goDown(0.2), elevatorSubsystem::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevatorSubsystem.setPosition(ElevatorConstants.ElevatorPositions.DOWN)).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.5)))), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(6, 0, new StartEndCommand(() -> shooterSubsystem.spinFeeder(-0.1), shooterSubsystem::stopNeo).alongWith(new StartEndCommand(() -> intakeSubsystem.rollOut(0.5), intakeSubsystem::stop)), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(6, 0, shooterSubsystem.spinFeederCmd(-.1).alongWith(new StartEndCommand(() -> intakeSubsystem.rollOut(0.5), intakeSubsystem::stop)), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(9,
                 0, new InstantCommand(() -> elevatorSubsystem.setPosition2(ElevatorConstants.ElevatorPositions.AMP)).andThen(new StartEndCommand(() -> pivotSubsystem.moveDown(0.25), pivotSubsystem::stop).unless(
                         () -> pivotSubsystem.getEncAngle() < 0.4).withTimeout(0.6).andThen(new InstantCommand(() -> pivotSubsystem.setPivotPosition(0.03)).unless(() -> !elevatorSubsystem.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(11, 0, new StartEndCommand(shooterSubsystem::shootTrap, shooterSubsystem::stopFlywheel), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(11, 0, shooterSubsystem.shootTrapCmd(), MultiButton.RunCondition.WHILE_HELD);
 
         new Trigger(() -> pivotSubsystem.getForwardLimitSwitch() || pivotSubsystem.getReverseLimitSwitch()).onTrue(new PivotLimitSwitchCommand(pivotSubsystem));
 
@@ -171,7 +171,7 @@ public class RobotContainer {
 
         // (This is unassigned on the gamepad map??)
         joystick.a().onTrue(
-                new StartEndCommand(() -> shooterSubsystem.setVelocity(45), shooterSubsystem::stopFlywheel).withTimeout(0.5)
+                shooterSubsystem.setVelocityCmd(45).withTimeout(0.5)
         );
         // Shoot
         joystick.rightTrigger().whileTrue(new StartEndCommand(shooterSubsystem::spinNeo, shooterSubsystem::stopFlywheel).alongWith(new StartEndCommand(() -> intakeSubsystem.roll(-1), intakeSubsystem::stop)));
@@ -183,7 +183,7 @@ public class RobotContainer {
         joystick.povLeft().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveUp(0.05), () -> pivotSubsystem.moveDown(0.01)));
         joystick.povRight().whileTrue(new StartEndCommand(() -> pivotSubsystem.moveDown(0.05), () -> pivotSubsystem.moveDown(0.01)));
         // Spin feeder
-        joystick.x().whileTrue(new StartEndCommand(() -> shooterSubsystem.spinFeeder(0.3), shooterSubsystem::stopNeo));
+        joystick.x().whileTrue(shooterSubsystem.spinFeederCmd(.3));
     }
 
     public void updateOdometryVision() {

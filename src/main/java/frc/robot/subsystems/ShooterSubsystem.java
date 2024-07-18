@@ -104,6 +104,26 @@ public class ShooterSubsystem extends SubsystemBase {
         return runOnce(this::bumpFire);
     }
 
+    public Command spinNeoCmd() {
+        return startEnd(this::spinNeo, this::stopFlywheel);
+    }
+
+    public Command setVelocityCmd(double vel) {
+        return startEnd(() -> setVelocity(vel), this::stopFlywheel);
+    }
+
+    public Command setVelocityInstantCommand(double vel) {
+        return runOnce(() -> setVelocity(vel));
+    }
+
+    public Command spinFeederCmd(double vel) {
+        return startEnd(() -> spinFeeder(vel), this::stopNeo);
+    }
+
+    public Command shootTrapCmd() {
+        return startEnd(this::shootTrap, this::stopFlywheel);
+    }
+
     public void shootTrap() {
         leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(35));
         rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(80));
