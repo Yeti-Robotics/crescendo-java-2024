@@ -33,11 +33,6 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledExit() {
-
-    }
-
-    @Override
     public void autonomousInit() {
         autonomousCommand = robotContainer.getAutonomousCommand();
 
