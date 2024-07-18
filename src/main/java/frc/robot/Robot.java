@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        robotContainer.visionSubsystem.ledOff();
+        robotContainer.vision.ledOff();
     }
 
     @Override
