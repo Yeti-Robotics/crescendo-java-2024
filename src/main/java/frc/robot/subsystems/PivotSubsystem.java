@@ -14,7 +14,6 @@ import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -37,12 +36,6 @@ public class PivotSubsystem extends SubsystemBase {
     public DigitalInput forwardLimitSwitch;
     public DigitalInput reverseLimitSwitch;
     public final Trigger anyLimitSwitchPressed = new Trigger(() -> getForwardLimitSwitch() || getReverseLimitSwitch());
-    public double vertAngle;
-    private double relativePoseY;
-    private double relativePoseX;
-    private double robotPoseY;
-    private double robotPoseX;
-    private double hypoGroundLength;
     private PivotConstants.PivotPositions pivotPositions = PivotConstants.PivotPositions.BUMPFIRE;
 
     public PivotSubsystem() {
@@ -112,19 +105,10 @@ public class PivotSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-//        relativePoseY = fieldLength - visionSubsystem.getPose2d().getY();
-//        relativePoseX = speakerPose - visionSubsystem.getPose2d().getX();
-//        robotPoseX = visionSubsystem.getPose2d().getX();
-//        robotPoseY = visionSubsystem.getPose2d().getY();
-//        hypoGroundLength = Math.sqrt((relativePoseX*relativePoseX)+(relativePoseY*relativePoseY));
-//        vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
-
         SmartDashboard.putData("Pivot kraken", pivotMotor1);
         SmartDashboard.putData("Pivot encoder", pivotEncoder1);
         SmartDashboard.putData("Forward limit switch pivot", forwardLimitSwitch);
         SmartDashboard.putData("Reverse limit switch pivot", reverseLimitSwitch);
-
-
     }
 
     public void setPivotPosition(double position) {
@@ -151,14 +135,6 @@ public class PivotSubsystem extends SubsystemBase {
         return pivotEncoder1.getAbsolutePosition().getValue();
     }
 
-    public PivotConstants.PivotPositions getArmPositions() {
-        return pivotPositions;
-    }
-
-    public boolean isMotionFinished() {
-        return Math.abs(getAngle() - pivotPositions.angle) <= PivotConstants.ANGLE_TOLERANCE;
-    }
-
     public void moveUp(double speed) {
         if (!getForwardLimitSwitch()) {
             pivotMotor1.set(Math.abs(speed));
@@ -177,19 +153,6 @@ public class PivotSubsystem extends SubsystemBase {
 
     public boolean getReverseLimitSwitch() {
         return !reverseLimitSwitch.get();
-    }
-
-    public double getSuppliedCurrent() {
-        return pivotMotor1.getSupplyCurrent().getValue();
-    }
-
-
-    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-        return sysIdRoutine.quasistatic(direction);
-    }
-
-    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        return sysIdRoutine.dynamic(direction);
     }
 
     public void stop() {
