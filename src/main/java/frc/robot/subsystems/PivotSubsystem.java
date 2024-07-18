@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.CANCoderConstants;
 import frc.robot.constants.PivotConstants;
@@ -35,6 +36,7 @@ public class PivotSubsystem extends SubsystemBase {
     private final SysIdRoutine sysIdRoutine;
     public DigitalInput forwardLimitSwitch;
     public DigitalInput reverseLimitSwitch;
+    public final Trigger anyLimitSwitchPressed = new Trigger(() -> getForwardLimitSwitch() || getReverseLimitSwitch());
     public double vertAngle;
     private double relativePoseY;
     private double relativePoseX;

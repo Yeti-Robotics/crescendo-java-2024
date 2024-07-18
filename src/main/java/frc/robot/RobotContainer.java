@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.HandoffCommandGroup;
 import frc.robot.commands.PivotLimitSwitchCommand;
@@ -137,7 +136,7 @@ public class RobotContainer {
                         () -> pivot.getEncAngle() < 0.4).withTimeout(0.6).andThen(new InstantCommand(() -> pivot.setPivotPosition(0.03)).unless(() -> !elevator.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(11, 0, shooter.shootTrapCmd(), MultiButton.RunCondition.WHILE_HELD);
 
-        new Trigger(() -> pivot.getForwardLimitSwitch() || pivot.getReverseLimitSwitch()).onTrue(new PivotLimitSwitchCommand(pivot));
+        pivot.anyLimitSwitchPressed.onTrue(new PivotLimitSwitchCommand(pivot));
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(
