@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-
-//import com.ctre.phoenix6.StatusSignal;
+// import com.ctre.phoenix6.StatusSignal;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -22,8 +21,6 @@ public class ClimberSubsystem extends SubsystemBase {
     private final CANcoder canCoder1;
     private final CANcoder canCoder2;
 
-
-
     public ClimberSubsystem() {
         climberFalcon1 = new TalonFX(ClimberConstants.CLIMBER_TALON_1, "canivoreBus");
         climberFalcon2 = new TalonFX(ClimberConstants.CLIMBER_TALON_2, "canivoreBus");
@@ -33,7 +30,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
         climberBrake1 = new Servo(ClimberConstants.SERVO_CHANNEL);
         climberBrake2 = new Servo(ClimberConstants.SERVO_CHANNEL_2);
-//        climberFalcon2.setControl(new Follower(climberFalcon1.getDeviceID(), false));
+        //        climberFalcon2.setControl(new Follower(climberFalcon1.getDeviceID(), false));
 
         var talon1Config = climberFalcon1.getConfigurator();
         var talon2Config = climberFalcon2.getConfigurator();
@@ -44,8 +41,8 @@ public class ClimberSubsystem extends SubsystemBase {
         motorConfig1.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         motorConfig2.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         // motorConfig.SoftwareLimitSwitch = new SoftwareLimitSwitchConfigs()
-//        motorConfig1.SoftwareLimitSwitch = ClimberConstants.CLIMBER_SOFT_LIMIT_1;
-//        motorConfig2.SoftwareLimitSwitch = ClimberConstants.CLIMBER_SOFT_LIMIT_2;
+        //        motorConfig1.SoftwareLimitSwitch = ClimberConstants.CLIMBER_SOFT_LIMIT_1;
+        //        motorConfig2.SoftwareLimitSwitch = ClimberConstants.CLIMBER_SOFT_LIMIT_2;
         motorConfig1.FutureProofConfigs = true;
         motorConfig2.FutureProofConfigs = true;
 
@@ -66,12 +63,12 @@ public class ClimberSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-//        SmartDashboard.putData("climber kraken 1", climberFalcon1);
-//        SmartDashboard.putData("climber kraken 2", climberFalcon2);
+        //        SmartDashboard.putData("climber kraken 1", climberFalcon1);
+        //        SmartDashboard.putData("climber kraken 2", climberFalcon2);
         SmartDashboard.putData("climber encoder 1", canCoder1);
         SmartDashboard.putData("climber encoder 2", canCoder2);
-//        SmartDashboard.putNumber("climber brake servo 1", climberBrake1.get());
-//        SmartDashboard.putNumber("climber brake servo 2", climberBrake2.get());
+        //        SmartDashboard.putNumber("climber brake servo 1", climberBrake1.get());
+        //        SmartDashboard.putNumber("climber brake servo 2", climberBrake2.get());
     }
 
     public void climbUp() {
@@ -118,7 +115,4 @@ public class ClimberSubsystem extends SubsystemBase {
     public boolean atEncoderLimit() {
         return getAverageEncoder() <= ClimberConstants.CLIMBER_TALON_1;
     }
-
-
 }
-

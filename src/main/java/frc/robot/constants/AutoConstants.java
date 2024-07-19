@@ -1,6 +1,5 @@
 package frc.robot.constants;
 
-
 import com.pathplanner.lib.path.PathConstraints;
 import frc.robot.subsystems.drivetrain.generated.TunerConstants;
 
@@ -8,21 +7,18 @@ public final class AutoConstants {
 
     public static final double MAX_SPEED = TunerConstants.kSpeedAt12VoltsMps;
     public static final double MAX_ACCEL = TunerConstants.kSpeedAt12VoltsMps;
-    public static final double MAX_THETA_VELOCITY =  MAX_SPEED / Math.hypot(22.25 / 2, 22.25 / 2);
+    public static final double MAX_THETA_VELOCITY = MAX_SPEED / Math.hypot(22.25 / 2, 22.25 / 2);
     public static final double MAX_THETA_ACCEL = MAX_SPEED / Math.hypot(22.25 / 2, 22.25 / 2);
-    public static final PathConstraints DEFAULT_CONSTRAINTS = new PathConstraints(
-            MAX_SPEED,
-            MAX_ACCEL,
-            MAX_THETA_VELOCITY,
-            MAX_THETA_ACCEL);
+    public static final PathConstraints DEFAULT_CONSTRAINTS =
+            new PathConstraints(MAX_SPEED, MAX_ACCEL, MAX_THETA_VELOCITY, MAX_THETA_ACCEL);
 
     public enum AutoMode {
-        //AMP_4_TWO_PIECE("amp4TwoPiece"), // unused
-        //AMP_4_THREE_PIECE("amp4ThreePiece"), // unused
+        // AMP_4_TWO_PIECE("amp4TwoPiece"), // unused
+        // AMP_4_THREE_PIECE("amp4ThreePiece"), // unused
         BUMP_ONLY("bumpOnly"),
         CLEAR_AUTO("1160 Auto"),
-        //MID_3_TWO_PIECE("mid3TwoPiece"), // unused
-        //MID_3_THREE_PIECE("mid3ThreePiece"), // unused
+        // MID_3_TWO_PIECE("mid3TwoPiece"), // unused
+        // MID_3_THREE_PIECE("mid3ThreePiece"), // unused
         // also unused: leaveAuto, mid3OnePiece
         MID_SUB_TWO_PIECE("midSubTwoPiece"),
         MID_SUB_THREE_PIECE("midSubThreePiece"),
@@ -47,4 +43,5 @@ public final class AutoConstants {
             this.initConstraint = initConstraint;
             this.pathConstraints = pathConstraints;
         }
-    }}
+    }
+}

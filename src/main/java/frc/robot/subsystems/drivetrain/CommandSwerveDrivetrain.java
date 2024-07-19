@@ -26,12 +26,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.drivetrain.generated.TunerConstants;
-
 import java.util.function.Supplier;
 
 /**
- * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
- * so it can be used in command-based projects easily.
+ * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
+ * in command-based projects easily.
  */
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
@@ -43,7 +42,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private double m_lastSimTime;
     private boolean hasAppliedPerspective = false;
 
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
+    public CommandSwerveDrivetrain(
+            SwerveDrivetrainConstants driveTrainConstants,
+            double OdometryUpdateFrequency,
+            SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         configurePathPlanner();
 
@@ -57,7 +59,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         }
     }
 
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
+    public CommandSwerveDrivetrain(
+            SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         configurePathPlanner();
 
@@ -66,8 +69,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         setAzimuthCurrentLimits();
         setAzimuthVoltageLimits();
 
-        publisher = NetworkTableInstance.getDefault()
-                .getStructArrayTopic("SwerveStates", SwerveModuleState.struct).publish();
+        publisher =
+                NetworkTableInstance.getDefault()
+                        .getStructArrayTopic("SwerveStates", SwerveModuleState.struct)
+                        .publish();
 
         if (Utils.isSimulation()) {
             startSimThread();
@@ -90,8 +95,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                         new PIDConstants(10, 0, 0),
                         TunerConstants.kSpeedAt12VoltsMps,
                         driveRad,
-                        new ReplanningConfig()
-                ),
+                        new ReplanningConfig()),
                 () -> {
                     var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
@@ -99,7 +103,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                     }
                     return false;
                 },
-
                 this);
     }
 
@@ -119,14 +122,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         m_lastSimTime = Utils.getCurrentTimeSeconds();
 
         /* Run simulation at a faster rate so PID gains behave more reasonably */
-        m_simNotifier = new Notifier(() -> {
-            final double currentTime = Utils.getCurrentTimeSeconds();
-            double deltaTime = currentTime - m_lastSimTime;
-            m_lastSimTime = currentTime;
+        m_simNotifier =
+                new Notifier(
+                        () -> {
+                            final double currentTime = Utils.getCurrentTimeSeconds();
+                            double deltaTime = currentTime - m_lastSimTime;
+                            m_lastSimTime = currentTime;
 
-            /* use the measured time delta, get battery voltage from WPILib */
-            updateSimState(deltaTime, RobotController.getBatteryVoltage());
-        });
+                            /* use the measured time delta, get battery voltage from WPILib */
+                            updateSimState(deltaTime, RobotController.getBatteryVoltage());
+                        });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
@@ -139,7 +144,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
             currentLimitConfigs.SupplyCurrentLimit = DriveConstants.SUPPLY_CURRENT_LIMIT;
             currentLimitConfigs.SupplyCurrentLimitEnable = DriveConstants.SUPPLY_CURRENT_LIMIT_ENABLE;
-            currentLimitConfigs.SupplyCurrentThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
+            currentLimitConfigs.SupplyCurrentThreshold =
+                    DriveConstants.SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
             currentLimitConfigs.SupplyTimeThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD;
 
             currentConfig.apply(currentLimitConfigs);
@@ -155,7 +161,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
             currentLimitConfigs.SupplyCurrentLimit = DriveConstants.SUPPLY_CURRENT_LIMIT;
             currentLimitConfigs.SupplyCurrentLimitEnable = DriveConstants.SUPPLY_CURRENT_LIMIT_ENABLE;
-            currentLimitConfigs.SupplyCurrentThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
+            currentLimitConfigs.SupplyCurrentThreshold =
+                    DriveConstants.SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
             currentLimitConfigs.SupplyTimeThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD;
 
             currentConfig.apply(currentLimitConfigs);
@@ -196,18 +203,21 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public void periodic() {
         publisher.set(super.getState().ModuleStates);
         if (!hasAppliedPerspective || DriverStation.isDisabled()) {
-            DriverStation.getAlliance().ifPresent((allianceColor) -> {
-                this.setOperatorPerspectiveForward(
-                        allianceColor == DriverStation.Alliance.Red ? RedPerspectiveRotation
-                                : BluePerspectiveRotation);
-                hasAppliedPerspective = true;
-            });
+            DriverStation.getAlliance()
+                    .ifPresent(
+                            (allianceColor) -> {
+                                this.setOperatorPerspectiveForward(
+                                        allianceColor == DriverStation.Alliance.Red
+                                                ? RedPerspectiveRotation
+                                                : BluePerspectiveRotation);
+                                hasAppliedPerspective = true;
+                            });
         }
 
-
-        Pose2d speakerPose = DriverStation.getAlliance().equals(DriverStation.Alliance.Blue)
-                ? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
-                : new Pose2d(0.0, 2.45, Rotation2d.fromRotations(0));
+        Pose2d speakerPose =
+                DriverStation.getAlliance().equals(DriverStation.Alliance.Blue)
+                        ? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
+                        : new Pose2d(0.0, 2.45, Rotation2d.fromRotations(0));
 
         Pose2d robotPose = this.getState().Pose;
         Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
@@ -216,6 +226,3 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         SmartDashboard.putNumber("gyro spin rate", getPigeon2().getRate());
     }
 }
-
-
-

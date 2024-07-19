@@ -34,8 +34,7 @@ public class TurnToAngle extends FieldCentricFacingAngle {
         return this.fieldCentricTargetDirection;
     }
 
-    public TurnToAngle withFieldCentricTargetDirection(
-            Rotation2d fieldCentricTargetDirection) {
+    public TurnToAngle withFieldCentricTargetDirection(Rotation2d fieldCentricTargetDirection) {
         setFieldCentricTargetDirection(fieldCentricTargetDirection);
         return this;
     }

@@ -16,7 +16,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final TalonFX elevatorMotor;
 
     private final DigitalInput magSwitch;
-    private ElevatorConstants.ElevatorPositions elevatorPositions = ElevatorConstants.ElevatorPositions.DOWN;
+    private ElevatorConstants.ElevatorPositions elevatorPositions =
+            ElevatorConstants.ElevatorPositions.DOWN;
 
     public ElevatorSubsystem() {
         elevatorMotor = new TalonFX(ElevatorConstants.ELEVATOR_ID, TalonFXConstants.CANIVORE_NAME);
@@ -30,14 +31,15 @@ public class ElevatorSubsystem extends SubsystemBase {
         talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = ElevatorConstants.PROFILE_V;
         talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = ElevatorConstants.PROFILE_A;
 
-
-        elevatorMotor.getRotorVelocity().waitForUpdate(ElevatorConstants.ELEVATOR_VELOCITY_STATUS_FRAME);
-        elevatorMotor.getRotorPosition().waitForUpdate(ElevatorConstants.ELEVATOR_POSITION_STATUS_FRAME);
+        elevatorMotor
+                .getRotorVelocity()
+                .waitForUpdate(ElevatorConstants.ELEVATOR_VELOCITY_STATUS_FRAME);
+        elevatorMotor
+                .getRotorPosition()
+                .waitForUpdate(ElevatorConstants.ELEVATOR_POSITION_STATUS_FRAME);
 
         ElConfigurator.apply(talonFXConfiguration);
         elevatorMotor.setNeutralMode(NeutralModeValue.Brake);
-
-
     }
 
     public void goUp(double speed) {
@@ -60,7 +62,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         return elevatorMotor.getRotorPosition().getValue();
     }
 
-
     public void setRotations(double rotations) {
         elevatorMotor.setPosition(rotations);
     }
@@ -70,9 +71,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void setPosition(ElevatorConstants.ElevatorPositions position) {
         elevatorPositions = position;
 
-        MotionMagicExpoVoltage motionMagicVoltage = new MotionMagicExpoVoltage(
-                position.distanceEl, true, 0.0, 0,
-                true, false, false);
+        MotionMagicExpoVoltage motionMagicVoltage =
+                new MotionMagicExpoVoltage(position.distanceEl, true, 0.0, 0, true, false, false);
 
         elevatorMotor.setControl(motionMagicVoltage.withPosition(position.distanceEl));
     }
@@ -80,11 +80,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void setPosition2(ElevatorConstants.ElevatorPositions position) {
         elevatorPositions = position;
 
-        MotionMagicExpoVoltage motionMagicVoltage = new MotionMagicExpoVoltage(
-                position.distanceEl, true, 4.0, 0,
-                true, false, false);
+        MotionMagicExpoVoltage motionMagicVoltage =
+                new MotionMagicExpoVoltage(position.distanceEl, true, 4.0, 0, true, false, false);
 
-        elevatorMotor.setControl(motionMagicVoltage.withPosition(position.distanceEl).withFeedForward(10));
+        elevatorMotor.setControl(
+                motionMagicVoltage.withPosition(position.distanceEl).withFeedForward(10));
     }
 
     @Override

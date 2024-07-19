@@ -10,15 +10,8 @@ public class LEDSubsystem extends SubsystemBase {
 
     private final AddressableLED ledStrip;
     private final AddressableLEDBuffer ledBuffer;
-
-    private double brightness = 1.0; // Default to full brightness
-
-    public enum LEDStripStatus {
-        OFF,
-        ON
-    }
-
     public LEDStripStatus stripStatus;
+    private double brightness = 1.0; // Default to full brightness
 
     public LEDSubsystem() {
         ledStrip = new AddressableLED(LEDConstants.ADDRESSABLE_LED);
@@ -37,7 +30,7 @@ public class LEDSubsystem extends SubsystemBase {
         // Apply brightness to the periodic update
         // setBrightness(SmartDashboard.getNumber("Brightness", brightness));
         // For demonstration, setting default color
-        //setRGB(0, 255, 0, 0); // Red
+        // setRGB(0, 255, 0, 0); // Red
         // sendData();
     }
 
@@ -46,7 +39,8 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     public void setRGB(int i, int red, int green, int blue) {
-        ledBuffer.setRGB(i, (int) (red * brightness), (int) (green * brightness), (int) (blue * brightness));
+        ledBuffer.setRGB(
+                i, (int) (red * brightness), (int) (green * brightness), (int) (blue * brightness));
     }
 
     public int getBufferLength() {
@@ -58,10 +52,15 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     public void setBrightness(double brightness) {
-        this.brightness = Math.max(0.0, Math.min(1.0, brightness)); // Ensure brightness is between 0 and 1
+        this.brightness =
+                Math.max(0.0, Math.min(1.0, brightness)); // Ensure brightness is between 0 and 1
     }
 
-    public void flashLimeLight() {
+    public void flashLimeLight() {}
 
+    public enum LEDStripStatus {
+        OFF,
+
+        ON
     }
 }

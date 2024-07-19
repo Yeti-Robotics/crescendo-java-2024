@@ -1,7 +1,5 @@
- package frc.robot.commands;
+package frc.robot.commands;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.FieldConstants;
@@ -9,7 +7,6 @@ import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.LimelightHelpers;
-
 import java.util.function.DoubleSupplier;
 
 public class AutoAimCommand extends Command {
@@ -34,8 +31,8 @@ public class AutoAimCommand extends Command {
         addRequirements(drivetrain);
 
         poseAimRequest = new TurnToPoint();
-        poseAimRequest.HeadingController.setPID(5,0,0);
-        poseAimRequest.HeadingController.enableContinuousInput(-Math.PI,Math.PI);
+        poseAimRequest.HeadingController.setPID(5, 0, 0);
+        poseAimRequest.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     @Override
@@ -44,29 +41,26 @@ public class AutoAimCommand extends Command {
         currentTag = LimelightHelpers.getFiducialID(VisionConstants.LIMELIGHT_NAME);
 
         poseY = drivetrain.getState().Pose.getX();
-        Translation2d speakerCenter = AllianceFlipUtil.apply(
-                FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()
-        );
+        Translation2d speakerCenter =
+                AllianceFlipUtil.apply(FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d());
 
         poseAimRequest.setPointToFace(speakerCenter);
     }
 
     @Override
     public void execute() {
-        if(LimelightHelpers.getFiducialID(VisionConstants.LIMELIGHT_NAME) == currentTag) {
+        if (LimelightHelpers.getFiducialID(VisionConstants.LIMELIGHT_NAME) == currentTag) {
             drivetrain.setControl(
-                    poseAimRequest.withVelocityX(xVelSupplier.getAsDouble() * 1.5).withVelocityY(yVelSupplier.getAsDouble() * 1.5)
-            );
+                    poseAimRequest
+                            .withVelocityX(xVelSupplier.getAsDouble() * 1.5)
+                            .withVelocityY(yVelSupplier.getAsDouble() * 1.5));
         } else {
             end(true);
         }
     }
-
-
 
     @Override
     public boolean isFinished() {
         return false;
     }
 }
-

@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
@@ -38,7 +37,6 @@ public class ShooterSubsystem extends SubsystemBase {
         leftKraken.setControl(new Follower(rightKraken.getDeviceID(), false));
         shooterStatus = ShooterStatus.OFF;
         shooterModes = ShooterModes.TRAP;
-
 
         neo = new TalonFX(ShooterConstants.SHOOTER_NEO, "canivoreBus");
 
@@ -142,5 +140,4 @@ public class ShooterSubsystem extends SubsystemBase {
         BACKWARD,
         OFF
     }
-
 }
