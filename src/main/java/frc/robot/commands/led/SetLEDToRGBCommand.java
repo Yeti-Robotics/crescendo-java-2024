@@ -12,7 +12,13 @@ public class SetLEDToRGBCommand extends Command {
 
     private long lastUpdateTime;
 
-    public SetLEDToRGBCommand(LEDSubsystem ledSubsystem, int red, int green, int blue, double brightness, long delayMillis) {
+    public SetLEDToRGBCommand(
+            LEDSubsystem ledSubsystem,
+            int red,
+            int green,
+            int blue,
+            double brightness,
+            long delayMillis) {
         this.ledSubsystem = ledSubsystem;
         this.red = red;
         this.green = green;

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -20,8 +21,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.CANCoderConstants;
 import frc.robot.constants.PivotConstants;
 import frc.robot.constants.TalonFXConstants;
-
-import static edu.wpi.first.units.Units.Seconds;
 
 public class PivotSubsystem extends SubsystemBase {
 
@@ -47,7 +46,8 @@ public class PivotSubsystem extends SubsystemBase {
         reverseLimitSwitch = new DigitalInput(PivotConstants.PIVOT_LIMIT_SWITCH_REVERSE);
         forwardLimitSwitch = new DigitalInput(PivotConstants.PIVOT_LIMIT_SWITCH_FORWARD);
         pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID, TalonFXConstants.CANIVORE_NAME);
-        pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
+        pivotEncoder1 =
+                new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
         pivotMotor1.setInverted(true);
         pivotMotor1.setNeutralMode(NeutralModeValue.Brake);
 
@@ -74,7 +74,6 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor1.getRotorPosition().waitForUpdate(PivotConstants.PIVOT_POSITION_STATUS_FRAME);
         pivotEncoder1.getAbsolutePosition().waitForUpdate(0.01);
 
-
         pivotMotor1Configurator.apply(talonFXConfiguration);
 
         var pivotEncoder1Configurator = pivotEncoder1.getConfigurator();
@@ -83,7 +82,8 @@ public class PivotSubsystem extends SubsystemBase {
 
         cancoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         cancoderConfiguration.MagnetSensor.MagnetOffset = PivotConstants.MAGNET_OFFSET;
-        cancoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        cancoderConfiguration.MagnetSensor.SensorDirection =
+                SensorDirectionValue.CounterClockwise_Positive;
         pivotEncoder1Configurator.apply(cancoderConfiguration);
 
         sysIdRoutine =
@@ -103,46 +103,51 @@ public class PivotSubsystem extends SubsystemBase {
                                 // Tell SysId how to record a frame of data for each motor on the mechanism being
                                 // characterized.
                                 null, // Using the CTRE SignalLogger API instead
-                                // Tell SysId to make generated commands require this subsystem, suffix test state in
+                                // Tell SysId to make generated commands require this subsystem, suffix test state
+                                // in
                                 // WPILog with this subsystem's name ("shooter")
                                 this));
     }
 
     @Override
     public void periodic() {
-//        relativePoseY = fieldLength - visionSubsystem.getPose2d().getY();
-//        relativePoseX = speakerPose - visionSubsystem.getPose2d().getX();
-//        robotPoseX = visionSubsystem.getPose2d().getX();
-//        robotPoseY = visionSubsystem.getPose2d().getY();
-//        hypoGroundLength = Math.sqrt((relativePoseX*relativePoseX)+(relativePoseY*relativePoseY));
-//        vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot), hypoGroundLength);
+        //        relativePoseY = fieldLength - visionSubsystem.getPose2d().getY();
+        //        relativePoseX = speakerPose - visionSubsystem.getPose2d().getX();
+        //        robotPoseX = visionSubsystem.getPose2d().getX();
+        //        robotPoseY = visionSubsystem.getPose2d().getY();
+        //        hypoGroundLength =
+        // Math.sqrt((relativePoseX*relativePoseX)+(relativePoseY*relativePoseY));
+        //        vertAngle = Math.atan2(Units.inchesToMeters(speakerHeightRelativeToBot),
+        // hypoGroundLength);
 
         SmartDashboard.putData("Pivot kraken", pivotMotor1);
         SmartDashboard.putData("Pivot encoder", pivotEncoder1);
         SmartDashboard.putData("Forward limit switch pivot", forwardLimitSwitch);
         SmartDashboard.putData("Reverse limit switch pivot", reverseLimitSwitch);
-
-
     }
 
     public void setPivotPosition(double position) {
-        MotionMagicVoltage motionMagic = new MotionMagicVoltage(
-                position, true, 0, 0,
-                false, false, false);
+        MotionMagicVoltage motionMagic =
+                new MotionMagicVoltage(position, true, 0, 0, false, false, false);
         // todo: overridebreakdurneutral = false
 
         System.out.print("Pivot position: ");
         System.out.println(position);
         System.out.println(motionMagic.Position);
-        pivotMotor1.setControl(motionMagic.withPosition(position).
-                withLimitForwardMotion(getForwardLimitSwitch())
-                .withLimitReverseMotion(getReverseLimitSwitch()).
-                withSlot(0).withUpdateFreqHz(200));
+        pivotMotor1.setControl(
+                motionMagic
+                        .withPosition(position)
+                        .withLimitForwardMotion(getForwardLimitSwitch())
+                        .withLimitReverseMotion(getReverseLimitSwitch())
+                        .withSlot(0)
+                        .withUpdateFreqHz(200));
         SmartDashboard.putNumber("pivot position setpoint:", position);
     }
 
     public double getAngle() {
-        return pivotMotor1.getRotorPosition().getValue() / CANCoderConstants.COUNTS_PER_DEG * PivotConstants.GEAR_RATIO;
+        return pivotMotor1.getRotorPosition().getValue()
+                / CANCoderConstants.COUNTS_PER_DEG
+                * PivotConstants.GEAR_RATIO;
     }
 
     public double getEncAngle() {
@@ -181,7 +186,6 @@ public class PivotSubsystem extends SubsystemBase {
         return pivotMotor1.getSupplyCurrent().getValue();
     }
 
-
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
         return sysIdRoutine.quasistatic(direction);
     }
@@ -193,7 +197,4 @@ public class PivotSubsystem extends SubsystemBase {
     public void stop() {
         pivotMotor1.stopMotor();
     }
-
-
 }
-

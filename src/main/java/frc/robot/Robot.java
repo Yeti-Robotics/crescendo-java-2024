@@ -40,8 +40,7 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void autonomousPeriodic() {
-    }
+    public void autonomousPeriodic() {}
 
     @Override
     public void autonomousExit() { // is this necessary??
@@ -66,10 +65,8 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void testPeriodic() {
-    }
+    public void testPeriodic() {}
 
     @Override
-    public void simulationPeriodic() {
-    }
+    public void simulationPeriodic() {}
 }

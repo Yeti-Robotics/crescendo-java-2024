@@ -1,8 +1,8 @@
 package frc.robot.commands.pivot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.constants.PivotConstants;
+import frc.robot.subsystems.PivotSubsystem;
 
 public class PivotHomeCommand extends Command {
 
@@ -21,9 +21,7 @@ public class PivotHomeCommand extends Command {
     }
 
     @Override
-    public void execute() {
-    }
-
+    public void execute() {}
 
     @Override
     public boolean isFinished() {
@@ -31,6 +29,5 @@ public class PivotHomeCommand extends Command {
     }
 
     @Override
-    public void end(boolean interrupted) {
-    }
+    public void end(boolean interrupted) {}
 }

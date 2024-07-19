@@ -9,16 +9,17 @@ public class ControllerContainer {
     public ControllerContainer() {
         controllers = new Controller[OIConstants.CONTROLLER_COUNT];
 
-        OIConstants.CONTROLLERS.forEach((port, type) -> {
-            switch (type) {
-                case CUSTOM:
-                    controllers[port] = new CustomController(port);
-                    break;
-                case XBOX:
-                    controllers[port] = new CustomXboxController(port);
-                    break;
-            }
-        });
+        OIConstants.CONTROLLERS.forEach(
+                (port, type) -> {
+                    switch (type) {
+                        case CUSTOM:
+                            controllers[port] = new CustomController(port);
+                            break;
+                        case XBOX:
+                            controllers[port] = new CustomXboxController(port);
+                            break;
+                    }
+                });
     }
 
     public Controller get(int controllerNumber) {

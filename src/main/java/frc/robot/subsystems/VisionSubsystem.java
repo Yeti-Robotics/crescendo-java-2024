@@ -11,7 +11,6 @@ public class VisionSubsystem extends SubsystemBase {
     public double xFinal;
     public double yFinal;
 
-
     public boolean hasTargets() {
         return LimelightHelpers.getTV(VisionConstants.LIMELIGHT_NAME);
     }
@@ -35,7 +34,6 @@ public class VisionSubsystem extends SubsystemBase {
     public Pose2d getPose2d() {
         return LimelightHelpers.getBotPose2d(VisionConstants.LIMELIGHT_NAME);
     }
-
 
     public double getYaw() {
         return getPose()[5];

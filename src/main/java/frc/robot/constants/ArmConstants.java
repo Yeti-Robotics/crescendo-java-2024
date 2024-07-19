@@ -1,6 +1,5 @@
 package frc.robot.constants;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -28,20 +27,32 @@ public final class ArmConstants {
     public static final double ARM_D = 0;
     public static final double ARM_F = 0;
 
-    public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().withKP(ARM_P).withKI(ARM_I).withKD(ARM_D).withGravityType(GravityTypeValue.Arm_Cosine);
-    public static final CurrentLimitsConfigs ARM_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
-            withSupplyCurrentThreshold(55).withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);
+    public static final Slot0Configs SLOT_0_CONFIGS =
+            new Slot0Configs()
+                    .withKP(ARM_P)
+                    .withKI(ARM_I)
+                    .withKD(ARM_D)
+                    .withGravityType(GravityTypeValue.Arm_Cosine);
+    public static final CurrentLimitsConfigs ARM_CURRENT_LIMIT =
+            new CurrentLimitsConfigs()
+                    .withSupplyCurrentLimitEnable(true)
+                    .withSupplyCurrentThreshold(55)
+                    .withSupplyCurrentLimit(65)
+                    .withSupplyTimeThreshold(0.1)
+                    .withStatorCurrentLimitEnable(true)
+                    .withStatorCurrentLimit(65);
 
-    public static final SoftwareLimitSwitchConfigs ARM_SOFT_LIMIT = new SoftwareLimitSwitchConfigs().
-            withForwardSoftLimitEnable
-                    (true).
-            withForwardSoftLimitThreshold(
-            0.0195 //placeholder
-    ).withReverseSoftLimitEnable(false).withReverseSoftLimitThreshold(
-            65 //placeholder
-    );
-    public static final double MAGNET_OFFSET = -1; //placeholder
-
+    public static final SoftwareLimitSwitchConfigs ARM_SOFT_LIMIT =
+            new SoftwareLimitSwitchConfigs()
+                    .withForwardSoftLimitEnable(true)
+                    .withForwardSoftLimitThreshold(
+                            0.0195 // placeholder
+                            )
+                    .withReverseSoftLimitEnable(false)
+                    .withReverseSoftLimitThreshold(
+                            65 // placeholder
+                            );
+    public static final double MAGNET_OFFSET = -1; // placeholder
 
     public static final double GEAR_RATIO = 1.0 / (50.463 / 12.0);
 

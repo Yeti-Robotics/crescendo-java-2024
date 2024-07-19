@@ -1,16 +1,18 @@
-//Borrowed from Mechanical Advantage, FRC Team 6328
+// Borrowed from Mechanical Advantage, FRC Team 6328
 package frc.robot.constants;
+
 import static edu.wpi.first.apriltag.AprilTagFields.k2024Crescendo;
-import edu.wpi.first.math.geometry.Rotation2d;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import java.io.IOException;
 import edu.wpi.first.wpilibj.DriverStation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * Contains various field dimensions and useful reference points. Dimensions are in meters, and sets
  * of corners start in the lower left moving clockwise. <b>All units in Meters</b> <br>
@@ -30,12 +32,12 @@ public class FieldConstants {
     public static final double startingLineX = Units.inchesToMeters(74.111);
     public static final double speakerPose = fieldWidth - Units.inchesToMeters(104.0);
     public static final double robotHeight = Units.feetToMeters(2.333);
-    public static final double speakerHeightRelativeToBot = Speaker.centerSpeakerOpening.getY()- robotHeight;
+    public static final double speakerHeightRelativeToBot =
+            Speaker.centerSpeakerOpening.getY() - robotHeight;
     public static final Translation2d ampCenter =
             new Translation2d(Units.inchesToMeters(72.455), Units.inchesToMeters(322.996));
-    /**
-     * Staging locations for each note
-     */
+
+    /** Staging locations for each note */
     public static final class StagingLocations {
         public static final double centerlineX = fieldLength / 2.0;
         // need to update
@@ -47,30 +49,30 @@ public class FieldConstants {
         public static final double spikeSeparationY = Units.inchesToMeters(57);
         public static final Translation2d[] centerlineTranslations = new Translation2d[5];
         public static final Translation2d[] spikeTranslations = new Translation2d[3];
+
         static {
             for (int i = 0; i < centerlineTranslations.length; i++) {
                 centerlineTranslations[i] =
                         new Translation2d(centerlineX, centerlineFirstY + (i * centerlineSeparationY));
             }
         }
+
         static {
             for (int i = 0; i < spikeTranslations.length; i++) {
                 spikeTranslations[i] = new Translation2d(spikeX, spikeFirstY + (i * spikeSeparationY));
             }
         }
     }
-    /**
-     * Each corner of the speaker *
-     */
+
+    /** Each corner of the speaker * */
     public static final class Speaker {
-        /**
-         * Center of the speaker opening (blue alliance)
-         */
+        /** Center of the speaker opening (blue alliance) */
         public static Translation3d topRightSpeaker =
                 new Translation3d(
                         Units.inchesToMeters(18.055),
                         Units.inchesToMeters(238.815),
                         Units.inchesToMeters(83.091));
+
         public static Translation3d topLeftSpeaker =
                 new Translation3d(
                         Units.inchesToMeters(18.055),
@@ -84,6 +86,7 @@ public class FieldConstants {
                 bottomLeftSpeaker.interpolate(topRightSpeaker, 0.5);
         public static final double aprilTagWidth = Units.inchesToMeters(6.50);
         public static final AprilTagFieldLayout aprilTags;
+
         static {
             try {
                 aprilTags = AprilTagFieldLayout.loadFromResource(k2024Crescendo.m_resourceFile);
@@ -92,35 +95,37 @@ public class FieldConstants {
             }
         }
     }
+
     public static AprilTagFieldLayout aprilTagLayout;
     public static List<Pose2d> aprilTagPoses = new ArrayList<Pose2d>(12);
     public static List<Pose2d> allianceAprilTags = new ArrayList<Pose2d>(6);
     public static Pose2d ampTag = new Pose2d(FieldConstants.ampCenter, Rotation2d.fromDegrees(0));
     public static List<Pose2d> opposingAllianceAprilTags = new ArrayList<Pose2d>(6);
-    static{
+
+    static {
         try {
             aprilTagLayout = k2024Crescendo.loadAprilTagLayoutField();
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
     }
+
     public static void updateAprilTagTranslations() {
         aprilTagPoses.clear();
         allianceAprilTags.clear();
         opposingAllianceAprilTags.clear();
-        for(int i = 0; i < aprilTagLayout.getTags().size(); i++) {
+        for (int i = 0; i < aprilTagLayout.getTags().size(); i++) {
             aprilTagPoses.add(i, aprilTagLayout.getTagPose(i + 1).get().toPose2d());
         }
 
-        if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
             ampTag = new Pose2d(FieldConstants.ampCenter, Rotation2d.fromDegrees(0));
-            allianceAprilTags.addAll(aprilTagPoses.subList(1,8));
-            opposingAllianceAprilTags.addAll(aprilTagPoses.subList(9,16));
+            allianceAprilTags.addAll(aprilTagPoses.subList(1, 8));
+            opposingAllianceAprilTags.addAll(aprilTagPoses.subList(9, 16));
         } else {
             ampTag = new Pose2d(FieldConstants.ampCenter.getX(), 0, Rotation2d.fromDegrees(0));
-            allianceAprilTags.addAll(aprilTagPoses.subList(9,16));
-            opposingAllianceAprilTags.addAll(aprilTagPoses.subList(1,8));
-
+            allianceAprilTags.addAll(aprilTagPoses.subList(9, 16));
+            opposingAllianceAprilTags.addAll(aprilTagPoses.subList(1, 8));
         }
     }
 }
