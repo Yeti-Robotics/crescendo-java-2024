@@ -122,7 +122,7 @@ public class RobotContainer {
                 shooter.setVelocityInstantCommand(100),
                 intake.rollCmd(-.1).withTimeout(0.2),
                 Commands.waitSeconds(.45),
-                shooter.spinNeoCmd().alongWith(new StartEndCommand(() -> intake.roll(-1), intake::stop).withTimeout(1),
+                new StartEndCommand(shooter::spinNeo, shooter::stopFlywheel).alongWith(new StartEndCommand(() -> intake.roll(-1), intake::stop).withTimeout(1),
                         new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2)
                 )
         ), MultiButton.RunCondition.WHEN_PRESSED);
