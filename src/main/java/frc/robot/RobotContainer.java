@@ -137,6 +137,7 @@ public class RobotContainer {
         buttonHelper.createButton(11, 0, shooter.shootTrapCmd(), MultiButton.RunCondition.WHILE_HELD);
 
         pivot.anyLimitSwitchPressed.onTrue(new PivotLimitSwitchCommand(pivot));
+        intake.intakeOccupiedTrigger.onTrue(vision.blinkLimelight());
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(

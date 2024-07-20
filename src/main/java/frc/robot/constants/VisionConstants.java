@@ -10,4 +10,7 @@ public final class VisionConstants {
     public static final String LIMELIGHT_NAME = "limelight";
 
     public static final String CAMERA_NAME = "camera";
-    }
+
+    public static final double BLINK_DELAY = 0.25;
+    public static final int NUM_BLINKS = 3;
+}

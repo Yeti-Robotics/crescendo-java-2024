@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.constants.VisionConstants;
 import frc.robot.util.LimelightHelpers;
 
@@ -63,5 +63,22 @@ public class VisionSubsystem extends SubsystemBase {
 
     public void ledOn() {
         LimelightHelpers.setLEDMode_ForceOn(VisionConstants.LIMELIGHT_NAME);
+    }
+
+    public Command blinkLimelight() {
+        Command blinkLightCommand = Commands.sequence(
+                runOnce(this::ledOn),
+                new WaitCommand(VisionConstants.BLINK_DELAY),
+                runOnce(this::ledOff)
+        );
+
+        SequentialCommandGroup sequentialCommandGroup = new SequentialCommandGroup();
+        sequentialCommandGroup.addRequirements(this);
+
+        for (int i = 0; i < VisionConstants.NUM_BLINKS; i++) {
+            sequentialCommandGroup.addCommands(blinkLightCommand);
+        }
+
+        return sequentialCommandGroup;
     }
 }
