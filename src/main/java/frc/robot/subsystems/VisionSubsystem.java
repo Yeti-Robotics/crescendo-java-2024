@@ -29,7 +29,7 @@ public class VisionSubsystem extends SubsystemBase {
         SequentialCommandGroup blinkCommands = new SequentialCommandGroup();
         blinkCommands.addRequirements(this);
 
-        for (int i = 0; i < VisionConstants.NUM_BLINKS - 1; i++) {
+        for (int i = 0; i < VisionConstants.NUM_BLINKS; i++) {
             blinkCommands.addCommands(Commands.sequence(
                     ledOn(),
                     new WaitCommand(VisionConstants.BLINK_DELAY),
