@@ -15,7 +15,6 @@ import java.util.function.DoubleSupplier;
 public class AutoAimCommand extends Command {
 
     private CommandSwerveDrivetrain drivetrain;
-    TurnToAngle swerveRequest;
     private DoubleSupplier xVelSupplier;
     private TurnToPoint poseAimRequest;
     private DoubleSupplier yVelSupplier;
