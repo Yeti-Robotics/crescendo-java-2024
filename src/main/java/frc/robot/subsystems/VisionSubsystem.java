@@ -32,7 +32,7 @@ public class VisionSubsystem extends SubsystemBase {
         for (int i = 0; i < VisionConstants.NUM_BLINKS; i++) {
             blinkCommands.addCommands(Commands.sequence(
                     ledOn(),
-                    new WaitCommand(VisionConstants.BLINK_DELAY),
+                    Commands.waitSeconds(VisionConstants.BLINK_DELAY),
                     ledOff()
             ));
         }
