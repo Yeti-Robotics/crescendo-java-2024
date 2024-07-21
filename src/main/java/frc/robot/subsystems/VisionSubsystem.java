@@ -33,8 +33,9 @@ public class VisionSubsystem extends SubsystemBase {
             blinkCommands.addCommands(Commands.sequence(
                     ledOn(),
                     Commands.waitSeconds(VisionConstants.BLINK_DELAY_SECONDS),
-                    ledOff()
-            ));
+                    ledOff(),
+                    Commands.waitSeconds(VisionConstants.BLINK_DELAY_SECONDS)
+                    ));
         }
 
         return blinkCommands;
