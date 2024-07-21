@@ -99,8 +99,6 @@ public class RobotContainer {
         buildAutoChooser();
         rebuildAutoIfNecessary();
 
-        vision.ledOff();
-
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
         SmartDashboard.putNumber("shooterstate-position", 0.5);
