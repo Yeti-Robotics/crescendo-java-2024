@@ -1,50 +1,42 @@
 package frc.robot.subsystems;
 
 
-import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Velocity;
-import edu.wpi.first.units.Voltage;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.constants.CANCoderConstants;
 import frc.robot.constants.PivotConstants;
+import frc.robot.constants.PivotConstants.PivotPosition;
 import frc.robot.constants.TalonFXConstants;
 
-import static edu.wpi.first.units.Units.Seconds;
-
 public class PivotSubsystem extends SubsystemBase {
-
-    private static final Measure<Velocity<Voltage>> sysIdRampRate =
-            edu.wpi.first.units.Units.Volts.of(1).per(Seconds.of(1));
-    private static final Measure<Voltage> sysIdStepAmps = edu.wpi.first.units.Units.Volts.of(7);
     public final TalonFX pivotMotor1;
     public final CANcoder pivotEncoder1;
-    private final VoltageOut voltageRequest = new VoltageOut(0);
-    // SysID Setup
-    private final SysIdRoutine sysIdRoutine;
     public DigitalInput forwardLimitSwitch;
     public DigitalInput reverseLimitSwitch;
     public final Trigger anyLimitSwitchPressed = new Trigger(() -> getForwardLimitSwitch() || getReverseLimitSwitch());
-    private PivotConstants.PivotPositions pivotPositions = PivotConstants.PivotPositions.BUMPFIRE;
+
+    private PivotPosition pivotSetPosition = PivotPosition.CUSTOM;
+    private final StatusSignal<Double> pivotPositionStatusSignal;
 
     public PivotSubsystem() {
         reverseLimitSwitch = new DigitalInput(PivotConstants.PIVOT_LIMIT_SWITCH_REVERSE);
         forwardLimitSwitch = new DigitalInput(PivotConstants.PIVOT_LIMIT_SWITCH_FORWARD);
         pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID, TalonFXConstants.CANIVORE_NAME);
         pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
+
         pivotMotor1.setInverted(true);
         pivotMotor1.setNeutralMode(NeutralModeValue.Brake);
+        pivotPositionStatusSignal = pivotMotor1.getPosition();
 
         var pivotMotor1Configurator = pivotMotor1.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
@@ -65,11 +57,6 @@ public class PivotSubsystem extends SubsystemBase {
         talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = PivotConstants.PROFILE_A;
         talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = PivotConstants.PROFILE_V;
 
-        pivotMotor1.getRotorVelocity().waitForUpdate(PivotConstants.PIVOT_VELOCITY_STATUS_FRAME);
-        pivotMotor1.getRotorPosition().waitForUpdate(PivotConstants.PIVOT_POSITION_STATUS_FRAME);
-        pivotEncoder1.getAbsolutePosition().waitForUpdate(0.01);
-
-
         pivotMotor1Configurator.apply(talonFXConfiguration);
 
         var pivotEncoder1Configurator = pivotEncoder1.getConfigurator();
@@ -80,71 +67,83 @@ public class PivotSubsystem extends SubsystemBase {
         cancoderConfiguration.MagnetSensor.MagnetOffset = PivotConstants.MAGNET_OFFSET;
         cancoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         pivotEncoder1Configurator.apply(cancoderConfiguration);
-
-        sysIdRoutine =
-                new SysIdRoutine(
-                        // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
-                        new SysIdRoutine.Config(
-                                sysIdRampRate,
-                                sysIdStepAmps,
-                                null,
-                                state -> SignalLogger.writeString("state", state.toString())),
-                        new SysIdRoutine.Mechanism(
-                                // Tell SysId how to plumb the driving voltage to the motor(s).
-                                (Measure<Voltage> volts) -> {
-                                    pivotMotor1.setControl(
-                                            voltageRequest.withOutput(volts.in(edu.wpi.first.units.Units.Volts)));
-                                },
-                                // Tell SysId how to record a frame of data for each motor on the mechanism being
-                                // characterized.
-                                null, // Using the CTRE SignalLogger API instead
-                                // Tell SysId to make generated commands require this subsystem, suffix test state in
-                                // WPILog with this subsystem's name ("shooter")
-                                this));
     }
 
     @Override
     public void periodic() {
+        pivotPositionStatusSignal.refresh();
+
+        Sendable pivotPositionSendable = sendableBuilder -> {
+            sendableBuilder.addStringProperty("Type", pivotSetPosition::toString, null);
+            sendableBuilder.addDoubleProperty("Position", pivotSetPosition::getPosition, null);
+        };
+
         SmartDashboard.putData("Pivot kraken", pivotMotor1);
         SmartDashboard.putData("Pivot encoder", pivotEncoder1);
         SmartDashboard.putData("Forward limit switch pivot", forwardLimitSwitch);
         SmartDashboard.putData("Reverse limit switch pivot", reverseLimitSwitch);
+        SmartDashboard.putData("Pivot position", pivotPositionSendable);
     }
 
-    public void setPivotPosition(double position) {
-        MotionMagicVoltage motionMagic = new MotionMagicVoltage(
-                position, true, 0, 0,
-                false, false, false);
-        // todo: overridebreakdurneutral = false
+    public double getPivotPosition() {
+        if (!pivotPositionStatusSignal.hasUpdated()) {
+            pivotPositionStatusSignal.waitForUpdate(PivotConstants.PIVOT_POSITION_STATUS_FRAME);
+        }
 
-        System.out.print("Pivot position: ");
-        System.out.println(position);
-        System.out.println(motionMagic.Position);
-        pivotMotor1.setControl(motionMagic.withPosition(position).
-                withLimitForwardMotion(getForwardLimitSwitch())
-                .withLimitReverseMotion(getReverseLimitSwitch()).
-                withSlot(0).withUpdateFreqHz(200));
-        SmartDashboard.putNumber("pivot position setpoint:", position);
+        return pivotPositionStatusSignal.getValue();
     }
 
-    public double getAngle() {
-        return pivotMotor1.getRotorPosition().getValue() / CANCoderConstants.COUNTS_PER_DEG * PivotConstants.GEAR_RATIO;
+    private void setPivotPosition(PivotPosition pivotPosition) {
+        pivotSetPosition = pivotPosition;
+
+        MotionMagicVoltage motionMagicControlRequest = new MotionMagicVoltage(
+                pivotPosition.getPosition(), true, 0, 0,
+                false, false, false)
+                .withLimitForwardMotion(getForwardLimitSwitch())
+                .withLimitReverseMotion(getReverseLimitSwitch())
+                .withSlot(0).withUpdateFreqHz(200);
+
+        pivotMotor1.setControl(motionMagicControlRequest);
     }
 
-    public double getEncAngle() {
+    public Command movePivotPositionTo(PivotPosition pivotPosition) {
+        return runOnce(() -> setPivotPosition(pivotPosition));
+    }
+
+    public Command adjustPivotPositionTo(double angle) {
+        return runOnce(() -> setPivotPosition(PivotPosition.CUSTOM(angle)));
+    }
+
+    public double getEncoderAngle() {
         return pivotEncoder1.getAbsolutePosition().getValue();
     }
 
-    public void moveUp(double speed) {
+    public Command moveDown(double speed) {
+        return startEnd(() -> movePivotMotorDown(speed), this::stopPivotMotor);
+    }
+
+    public Command moveDownWithBrake(double moveSpeed, double brakeSpeed) {
+        return startEnd(() -> movePivotMotorDown(moveSpeed), () -> movePivotMotorUp(brakeSpeed));
+    }
+
+    public Command moveUpWithBrake(double moveSpeed, double brakeSpeed) {
+        return startEnd(() -> movePivotMotorUp(moveSpeed), () -> movePivotMotorDown(brakeSpeed));
+    }
+
+    private void movePivotMotorUp(double speed) {
         if (!getForwardLimitSwitch()) {
             pivotMotor1.set(Math.abs(speed));
         }
     }
 
-    public void moveDown(double speed) {
+    private void movePivotMotorDown(double speed) {
         if (!getReverseLimitSwitch()) {
             pivotMotor1.set(-Math.abs(speed));
         }
+    }
+
+    public void stopPivotMotor() {
+        pivotMotor1.stopMotor();
     }
 
     public boolean getForwardLimitSwitch() {
@@ -154,11 +153,5 @@ public class PivotSubsystem extends SubsystemBase {
     public boolean getReverseLimitSwitch() {
         return !reverseLimitSwitch.get();
     }
-
-    public void stop() {
-        pivotMotor1.stopMotor();
-    }
-
-
 }
 

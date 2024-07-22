@@ -15,7 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
  */
 public class TurnToPoint extends SwerveRequest.FieldCentricFacingAngle {
 
-    Translation2d pointToFace;
+    private Translation2d pointToFace;
 
     @Override
     public StatusCode apply(
@@ -40,14 +40,5 @@ public class TurnToPoint extends SwerveRequest.FieldCentricFacingAngle {
 
     public void setPointToFace(Translation2d point) {
         pointToFace = point;
-    }
-
-    public FieldCentricFacingAngle withPointToFace(Translation2d point) {
-        setPointToFace(point);
-        return this;
-    }
-
-    public Rotation2d getTargetDirection() {
-        return this.TargetDirection;
     }
 }

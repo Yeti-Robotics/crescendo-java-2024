@@ -5,17 +5,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.TalonFXConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX intakeKraken;
-
     private final DigitalInput beamBreak;
-
-    private boolean prevBreak = false;
 
     public IntakeSubsystem() {
         intakeKraken = new TalonFX(IntakeConstants.INTAKE_KRAKEN_ID, "canivoreBus");
@@ -37,15 +33,7 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putData("intake beam break", beamBreak);
     }
 
-    public void rollIn(double speed) {
-        intakeKraken.set(Math.abs(speed));
-    }
-
-    public void rollOut(double speed) {
-        intakeKraken.set(-Math.abs(speed));
-    }
-
-    public void roll(double speed) {
+    private void setIntakeSpeed(double speed) {
         intakeKraken.set(speed);
     }
 
@@ -57,7 +45,19 @@ public class IntakeSubsystem extends SubsystemBase {
         return !beamBreak.get();
     }
 
-    public Command rollCmd(double val) {
-        return startEnd(() -> roll(val), this::stop);
+    private Command roll(double vel) {
+        return startEnd(() -> setIntakeSpeed(vel), this::stop);
+    }
+
+    public Command rollIn(double vel) {
+        // TODO: add some kind of warning logging if a negative value is passed
+
+        return roll(Math.abs(vel));
+    }
+
+    public Command rollOut(double vel) {
+        // TODO: add some kind of warning logging if a positive value is passed
+
+        return roll(-Math.abs(vel));
     }
 }
