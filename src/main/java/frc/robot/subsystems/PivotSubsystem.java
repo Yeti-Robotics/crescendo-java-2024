@@ -118,6 +118,10 @@ public class PivotSubsystem extends SubsystemBase {
         return pivotEncoder1.getAbsolutePosition().getValue();
     }
 
+    public Command moveUp(double speed) {
+        return startEnd(() -> movePivotMotorUp(speed), this::stopPivotMotor);
+    }
+
     public Command moveDown(double speed) {
         return startEnd(() -> movePivotMotorDown(speed), this::stopPivotMotor);
     }
