@@ -51,7 +51,7 @@ public  class PivotLimitSwitchCommand extends Command
         if (moveUpTrue) {
             pivotSubsystem.moveDown(0.01);
         } else{
-            pivotSubsystem.stop();
+            pivotSubsystem.moveDown(0);
         }
     }
 
