@@ -1,21 +1,16 @@
 package frc.robot.commands;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.FieldConstants;
-import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.util.AllianceFlipUtil;
 
-import java.lang.reflect.Field;
 import java.util.function.DoubleSupplier;
 
 
@@ -53,8 +48,8 @@ public class ShooterStateCommand extends Command {
     public void initialize() {
         poseY = commandSwerveDrivetrain.getState().Pose.getY();
         poseX = commandSwerveDrivetrain.getState().Pose.getX();
-        rps = ShooterConstants.SHOOTER_MAP().get(poseY).rps;
-        angle = ShooterConstants.SHOOTER_MAP().get(poseY).angle;
+        rps = ShooterSubsystem.SHOOTER_MAP().get(poseY).rps;
+        angle = ShooterSubsystem.SHOOTER_MAP().get(poseY).angle;
         speakerPose = AllianceFlipUtil.apply(new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0)));
     }
 
@@ -68,8 +63,8 @@ public class ShooterStateCommand extends Command {
         yawTarget = Rotation2d.fromRadians(Math.atan2(relativeSpeaker.getY(), relativeSpeaker.getX()) + Math.PI);
         double distance = relativeSpeaker.getTranslation().getNorm();
         System.out.println(distance);
-        rps = ShooterConstants.SHOOTER_MAP().get(distance).rps;
-        angle = ShooterConstants.SHOOTER_MAP().get(distance).angle;
+        rps = ShooterSubsystem.SHOOTER_MAP().get(distance).rps;
+        angle = ShooterSubsystem.SHOOTER_MAP().get(distance).angle;
         SmartDashboard.putNumber("calc shooter angle", angle);
 //        angle = SmartDashboard.getNumber("shooterstate-position", 0.5);
 

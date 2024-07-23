@@ -2,8 +2,7 @@ package frc.robot.subsystems;
 
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -17,9 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.constants.CANCoderConstants;
-import frc.robot.constants.PivotConstants;
-import frc.robot.constants.TalonFXConstants;
+import frc.robot.constants.ConfiguratorConstants;
 
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -36,13 +33,53 @@ public class PivotSubsystem extends SubsystemBase {
     public DigitalInput forwardLimitSwitch;
     public DigitalInput reverseLimitSwitch;
     public final Trigger anyLimitSwitchPressed = new Trigger(() -> getForwardLimitSwitch() || getReverseLimitSwitch());
-    private PivotConstants.PivotPositions pivotPositions = PivotConstants.PivotPositions.BUMPFIRE;
+    private PivotPositions pivotPositions = PivotPositions.BUMPFIRE;
+    public static final int PIVOT_LIMIT_SWITCH_FORWARD = 7;
+    public static final int PIVOT_LIMIT_SWITCH_REVERSE = 6;
+    public static final NeutralModeValue PIVOT_NEUTRAL_MODE = NeutralModeValue.Brake;
+    public static final double PIVOT_POSITION_STATUS_FRAME = 0.05;
+    public static final double PIVOT_VELOCITY_STATUS_FRAME = 0.01;
+    public static final double PIVOT_HOME_POSITION = 0.5;
+    public static final double PIVOT_P = 50; //1 //350.0 /11.7
+    public static final double PIVOT_I = 0;
+    public static final double PIVOT_D = 2; //0 //45.0
+    public static final double PIVOT_V = 0.12000000149011612; // 65
+    public static final double PIVOT_A = 0.009999999776482582; // 0.7
+    public static final double PIVOT_G = 0.02; // 0.35
+    public static final double PROFILE_V = 0.000000001;
+    public static final double PROFILE_A = 0.000000001;
+    public static final CurrentLimitsConfigs PIVOT_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).withSupplyCurrentThreshold(55).
+            withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);
+
+    public static final SoftwareLimitSwitchConfigs PIVOT_SOFT_LIMIT = new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(true).withForwardSoftLimitThreshold(
+            .53
+    ).withReverseSoftLimitEnable(true).withReverseSoftLimitThreshold(
+            .31
+    );
+
+    public static final double MAGNET_OFFSET = 0.433838; //placeholder
+
+    public static final double GEAR_RATIO = 1.0/144.0;
+
+    public enum PivotPositions {
+        BUMPFIRE(52);
+        public final double angle;
+        public final double sensorUnits;
+        PivotPositions(double angle){
+            this.angle = angle;
+            this.sensorUnits = angle/GEAR_RATIO * ConfiguratorConstants.COUNTS_PER_DEG;
+        }
+    }
+
+    public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().withKP(PIVOT_P).withKI(PIVOT_I).withKD(PIVOT_D).
+            withKA(PIVOT_A).withKV(PIVOT_V).withKG(PIVOT_G).withGravityType(GravityTypeValue.Arm_Cosine);
+
 
     public PivotSubsystem() {
-        reverseLimitSwitch = new DigitalInput(PivotConstants.PIVOT_LIMIT_SWITCH_REVERSE);
-        forwardLimitSwitch = new DigitalInput(PivotConstants.PIVOT_LIMIT_SWITCH_FORWARD);
-        pivotMotor1 = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID, TalonFXConstants.CANIVORE_NAME);
-        pivotEncoder1 = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID, TalonFXConstants.CANIVORE_NAME);
+        reverseLimitSwitch = new DigitalInput(PIVOT_LIMIT_SWITCH_REVERSE);
+        forwardLimitSwitch = new DigitalInput(PIVOT_LIMIT_SWITCH_FORWARD);
+        pivotMotor1 = new TalonFX(ConfiguratorConstants.PIVOT_ONE_MOTOR_ID, ConfiguratorConstants.CANIVORE_NAME);
+        pivotEncoder1 = new CANcoder(ConfiguratorConstants.PIVOT_ONE_CANCODER_ID, ConfiguratorConstants.CANIVORE_NAME);
         pivotMotor1.setInverted(true);
         pivotMotor1.setNeutralMode(NeutralModeValue.Brake);
 
@@ -53,20 +90,20 @@ public class PivotSubsystem extends SubsystemBase {
 
         talonFXConfiguration.Feedback.FeedbackRemoteSensorID = pivotEncoder1.getDeviceID();
         talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        talonFXConfiguration.MotorOutput.NeutralMode = PivotConstants.PIVOT_NEUTRAL_MODE;
+        talonFXConfiguration.MotorOutput.NeutralMode = PIVOT_NEUTRAL_MODE;
         talonFXConfiguration.FutureProofConfigs = true;
         talonFXConfiguration.Feedback.SensorToMechanismRatio = 1;
         talonFXConfiguration.Feedback.RotorToSensorRatio = 83.79;
-        talonFXConfiguration.CurrentLimits = PivotConstants.PIVOT_CURRENT_LIMIT;
-        talonFXConfiguration.SoftwareLimitSwitch = PivotConstants.PIVOT_SOFT_LIMIT;
-        talonFXConfiguration.Slot0 = PivotConstants.SLOT_0_CONFIGS;
+        talonFXConfiguration.CurrentLimits = PIVOT_CURRENT_LIMIT;
+        talonFXConfiguration.SoftwareLimitSwitch = PIVOT_SOFT_LIMIT;
+        talonFXConfiguration.Slot0 = SLOT_0_CONFIGS;
         talonFXConfiguration.MotionMagic.MotionMagicCruiseVelocity = 2;
         talonFXConfiguration.MotionMagic.MotionMagicAcceleration = 2;
-        talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = PivotConstants.PROFILE_A;
-        talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = PivotConstants.PROFILE_V;
+        talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = PROFILE_A;
+        talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = PROFILE_V;
 
-        pivotMotor1.getRotorVelocity().waitForUpdate(PivotConstants.PIVOT_VELOCITY_STATUS_FRAME);
-        pivotMotor1.getRotorPosition().waitForUpdate(PivotConstants.PIVOT_POSITION_STATUS_FRAME);
+        pivotMotor1.getRotorVelocity().waitForUpdate(PIVOT_VELOCITY_STATUS_FRAME);
+        pivotMotor1.getRotorPosition().waitForUpdate(PIVOT_POSITION_STATUS_FRAME);
         pivotEncoder1.getAbsolutePosition().waitForUpdate(0.01);
 
 
@@ -77,7 +114,7 @@ public class PivotSubsystem extends SubsystemBase {
         var cancoderConfiguration = new CANcoderConfiguration();
 
         cancoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
-        cancoderConfiguration.MagnetSensor.MagnetOffset = PivotConstants.MAGNET_OFFSET;
+        cancoderConfiguration.MagnetSensor.MagnetOffset = MAGNET_OFFSET;
         cancoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         pivotEncoder1Configurator.apply(cancoderConfiguration);
 
@@ -128,7 +165,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public double getAngle() {
-        return pivotMotor1.getRotorPosition().getValue() / CANCoderConstants.COUNTS_PER_DEG * PivotConstants.GEAR_RATIO;
+        return pivotMotor1.getRotorPosition().getValue() / ConfiguratorConstants.COUNTS_PER_DEG * GEAR_RATIO;
     }
 
     public double getEncAngle() {

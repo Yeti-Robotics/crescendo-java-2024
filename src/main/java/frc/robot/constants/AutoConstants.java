@@ -2,12 +2,11 @@ package frc.robot.constants;
 
 
 import com.pathplanner.lib.path.PathConstraints;
-import frc.robot.subsystems.drivetrain.generated.TunerConstants;
 
 public final class AutoConstants {
 
-    public static final double MAX_SPEED = TunerConstants.kSpeedAt12VoltsMps;
-    public static final double MAX_ACCEL = TunerConstants.kSpeedAt12VoltsMps;
+    public static final double MAX_SPEED = ConfiguratorConstants.kSpeedAt12VoltsMps;
+    public static final double MAX_ACCEL = ConfiguratorConstants.kSpeedAt12VoltsMps;
     public static final double MAX_THETA_VELOCITY =  MAX_SPEED / Math.hypot(22.25 / 2, 22.25 / 2);
     public static final double MAX_THETA_ACCEL = MAX_SPEED / Math.hypot(22.25 / 2, 22.25 / 2);
     public static final PathConstraints DEFAULT_CONSTRAINTS = new PathConstraints(

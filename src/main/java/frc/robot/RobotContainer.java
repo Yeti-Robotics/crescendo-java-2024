@@ -27,14 +27,11 @@ import frc.robot.commands.PivotLimitSwitchCommand;
 import frc.robot.commands.ShooterStateCommand;
 import frc.robot.commands.auto.AutoNamedCommands;
 import frc.robot.commands.pivot.PivotHomeCommand;
-import frc.robot.constants.ArmConstants;
 import frc.robot.constants.AutoConstants;
-import frc.robot.constants.DriveConstants;
-import frc.robot.constants.ElevatorConstants;
+import frc.robot.constants.ConfiguratorConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drivetrain.Telemetry;
-import frc.robot.subsystems.drivetrain.generated.TunerConstants;
 import frc.robot.util.controllerUtils.ButtonHelper;
 import frc.robot.util.controllerUtils.ControllerContainer;
 import frc.robot.util.controllerUtils.MultiButton;
@@ -50,14 +47,14 @@ public class RobotContainer {
     public final CommandXboxController joystick = new CommandXboxController(1); // My joystick
     public final VisionSubsystem vision = new VisionSubsystem();
 
-    final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+    final CommandSwerveDrivetrain drivetrain = ConfiguratorConstants.DriveTrain; // My drivetrain
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(DriveConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
-            .withRotationalDeadband(DriveConstants.MaFxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(CommandSwerveDrivetrain.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
+            .withRotationalDeadband(CommandSwerveDrivetrain.MaFxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
 
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-    private final Telemetry logger = new Telemetry(DriveConstants.MAX_VELOCITY_METERS_PER_SECOND);
+    private final Telemetry logger = new Telemetry(CommandSwerveDrivetrain.MAX_VELOCITY_METERS_PER_SECOND);
     public ControllerContainer controllerContainer = new ControllerContainer();
     public SendableChooser<AutoConstants.AutoMode> autoChooser;
     ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
@@ -110,7 +107,7 @@ public class RobotContainer {
         buttonHelper.createButton(5, 0, new SequentialCommandGroup(
                 new InstantCommand(() -> pivot.setPivotPosition(0.42)).andThen(
                         new StartEndCommand(() -> arm.moveUp(.7), arm::stop).until(() ->
-                                arm.getEnc() <= ArmConstants.ARM_HANDOFF_POSITION).andThen(
+                                arm.getEnc() <= ArmSubsystem.ARM_HANDOFF_POSITION).andThen(
                                 new StartEndCommand(() -> shooter.spinFeeder(-0.3),
                                         shooter::stopFlywheel).alongWith(intake.rollCmd(-.2))
                         ).until(shooter::getBeamBreak),
@@ -126,10 +123,10 @@ public class RobotContainer {
 
         buttonHelper.createButton(10, 0, new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(2, 0, intake.rollCmd(-.65), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevator.goDown(0.2), elevator::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevator.setPosition(ElevatorConstants.ElevatorPositions.DOWN)).andThen(new InstantCommand(() -> pivot.setPivotPosition(0.5)))), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevator.goDown(0.2), elevator::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevator.setPosition(ElevatorSubsystem.ElevatorPositions.DOWN)).andThen(new InstantCommand(() -> pivot.setPivotPosition(0.5)))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(6, 0, shooter.spinFeederCmd(-.1).alongWith(new StartEndCommand(() -> intake.rollOut(0.5), intake::stop)), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(9,
-                0, new InstantCommand(() -> elevator.setPosition2(ElevatorConstants.ElevatorPositions.AMP)).andThen(new StartEndCommand(() -> pivot.moveDown(0.25), pivot::stop).unless(
+                0, new InstantCommand(() -> elevator.setPosition2(ElevatorSubsystem.ElevatorPositions.AMP)).andThen(new StartEndCommand(() -> pivot.moveDown(0.25), pivot::stop).unless(
                         () -> pivot.getEncAngle() < 0.4).withTimeout(0.6).andThen(new InstantCommand(() -> pivot.setPivotPosition(0.03)).unless(() -> !elevator.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(11, 0, shooter.shootTrapCmd(), MultiButton.RunCondition.WHILE_HELD);
 
@@ -140,11 +137,11 @@ public class RobotContainer {
                         () ->
                                 drive
                                         // +X in velocity = forward, -Y in joystick = forward
-                                        .withVelocityX(-joystick.getLeftY() * TunerConstants.kSpeedAt12VoltsMps)
+                                        .withVelocityX(-joystick.getLeftY() * ConfiguratorConstants.kSpeedAt12VoltsMps)
                                         // +Y in velocity = left, -X in joystick = left
-                                        .withVelocityY(-joystick.getLeftX() * TunerConstants.kSpeedAt12VoltsMps)
+                                        .withVelocityY(-joystick.getLeftX() * ConfiguratorConstants.kSpeedAt12VoltsMps)
                                         // +rotational rate = counterclockwise (left), -X in joystick = left
-                                        .withRotationalRate(-joystick.getRightX() * DriveConstants.MaFxAngularRate)
+                                        .withRotationalRate(-joystick.getRightX() * CommandSwerveDrivetrain.MaFxAngularRate)
                 ));
 
         // Lock on to speaker

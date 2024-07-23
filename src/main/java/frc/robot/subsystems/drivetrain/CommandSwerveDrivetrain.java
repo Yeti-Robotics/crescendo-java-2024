@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,8 +25,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.constants.DriveConstants;
-import frc.robot.subsystems.drivetrain.generated.TunerConstants;
+import frc.robot.constants.ConfiguratorConstants;
 
 import java.util.function.Supplier;
 
@@ -43,19 +43,21 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private double m_lastSimTime;
     private boolean hasAppliedPerspective = false;
 
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
-        super(driveTrainConstants, OdometryUpdateFrequency, modules);
-        configurePathPlanner();
+    public static final double SUPPLY_CURRENT_LIMIT = 60;
+    public static final boolean SUPPLY_CURRENT_LIMIT_ENABLE = true;
+    public static final double SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD = 65;
+    public static final double SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD = 0.1;
 
-        setDriveCurrentLimits();
-        setDriveVoltageLimits();
-        setAzimuthCurrentLimits();
-        setAzimuthVoltageLimits();
+    public static final double PEAK_FORWARD_VOLTAGE = 12.0;
+    public static final double PEAK_REVERSE_VOLTAGE = -12.0;
 
-        if (Utils.isSimulation()) {
-            startSimThread();
-        }
-    }
+    public static final double SWERVE_X_REDUCTION = 1.0 / 6.75;
+    public static final double WHEEL_DIAMETER = Units.inchesToMeters(4); //0.1016
+
+    public static final double MaFxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+
+    public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 * SWERVE_X_REDUCTION * WHEEL_DIAMETER * Math.PI; //placeholder
+
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
@@ -88,7 +90,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 new HolonomicPathFollowerConfig(
                         new PIDConstants(10, 0, 0),
                         new PIDConstants(10, 0, 0),
-                        TunerConstants.kSpeedAt12VoltsMps,
+                        ConfiguratorConstants.kSpeedAt12VoltsMps,
                         driveRad,
                         new ReplanningConfig()
                 ),
@@ -137,10 +139,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             var currentConfig = module.getDriveMotor().getConfigurator();
             currentConfig.refresh(currentLimitConfigs);
 
-            currentLimitConfigs.SupplyCurrentLimit = DriveConstants.SUPPLY_CURRENT_LIMIT;
-            currentLimitConfigs.SupplyCurrentLimitEnable = DriveConstants.SUPPLY_CURRENT_LIMIT_ENABLE;
-            currentLimitConfigs.SupplyCurrentThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
-            currentLimitConfigs.SupplyTimeThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD;
+            currentLimitConfigs.SupplyCurrentLimit = SUPPLY_CURRENT_LIMIT;
+            currentLimitConfigs.SupplyCurrentLimitEnable = SUPPLY_CURRENT_LIMIT_ENABLE;
+            currentLimitConfigs.SupplyCurrentThreshold = SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
+            currentLimitConfigs.SupplyTimeThreshold = SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD;
 
             currentConfig.apply(currentLimitConfigs);
         }
@@ -153,10 +155,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             var currentConfig = module.getSteerMotor().getConfigurator();
             currentConfig.refresh(currentLimitConfigs);
 
-            currentLimitConfigs.SupplyCurrentLimit = DriveConstants.SUPPLY_CURRENT_LIMIT;
-            currentLimitConfigs.SupplyCurrentLimitEnable = DriveConstants.SUPPLY_CURRENT_LIMIT_ENABLE;
-            currentLimitConfigs.SupplyCurrentThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
-            currentLimitConfigs.SupplyTimeThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD;
+            currentLimitConfigs.SupplyCurrentLimit = SUPPLY_CURRENT_LIMIT;
+            currentLimitConfigs.SupplyCurrentLimitEnable = SUPPLY_CURRENT_LIMIT_ENABLE;
+            currentLimitConfigs.SupplyCurrentThreshold = SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
+            currentLimitConfigs.SupplyTimeThreshold = SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD;
 
             currentConfig.apply(currentLimitConfigs);
         }
@@ -170,8 +172,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
             currentConfig.refresh(voltageLimitConfigs);
 
-            voltageLimitConfigs.PeakForwardVoltage = DriveConstants.PEAK_FORWARD_VOLTAGE;
-            voltageLimitConfigs.PeakReverseVoltage = DriveConstants.PEAK_REVERSE_VOLTAGE;
+            voltageLimitConfigs.PeakForwardVoltage = PEAK_FORWARD_VOLTAGE;
+            voltageLimitConfigs.PeakReverseVoltage = PEAK_REVERSE_VOLTAGE;
 
             currentConfig.apply(voltageLimitConfigs);
         }
@@ -185,8 +187,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
             currentConfig.refresh(voltageLimitConfigs);
 
-            voltageLimitConfigs.PeakForwardVoltage = DriveConstants.PEAK_FORWARD_VOLTAGE;
-            voltageLimitConfigs.PeakReverseVoltage = DriveConstants.PEAK_REVERSE_VOLTAGE;
+            voltageLimitConfigs.PeakForwardVoltage = PEAK_FORWARD_VOLTAGE;
+            voltageLimitConfigs.PeakReverseVoltage = PEAK_REVERSE_VOLTAGE;
 
             currentConfig.apply(voltageLimitConfigs);
         }

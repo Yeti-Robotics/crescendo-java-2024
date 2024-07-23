@@ -10,17 +10,16 @@ package frc.robot.util;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.constants.FieldConstants;
+import frc.robot.constants.ConfiguratorConstants;
 
 /** Utility functions for flipping from the blue to red alliance. */
 public class AllianceFlipUtil {
     /** Flips an x coordinate to the correct side of the field based on the current alliance color. */
     public static double apply(double xCoordinate) {
         if (shouldFlip()) {
-            return FieldConstants.fieldLength - xCoordinate;
+            return ConfiguratorConstants.fieldLength - xCoordinate;
         } else {
             return xCoordinate;
         }
@@ -50,15 +49,6 @@ public class AllianceFlipUtil {
             return new Pose2d(apply(pose.getTranslation()), apply(pose.getRotation()));
         } else {
             return pose;
-        }
-    }
-
-    public static Translation3d apply(Translation3d translation3d) {
-        if (shouldFlip()) {
-            return new Translation3d(
-                    apply(translation3d.getX()), translation3d.getY(), translation3d.getZ());
-        } else {
-            return translation3d;
         }
     }
 

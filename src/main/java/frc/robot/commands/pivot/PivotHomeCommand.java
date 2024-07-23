@@ -2,7 +2,6 @@ package frc.robot.commands.pivot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.PivotSubsystem;
-import frc.robot.constants.PivotConstants;
 
 public class PivotHomeCommand extends Command {
 
@@ -17,7 +16,7 @@ public class PivotHomeCommand extends Command {
 
     @Override
     public void initialize() {
-        pivotSubsystem.setPivotPosition(PivotConstants.PIVOT_HOME_POSITION);
+        pivotSubsystem.setPivotPosition(PivotSubsystem.PIVOT_HOME_POSITION);
     }
 
     @Override
