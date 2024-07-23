@@ -26,7 +26,6 @@ import frc.robot.commands.HandoffCommandGroup;
 import frc.robot.commands.PivotLimitSwitchCommand;
 import frc.robot.commands.ShooterStateCommand;
 import frc.robot.commands.auto.AutoNamedCommands;
-import frc.robot.commands.led.SetLEDToRGBCommand;
 import frc.robot.commands.pivot.PivotHomeCommand;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.AutoConstants;
@@ -43,7 +42,6 @@ import frc.robot.util.controllerUtils.MultiButton;
 
 public class RobotContainer {
 
-    public final LEDSubsystem led = new LEDSubsystem();
     public final ShooterSubsystem shooter = new ShooterSubsystem();
     public final PivotSubsystem pivot = new PivotSubsystem();
     public final ElevatorSubsystem elevator = new ElevatorSubsystem();
@@ -67,7 +65,6 @@ public class RobotContainer {
     private Command auto;
 
     public RobotContainer() {
-        led.setDefaultCommand(new SetLEDToRGBCommand(led, 255, 0, 0, 1.0, 0));
 
         NamedCommands.registerCommand("shootBump", Commands.sequence(
                 new InstantCommand(() -> pivot.setPivotPosition(0.55)),
