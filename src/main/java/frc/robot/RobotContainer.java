@@ -96,6 +96,8 @@ public class RobotContainer {
         buildAutoChooser();
         rebuildAutoIfNecessary();
 
+        vision.ledOff();
+
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
         SmartDashboard.putNumber("shooterstate-position", 0.5);
@@ -132,7 +134,6 @@ public class RobotContainer {
         buttonHelper.createButton(11, 0, shooter.shootTrapCmd(), MultiButton.RunCondition.WHILE_HELD);
 
         pivot.anyLimitSwitchPressed.onTrue(new PivotLimitSwitchCommand(pivot));
-        intake.intakeOccupiedTrigger.onTrue(vision.blinkLimelight());
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(
