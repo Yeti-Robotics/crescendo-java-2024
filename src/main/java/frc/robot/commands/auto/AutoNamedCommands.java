@@ -42,7 +42,7 @@ public class AutoNamedCommands {
 
         NamedCommands.registerCommand("shootLine", new SequentialCommandGroup(
                 pivotSubsystem.adjustPivotPositionTo(.47),
-                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                shooterSubsystem.setVelocityContinuous(100),
                 intakeSubsystem.rollOut(-0.1).withTimeout(0.25),
                 new WaitCommand(.45),
                 shooterSubsystem.spinFeederMaxAndStop().alongWith(intakeSubsystem.rollOut(-1).withTimeout(1.7))
@@ -50,7 +50,7 @@ public class AutoNamedCommands {
 
         NamedCommands.registerCommand("shootLine2", new SequentialCommandGroup(
                 pivotSubsystem.adjustPivotPositionTo(.39),
-                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                shooterSubsystem.setVelocityContinuous(100),
                 intakeSubsystem.rollOut(-0.1).withTimeout(0.2),
                 new WaitCommand(.45),
                 shooterSubsystem.spinFeederMaxAndStop().alongWith(intakeSubsystem.rollOut(-1).withTimeout(1))
@@ -58,7 +58,7 @@ public class AutoNamedCommands {
 
         NamedCommands.registerCommand("shootNearSource", new SequentialCommandGroup(
                 pivotSubsystem.adjustPivotPositionTo(.48),
-                new InstantCommand(() -> shooterSubsystem.setVelocity(90)),
+                shooterSubsystem.setVelocityContinuous(90),
                 intakeSubsystem.rollOut(-0.1).withTimeout(0.2),
                 new WaitCommand(.45),
                 shooterSubsystem.spinFeederMaxAndStop().alongWith(intakeSubsystem.rollOut(-1).withTimeout(1))
@@ -66,7 +66,7 @@ public class AutoNamedCommands {
 
         NamedCommands.registerCommand("shuttleMid", new SequentialCommandGroup(
                 pivotSubsystem.adjustPivotPositionTo(.535),
-                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                shooterSubsystem.setVelocityContinuous(100),
                 intakeSubsystem.rollOut(-0.1).withTimeout(0.2),
                 new WaitCommand(.45),
                 shooterSubsystem.spinFeederMaxAndStop().alongWith(intakeSubsystem.rollOut(-1).withTimeout(1))
@@ -90,7 +90,7 @@ public class AutoNamedCommands {
 
         NamedCommands.registerCommand("shootFar", new SequentialCommandGroup(
                 pivotSubsystem.adjustPivotPositionTo(.45),
-                new InstantCommand(() -> shooterSubsystem.setVelocity(100)),
+                shooterSubsystem.setVelocityContinuous(100),
                 new WaitCommand(.75),
                 shooterSubsystem.spinFeederMaxAndStop().alongWith(intakeSubsystem.rollOut(-1).withTimeout(1))
         ));
