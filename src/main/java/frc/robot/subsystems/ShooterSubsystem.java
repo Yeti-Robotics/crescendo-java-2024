@@ -94,7 +94,7 @@ public class ShooterSubsystem extends SubsystemBase {
         rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(rightVel));
     }
 
-    public void setVelocity(double velocity) {
+    private void setVelocity(double velocity) {
         setDualVelocity(velocity, velocity);
     }
 

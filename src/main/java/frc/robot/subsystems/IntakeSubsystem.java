@@ -37,24 +37,32 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeKraken.set(speed);
     }
 
-    public void stop() {
+    private void stop() {
         intakeKraken.stopMotor();
-    }
-
-    public boolean getBeamBreak() {
-        return !beamBreak.get();
     }
 
     private Command roll(double vel) {
         return startEnd(() -> setIntakeSpeed(vel), this::stop);
     }
 
+    /**
+     * Sucks up note into the robot
+     *
+     * @param vel positive speed in RPS
+     * @return {@code Command} instance
+     */
     public Command rollIn(double vel) {
         // TODO: add some kind of warning logging if a negative value is passed
 
         return roll(Math.abs(vel));
     }
 
+    /**
+     * Sucks up note into the robot
+     *
+     * @param vel negative speed in RPS
+     * @return {@code Command} instance
+     */
     public Command rollOut(double vel) {
         // TODO: add some kind of warning logging if a positive value is passed
 

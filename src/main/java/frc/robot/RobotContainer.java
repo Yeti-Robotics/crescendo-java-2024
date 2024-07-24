@@ -23,8 +23,6 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.HandoffCommandGroup;
-import frc.robot.commands.PivotLimitSwitchCommand;
-import frc.robot.commands.ShooterStateCommand;
 import frc.robot.commands.auto.AutoNamedCommands;
 import frc.robot.constants.*;
 import frc.robot.subsystems.*;
@@ -59,14 +57,18 @@ public class RobotContainer {
     private boolean autoNeedsRebuild = true;
     private Command auto;
 
-    public RobotContainer() {
+    private final RobotCommands robotCommands = new RobotCommands(
+            intake, pivot, elevator, shooter, vision, drivetrain
+    );
 
+    public RobotContainer() {
         NamedCommands.registerCommand("shootBump", Commands.sequence(
                 pivot.adjustPivotPositionTo(0.55),
                 shooter.shooterBumpFire(),
                 Commands.waitSeconds(.75), // is this waiting for a specific speed or something? should prob be replaced
                 shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1).withTimeout(1))
         ));
+
         var field = new Field2d();
         SmartDashboard.putData("Field", field);
 
@@ -100,7 +102,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        buttonHelper.createButton(1, 0, new ShooterStateCommand(drivetrain, pivot, shooter, intake), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(1, 0, robotCommands.setShooterState(), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(8, 0, shooter.setVelocityAndStop(-70), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(7, 0, shooter.setVelocityAndStop(15), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(5, 0, new SequentialCommandGroup(
@@ -127,8 +129,6 @@ public class RobotContainer {
                 0, new InstantCommand(() -> elevator.setPosition2(ElevatorConstants.ElevatorPositions.AMP)).andThen(pivot.moveDown(-0.25).unless(
                         () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(11, 0, shooter.shooterTrap(), MultiButton.RunCondition.WHILE_HELD);
-
-        pivot.anyLimitSwitchPressed.onTrue(new PivotLimitSwitchCommand(pivot));
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(
