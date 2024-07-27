@@ -12,6 +12,7 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.PivotConstants;
@@ -24,7 +25,7 @@ public class PivotSubsystem extends SubsystemBase {
     public DigitalInput forwardLimitSwitch;
     public DigitalInput reverseLimitSwitch;
 
-    private PivotPosition pivotSetPosition = PivotPosition.CUSTOM;
+    private PivotPosition pivotSetPosition = PivotPosition.CUSTOM(0.45);
     private final StatusSignal<Double> pivotPositionStatusSignal;
 
     public PivotSubsystem() {
@@ -79,11 +80,6 @@ public class PivotSubsystem extends SubsystemBase {
             sendableBuilder.addDoubleProperty("Position", pivotSetPosition::getPosition, null);
         };
 
-        SmartDashboard.putData("Pivot kraken", pivotMotor);
-        SmartDashboard.putData("Pivot encoder", pivotEncoder);
-        SmartDashboard.putData("Forward limit switch pivot", forwardLimitSwitch);
-        SmartDashboard.putData("Reverse limit switch pivot", reverseLimitSwitch);
-        SmartDashboard.putData("Pivot position", pivotPositionSendable);
     }
 
     public double getPivotPosition() {
@@ -108,7 +104,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public Command movePivotPositionTo(PivotPosition pivotPosition) {
-        return runOnce(() -> setPivotPosition(pivotPosition));
+        return Commands.runOnce(() -> setPivotPosition(pivotPosition));
     }
 
     public Command adjustPivotPositionTo(double angle) {

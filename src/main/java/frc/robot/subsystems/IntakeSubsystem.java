@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.TalonFXConstants;
@@ -42,7 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     private Command roll(double vel) {
-        return startEnd(() -> setIntakeSpeed(vel), this::stop);
+        return Commands.startEnd(() -> setIntakeSpeed(vel), this::stop);
     }
 
     /**
