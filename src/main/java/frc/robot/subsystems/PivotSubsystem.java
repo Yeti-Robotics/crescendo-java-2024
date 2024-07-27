@@ -104,7 +104,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public Command movePivotPositionTo(PivotPosition pivotPosition) {
-        return Commands.runOnce(() -> setPivotPosition(pivotPosition));
+        return runOnce(() -> setPivotPosition(pivotPosition));
     }
 
     public Command adjustPivotPositionTo(double angle) {

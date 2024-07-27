@@ -49,7 +49,7 @@ public class RobotCommands {
         SmartDashboard.putNumber("distance", distance);
         SmartDashboard.putNumber("angle", angle);
 
-        return Commands.sequence(
+        return Commands.parallel(
                 intake.rollOut(-0.2),
                 shooter.setVelocityAndStop(rps),
                 pivot.adjustPivotPositionTo(angle)

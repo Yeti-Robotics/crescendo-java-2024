@@ -14,16 +14,13 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class HandoffCommandGroup extends SequentialCommandGroup {
 
     public HandoffCommandGroup(PivotSubsystem pivotSubsystem, ArmSubsystem armSubsystem, ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
-        addCommands(
+        super(
                  pivotSubsystem.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF).andThen(
                         new StartEndCommand(() -> armSubsystem.moveUp(.5), armSubsystem::stop).until(() ->
                                 armSubsystem.getEnc() <= ArmConstants.ARM_HANDOFF_POSITION).andThen(
                                 shooterSubsystem.spinFeederAndStop(-0.3).alongWith(intakeSubsystem.rollOut(-0.35))
-                        ).until(shooterSubsystem::getBeamBreak),
-                        pivotSubsystem.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF)
+                        ).until(shooterSubsystem::getBeamBreak)
                 )
         );
-
-        addRequirements(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem);
     }
 }

@@ -43,7 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     private Command roll(double vel) {
-        return Commands.startEnd(() -> setIntakeSpeed(vel), this::stop);
+        return startEnd(() -> setIntakeSpeed(vel), this::stop);
     }
 
     /**

@@ -75,11 +75,11 @@ public class RobotContainer {
         PathPlannerLogging.setLogCurrentPoseCallback(field::setRobotPose);
 
         PathPlannerLogging.setLogTargetPoseCallback(pose ->
-            field.getObject("target pose").setPose(pose)
+                field.getObject("target pose").setPose(pose)
         );
 
         PathPlannerLogging.setLogActivePathCallback(poses ->
-            field.getObject("path").setPoses(poses)
+                field.getObject("path").setPoses(poses)
         );
 
 
@@ -105,21 +105,20 @@ public class RobotContainer {
         buttonHelper.createButton(1, 0, robotCommands.setShooterState(), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(8, 0, shooter.setVelocityAndStop(-70), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(7, 0, shooter.setVelocityAndStop(15), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(5, 0, new SequentialCommandGroup(
+        buttonHelper.createButton(5, 0,
                 pivot.adjustPivotPositionTo(.42).andThen(
                         new StartEndCommand(() -> arm.moveUp(.7), arm::stop).until(() ->
                                 arm.getEnc() <= ArmConstants.ARM_HANDOFF_POSITION).andThen(
                                 shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-.2))
                         ).until(shooter::getBeamBreak),
                         pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF)
-                ),
-                shooter.setVelocityContinuous(100),
-                intake.rollOut(-.1).withTimeout(0.2),
-                Commands.waitSeconds(.45),
-                shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1).withTimeout(1),
-                        new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2)
-                )
-        ), MultiButton.RunCondition.WHEN_PRESSED);
+                ).andThen(
+                        shooter.setVelocityContinuous(100)).andThen(
+                        intake.rollOut(-.1).withTimeout(0.2)).andThen(
+                        Commands.waitSeconds(.45)).andThen(
+                        shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1).withTimeout(1)).andThen(
+                                new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2))
+                ), MultiButton.RunCondition.WHEN_PRESSED);
 
         buttonHelper.createButton(10, 0, new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(2, 0, intake.rollOut(-.65), MultiButton.RunCondition.WHILE_HELD);
@@ -156,7 +155,7 @@ public class RobotContainer {
         joystick.rightBumper().whileTrue(intake.rollIn(.7));
 
         // Arm down
-        joystick.leftBumper().onTrue(new StartEndCommand(() -> arm.moveDown(.5), arm::stop).until(
+        joystick.leftBumper().onTrue(new StartEndCommand(() -> arm.moveDown(.5), arm::stop, arm).until(
                 () -> arm.getEnc() <= .54 && arm.getEnc() >= .52).alongWith(pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF)));
 
         // (This is unassigned on the gamepad map??)
