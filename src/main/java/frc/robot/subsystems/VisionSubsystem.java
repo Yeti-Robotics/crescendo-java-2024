@@ -27,7 +27,6 @@ public class VisionSubsystem extends SubsystemBase {
 
     public Command blinkLimelight() {
         SequentialCommandGroup blinkCommands = new SequentialCommandGroup();
-        blinkCommands.addRequirements(this);
 
         for (int i = 0; i < VisionConstants.NUM_BLINKS; i++) {
             blinkCommands.addCommands(Commands.sequence(
