@@ -2,19 +2,16 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.PivotConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drivetrain.NaivePublisher;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.ShooterStateData;
 
 public class RobotCommands {
 
@@ -43,16 +40,21 @@ public class RobotCommands {
      * @return {@code Command} instance
      */
     public Command setShooterState() {
-        Pose2d robotPose = commandSwerveDrivetrain.getState().Pose;
-        final Pose2d speakerPose = AllianceFlipUtil.apply(new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0)));
-        Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
-        double distance = relativeSpeaker.getTranslation().getNorm();
-        double rps = ShooterConstants.SHOOTER_MAP().get(distance).rps;
-        double angle = ShooterConstants.SHOOTER_MAP().get(distance).angle;
+        NaivePublisher<Pose2d> posePublisher = commandSwerveDrivetrain.observablePose();
+        NaivePublisher<ShooterStateData> shooterStatePublisher = new NaivePublisher<>();
 
-        SmartDashboard.putNumber("shooter-state/distance", distance);
-        SmartDashboard.putNumber("angle", angle);
-        return pivot.adjustPivotPositionTo(angle).andThen(Commands.waitSeconds(0.5)).andThen(shooter.setVelocityAndStop(rps));
+        posePublisher.subscribe(new NaivePublisher.NaiveSubscriber<>(robotPose -> {
+            final Pose2d speakerPose = AllianceFlipUtil.apply(new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0)));
+            Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
+            double distance = relativeSpeaker.getTranslation().getNorm();
+            shooterStatePublisher.publish(ShooterConstants.SHOOTER_MAP().get(distance));
+        }));
+
+        return pivot.updatePivotPositionWith(shooterStatePublisher).alongWith(shooter.updateVelocityWith(shooterStatePublisher));
+
+      //  SmartDashboard.putNumber("shooter-state/distance", distance);
+     //   SmartDashboard.putNumber("angle", angle);
+     //   return pivot.adjustPivotPositionTo(angle).andThen(Commands.waitSeconds(0.5)).andThen(shooter.setVelocityAndStop(rps));
         //return shooter.setVelocityAndStop(rps).alongWith(pivot.adjustPivotPositionTo(angle));
     }
 

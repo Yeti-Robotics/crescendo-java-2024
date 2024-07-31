@@ -12,12 +12,13 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.PivotConstants;
 import frc.robot.constants.PivotConstants.PivotPosition;
 import frc.robot.constants.TalonFXConstants;
+import frc.robot.subsystems.drivetrain.NaivePublisher;
+import frc.robot.util.ShooterStateData;
 
 public class PivotSubsystem extends SubsystemBase {
     public final TalonFX pivotMotor;
@@ -111,6 +112,11 @@ public class PivotSubsystem extends SubsystemBase {
 
     public Command adjustPivotPositionTo(double angle) {
         return runOnce(() -> setPivotPosition(PivotPosition.CUSTOM(angle)));
+    }
+
+    public Command updatePivotPositionWith(NaivePublisher<ShooterStateData> shooterDataPublisher) {
+        NaivePublisher.NaiveSubscriber<ShooterStateData> shooterSubscriber = new NaivePublisher.NaiveSubscriber<>(shooterStateData -> setPivotPosition(PivotPosition.CUSTOM(shooterStateData.angle)));
+        return startEnd(() -> shooterDataPublisher.subscribe(shooterSubscriber), () -> shooterDataPublisher.cancel(shooterSubscriber));
     }
 
     public double getEncoderAngle() {

@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.TalonFXConstants;
+import frc.robot.subsystems.drivetrain.NaivePublisher;
+import frc.robot.util.ShooterStateData;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -106,6 +108,11 @@ public class ShooterSubsystem extends SubsystemBase {
         }
 
         return (leftVel.getValue() + rightVel.getValue()) / 2;
+    }
+
+    public Command updateVelocityWith(NaivePublisher<ShooterStateData> publisher) {
+        NaivePublisher.NaiveSubscriber<ShooterStateData> shooterDataSubscriber = new NaivePublisher.NaiveSubscriber<ShooterStateData>(shooterStateData -> setVelocity(shooterStateData.rps));
+        return startEnd(() -> publisher.subscribe(shooterDataSubscriber), () -> publisher.cancel(shooterDataSubscriber));
     }
 
     public Command shooterBumpFire() {
