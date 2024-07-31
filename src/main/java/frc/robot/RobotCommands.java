@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.constants.ArmConstants;
 import frc.robot.constants.PivotConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.*;
@@ -24,13 +25,16 @@ public class RobotCommands {
     private final VisionSubsystem vision;
     private final CommandSwerveDrivetrain commandSwerveDrivetrain;
 
-    public RobotCommands(IntakeSubsystem intake, PivotSubsystem pivot, ElevatorSubsystem elevator, ShooterSubsystem shooter, VisionSubsystem vision, CommandSwerveDrivetrain commandSwerveDrivetrain) {
+    private final ArmSubsystem arm;
+
+    public RobotCommands(IntakeSubsystem intake, PivotSubsystem pivot, ElevatorSubsystem elevator, ShooterSubsystem shooter, VisionSubsystem vision, CommandSwerveDrivetrain commandSwerveDrivetrain, ArmSubsystem arm) {
         this.intake = intake;
         this.pivot = pivot;
         this.elevator = elevator;
         this.shooter = shooter;
         this.vision = vision;
         this.commandSwerveDrivetrain = commandSwerveDrivetrain;
+        this.arm = arm;
     }
 
     /**
@@ -46,19 +50,19 @@ public class RobotCommands {
         double rps = ShooterConstants.SHOOTER_MAP().get(distance).rps;
         double angle = ShooterConstants.SHOOTER_MAP().get(distance).angle;
 
-        SmartDashboard.putNumber("distance", distance);
+        SmartDashboard.putNumber("shooter-state/distance", distance);
         SmartDashboard.putNumber("angle", angle);
-
-        return Commands.parallel(
-                intake.rollOut(-0.2),
-                shooter.setVelocityAndStop(rps),
-                pivot.adjustPivotPositionTo(angle)
-        );
+        return pivot.adjustPivotPositionTo(angle).andThen(Commands.waitSeconds(0.5)).andThen(shooter.setVelocityAndStop(rps));
+        //return shooter.setVelocityAndStop(rps).alongWith(pivot.adjustPivotPositionTo(angle));
     }
 
     @Deprecated
     public Command handoff() {
-        return pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF)
-                .andThen();
+        return pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF).andThen(
+                new StartEndCommand(() -> arm.moveUp(.5), arm::stop).until(() ->
+                        arm.getEnc() <= ArmConstants.ARM_HANDOFF_POSITION).andThen(
+                        shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-0.35))
+                ).until(shooter::getBeamBreak).andThen(intake.rollOut(1).withTimeout(0.2))
+        );
     }
 }

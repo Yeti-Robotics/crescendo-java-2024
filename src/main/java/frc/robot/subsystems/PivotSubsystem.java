@@ -38,8 +38,8 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor.setNeutralMode(NeutralModeValue.Brake);
         pivotPositionStatusSignal = pivotMotor.getPosition();
 
-        new Trigger(this::getForwardLimitSwitch).onTrue(moveDown(0.05));
-        new Trigger(this::getReverseLimitSwitch).onTrue(moveUp(0.05));
+        new Trigger(this::getForwardLimitSwitch).whileTrue(moveDown(0.05));
+        new Trigger(this::getReverseLimitSwitch).whileTrue(moveUp(0.05));
 
         var pivotMotor1Configurator = pivotMotor.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
@@ -79,6 +79,8 @@ public class PivotSubsystem extends SubsystemBase {
             sendableBuilder.addStringProperty("Type", pivotSetPosition::toString, null);
             sendableBuilder.addDoubleProperty("Position", pivotSetPosition::getPosition, null);
         };
+
+        SmartDashboard.putNumber("Pivot pos:", getPivotPosition());
 
     }
 

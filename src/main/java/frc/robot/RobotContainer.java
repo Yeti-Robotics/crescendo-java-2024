@@ -58,7 +58,7 @@ public class RobotContainer {
     private Command auto;
 
     private final RobotCommands robotCommands = new RobotCommands(
-            intake, pivot, elevator, shooter, vision, drivetrain
+            intake, pivot, elevator, shooter, vision, drivetrain, arm
     );
 
     public RobotContainer() {
@@ -102,6 +102,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+
         buttonHelper.createButton(1, 0, robotCommands.setShooterState(), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(8, 0, shooter.setVelocityAndStop(-70), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(7, 0, shooter.setVelocityAndStop(15), MultiButton.RunCondition.WHILE_HELD);
@@ -120,7 +121,7 @@ public class RobotContainer {
                                 new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2))
                 ), MultiButton.RunCondition.WHEN_PRESSED);
 
-        buttonHelper.createButton(10, 0, new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(10, 0, robotCommands.handoff().withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(2, 0, intake.rollOut(-.65), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevator.goDown(0.2), elevator::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevator.setPosition(ElevatorConstants.ElevatorPositions.DOWN)).andThen(pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(6, 0, shooter.spinFeederAndStop(-.1).alongWith(intake.rollIn(0.5)), MultiButton.RunCondition.WHILE_HELD);
@@ -163,9 +164,9 @@ public class RobotContainer {
                 shooter.setVelocityAndStop(45).withTimeout(0.5)
         );
         // Shoot
-        joystick.rightTrigger().whileTrue(shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1)));
+        joystick.rightTrigger().whileTrue(shooter.spinFeederMaxAndStop());
         // Handoff
-        joystick.povUp().onTrue(new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2));
+        joystick.povUp().onTrue(robotCommands.handoff().withTimeout(2));
         // Move elevator down
         joystick.povDown().onTrue(elevator.positionDownCmd());
         // (These are also unassigned on the gamepad map?)
