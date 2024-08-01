@@ -112,7 +112,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command updateVelocityWith(NaivePublisher<ShooterStateData> publisher) {
         NaivePublisher.NaiveSubscriber<ShooterStateData> shooterDataSubscriber = new NaivePublisher.NaiveSubscriber<ShooterStateData>(shooterStateData -> setVelocity(shooterStateData.rps));
-        return startEnd(() -> publisher.subscribe(shooterDataSubscriber), () -> publisher.cancel(shooterDataSubscriber));
+        return startEnd(() -> publisher.subscribe(shooterDataSubscriber), () -> {
+            publisher.cancel(shooterDataSubscriber);
+            stopShooter();
+        });
     }
 
     public Command shooterBumpFire() {

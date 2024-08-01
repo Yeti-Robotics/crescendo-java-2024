@@ -50,7 +50,8 @@ public class RobotCommands {
             shooterStatePublisher.publish(ShooterConstants.SHOOTER_MAP().get(distance));
         }));
 
-        return pivot.updatePivotPositionWith(shooterStatePublisher).alongWith(shooter.updateVelocityWith(shooterStatePublisher));
+        return pivot.updatePivotPositionWith(shooterStatePublisher)
+                .alongWith(shooter.updateVelocityWith(shooterStatePublisher));
 
       //  SmartDashboard.putNumber("shooter-state/distance", distance);
      //   SmartDashboard.putNumber("angle", angle);
