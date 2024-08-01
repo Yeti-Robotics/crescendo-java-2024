@@ -104,6 +104,20 @@ public class FieldConstants {
             throw new RuntimeException(e);
         }
     }
+
+    public static final class Shuttle {
+        public static Translation2d closeShuttleTargetCorner =
+                new Translation2d(
+                        0.0,
+                        1.0);
+        public static Translation2d farShuttleTargetCorner =
+                new Translation2d(
+                        2.5,
+                        0);
+        public static Translation2d shuttleTargetZone =
+                closeShuttleTargetCorner.interpolate(farShuttleTargetCorner, 0.5);
+    }
+
     public static void updateAprilTagTranslations() {
         aprilTagPoses.clear();
         allianceAprilTags.clear();

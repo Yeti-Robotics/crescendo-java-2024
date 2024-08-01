@@ -21,10 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.AutoAimCommand;
-import frc.robot.commands.HandoffCommandGroup;
-import frc.robot.commands.PivotLimitSwitchCommand;
-import frc.robot.commands.ShooterStateCommand;
+import frc.robot.commands.*;
 import frc.robot.commands.auto.AutoNamedCommands;
 import frc.robot.commands.pivot.PivotHomeCommand;
 import frc.robot.constants.ArmConstants;
@@ -102,7 +99,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        buttonHelper.createButton(1, 0, new ShooterStateCommand(drivetrain, pivot, shooter, intake), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(1, 0, new ShuttleAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(new ShuttleStateCommand(drivetrain, pivot, shooter, vision, intake)), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(8, 0, shooter.setVelocityCmd(-70), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(7, 0, shooter.setVelocityCmd(15), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(5, 0, new SequentialCommandGroup(
@@ -147,7 +144,7 @@ public class RobotContainer {
                 ));
 
         // Lock on to speaker
-        joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()));
+        joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(new ShooterStateCommand(drivetrain, pivot, shooter, intake)));
 
         // Swerve lock
         joystick.b().whileTrue(drivetrain
