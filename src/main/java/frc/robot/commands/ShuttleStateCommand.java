@@ -30,7 +30,7 @@ public class ShuttleStateCommand extends Command {
         this.intakeSubsystem = intakeSubsystem;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(this.commandSwerveDrivetrain, this.pivotSubsystem, this.shooterSubsystem, this.visionSubsystem);
+        addRequirements(this.pivotSubsystem, this.shooterSubsystem, this.visionSubsystem);
     }
 
     @Override
