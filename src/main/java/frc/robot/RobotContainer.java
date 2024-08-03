@@ -19,10 +19,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutoAimCommand;
-import frc.robot.commands.HandoffCommandGroup;
 import frc.robot.commands.auto.AutoNamedCommands;
 import frc.robot.constants.*;
 import frc.robot.subsystems.*;
@@ -118,7 +120,7 @@ public class RobotContainer {
                         intake.rollOut(-.1).withTimeout(0.2)).andThen(
                         Commands.waitSeconds(.45)).andThen(
                         shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1).withTimeout(1)).andThen(
-                                new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2))
+                                robotCommands.handoff().withTimeout(2))
                 ), MultiButton.RunCondition.WHEN_PRESSED);
 
         buttonHelper.createButton(10, 0, robotCommands.handoff().withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
@@ -188,8 +190,7 @@ public class RobotContainer {
     }
 
     public void buildAutoChooser() {
-
-        var namedCommands = new AutoNamedCommands(intake, shooter, pivot, arm);
+        var namedCommands = new AutoNamedCommands(intake, shooter, pivot, arm, robotCommands);
         namedCommands.registerCommands();
 
         autoChooser = new SendableChooser<>();

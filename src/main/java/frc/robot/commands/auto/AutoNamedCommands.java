@@ -1,11 +1,10 @@
 package frc.robot.commands.auto;
 
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.HandoffCommandGroup;
+import frc.robot.RobotCommands;
 import frc.robot.constants.PivotConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -17,13 +16,14 @@ public class AutoNamedCommands {
     private final ShooterSubsystem shooterSubsystem;
     private final PivotSubsystem pivotSubsystem;
     private final ArmSubsystem armSubsystem;
+    private final RobotCommands robotCommands;
 
-
-    public AutoNamedCommands(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem, PivotSubsystem pivotSubsystem, ArmSubsystem armSubsystem) {
+    public AutoNamedCommands(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem, PivotSubsystem pivotSubsystem, ArmSubsystem armSubsystem, RobotCommands robotCommands) {
         this.intakeSubsystem = intakeSubsystem;
         this.shooterSubsystem = shooterSubsystem;
         this.pivotSubsystem = pivotSubsystem;
         this.armSubsystem = armSubsystem;
+        this.robotCommands = robotCommands;
         registerCommands();
     }
 
@@ -97,10 +97,10 @@ public class AutoNamedCommands {
 
 
         NamedCommands.registerCommand("shootOut", shooterSubsystem.spinFeederMaxAndStop().alongWith(intakeSubsystem.rollOut(-1).withTimeout(1)));
-        NamedCommands.registerCommand("handoff", new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(1.5));
+        NamedCommands.registerCommand("handoff", robotCommands.handoff().withTimeout(1.5));
         NamedCommands.registerCommand("handoffMidLine", intakeSubsystem.rollIn(.275)
                 .withTimeout(0.5).andThen(
-                        new HandoffCommandGroup(pivotSubsystem, armSubsystem, shooterSubsystem, intakeSubsystem).withTimeout(1.5)));
+                        robotCommands.handoff().withTimeout(1.5)));
 
         NamedCommands.registerCommand("pivotHandoff", pivotSubsystem.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF));
     }

@@ -56,7 +56,6 @@ public class RobotCommands {
         //return shooter.setVelocityAndStop(rps).alongWith(pivot.adjustPivotPositionTo(angle));
     }
 
-    @Deprecated
     public Command handoff() {
         return pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF).andThen(
                 new StartEndCommand(() -> arm.moveUp(.5), arm::stop).until(() ->
