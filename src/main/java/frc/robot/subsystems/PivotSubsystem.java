@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.PivotConstants;
 import frc.robot.constants.PivotConstants.PivotPosition;
 import frc.robot.constants.TalonFXConstants;
-import frc.robot.subsystems.drivetrain.NaivePublisher;
+import frc.robot.util.RobotDataPublisher;
+import frc.robot.util.RobotDataPublisher.RobotDataSubscription;
 import frc.robot.util.ShooterStateData;
 
 public class PivotSubsystem extends SubsystemBase {
@@ -114,9 +115,10 @@ public class PivotSubsystem extends SubsystemBase {
         return runOnce(() -> setPivotPosition(PivotPosition.CUSTOM(angle)));
     }
 
-    public Command updatePivotPositionWith(NaivePublisher<ShooterStateData> shooterDataPublisher) {
-        NaivePublisher.NaiveSubscriber<ShooterStateData> shooterSubscriber = new NaivePublisher.NaiveSubscriber<>(shooterStateData -> setPivotPosition(PivotPosition.CUSTOM(shooterStateData.angle)));
-        return startEnd(() -> shooterDataPublisher.subscribe(shooterSubscriber), () -> shooterDataPublisher.cancel(shooterSubscriber));
+    public Command updatePivotPositionWith(RobotDataPublisher<ShooterStateData> shooterDataPublisher) {
+        RobotDataSubscription<ShooterStateData> shooterStateSubscription = shooterDataPublisher.subscribeWith(data -> setPivotPosition(PivotPosition.CUSTOM(data.angle)));
+
+        return startEnd(shooterStateSubscription::start, shooterStateSubscription::cancel);
     }
 
     public double getEncoderAngle() {
