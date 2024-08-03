@@ -51,7 +51,6 @@ public class RobotCommands {
                 .alongWith(shooter.updateVelocityWith(shooterStatePublisher));
     }
 
-    @Deprecated
     public Command handoff() {
         return pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF).andThen(
                 new StartEndCommand(() -> arm.moveUp(.5), arm::stop).until(() ->
