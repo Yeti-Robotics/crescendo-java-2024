@@ -51,6 +51,16 @@ public class RobotCommands {
                 .alongWith(shooter.updateVelocityWith(shooterStatePublisher));
     }
 
+    public Command setShuttleState() {
+        RobotDataPublisher<ShooterStateData> shuttleStatePublisher = commandSwerveDrivetrain.observablePose().map(robotPose -> {
+            final Pose2d shuttleTarget = AllianceFlipUtil.apply(new Pose2d(2.5, 7.0, Rotation2d.fromDegrees(0)));
+            Pose2d relativeShuttleTarget = robotPose.relativeTo(shuttleTarget);
+            double distance = relativeShuttleTarget.getTranslation().getNorm();
+            return ShooterConstants.SHUTTLE_MAP().get(distance);
+        });
+        return pivot.updatePivotPositionWith(shuttleStatePublisher).alongWith(shooter.updateVelocityWith(shuttleStatePublisher));
+    }
+
     public Command handoff() {
         return pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF).andThen(
                 new StartEndCommand(() -> arm.moveUp(.5), arm::stop).until(() ->
