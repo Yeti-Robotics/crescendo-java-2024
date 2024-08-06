@@ -46,6 +46,11 @@ public class RobotDataPublisher<T> {
         }
 
         public void cancel() {
+            accept = false;
+        }
+
+        @SuppressWarnings("unused")
+        public void dispose() {
             robotDataPublisher.subscriptions.remove(this);
         }
     }
