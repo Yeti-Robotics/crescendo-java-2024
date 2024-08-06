@@ -10,6 +10,7 @@ public class RobotDataPublisher<T> {
 
     public <R> RobotDataPublisher<R> map(Function<T, R> mapper) {
         RobotDataPublisher<R> newPublisher = new RobotDataPublisher<>();
+        subscribeWith(System.out::println).start();
         subscribeWith(data -> newPublisher.publish(mapper.apply(data))).start();
         return newPublisher;
     }
@@ -46,6 +47,11 @@ public class RobotDataPublisher<T> {
         }
 
         public void cancel() {
+            accept = false;
+        }
+
+        @SuppressWarnings("unused")
+        public void dispose() {
             robotDataPublisher.subscriptions.remove(this);
         }
     }
