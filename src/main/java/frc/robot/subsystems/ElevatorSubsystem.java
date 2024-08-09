@@ -8,31 +8,30 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.ElevatorConstants;
-import frc.robot.constants.ElevatorConstants.ElevatorPositions;
-import frc.robot.constants.TalonFXConstants;
+import frc.robot.Constants;
+import frc.robot.Constants.ElevatorConstants.ElevatorPositions;
 
 public class ElevatorSubsystem extends SubsystemBase {
     private final TalonFX elevatorMotor;
 
     private final DigitalInput magSwitch;
-    private ElevatorConstants.ElevatorPositions elevatorPositions = ElevatorConstants.ElevatorPositions.DOWN;
+    private Constants.ElevatorConstants.ElevatorPositions elevatorPositions = Constants.ElevatorConstants.ElevatorPositions.DOWN;
 
     public ElevatorSubsystem() {
-        elevatorMotor = new TalonFX(ElevatorConstants.ELEVATOR_ID, TalonFXConstants.CANIVORE_NAME);
+        elevatorMotor = new TalonFX(Constants.ElevatorConstants.ELEVATOR_ID, Constants.TalonFXConstants.CANIVORE_NAME);
         magSwitch = new DigitalInput(9);
         var ElConfigurator = elevatorMotor.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
 
-        talonFXConfiguration.CurrentLimits = ElevatorConstants.ELEVATOR_CURRENT_LIMIT;
-        talonFXConfiguration.SoftwareLimitSwitch = ElevatorConstants.ELEVATOR_SOFT_LIMIT;
-        talonFXConfiguration.Slot0 = ElevatorConstants.SLOT_0_CONFIGS;
-        talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = ElevatorConstants.PROFILE_V;
-        talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = ElevatorConstants.PROFILE_A;
+        talonFXConfiguration.CurrentLimits = Constants.ElevatorConstants.ELEVATOR_CURRENT_LIMIT;
+        talonFXConfiguration.SoftwareLimitSwitch = Constants.ElevatorConstants.ELEVATOR_SOFT_LIMIT;
+        talonFXConfiguration.Slot0 = Constants.ElevatorConstants.SLOT_0_CONFIGS;
+        talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = Constants.ElevatorConstants.PROFILE_V;
+        talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = Constants.ElevatorConstants.PROFILE_A;
 
 
-        elevatorMotor.getRotorVelocity().waitForUpdate(ElevatorConstants.ELEVATOR_VELOCITY_STATUS_FRAME);
-        elevatorMotor.getRotorPosition().waitForUpdate(ElevatorConstants.ELEVATOR_POSITION_STATUS_FRAME);
+        elevatorMotor.getRotorVelocity().waitForUpdate(Constants.ElevatorConstants.ELEVATOR_VELOCITY_STATUS_FRAME);
+        elevatorMotor.getRotorPosition().waitForUpdate(Constants.ElevatorConstants.ELEVATOR_POSITION_STATUS_FRAME);
 
         ElConfigurator.apply(talonFXConfiguration);
         elevatorMotor.setNeutralMode(NeutralModeValue.Brake);
@@ -67,7 +66,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     // why do we have two of these methods????
 
-    public void setPosition(ElevatorConstants.ElevatorPositions position) {
+    public void setPosition(Constants.ElevatorConstants.ElevatorPositions position) {
         elevatorPositions = position;
 
         MotionMagicExpoVoltage motionMagicVoltage = new MotionMagicExpoVoltage(
@@ -77,7 +76,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.setControl(motionMagicVoltage.withPosition(position.distanceEl));
     }
 
-    public void setPosition2(ElevatorConstants.ElevatorPositions position) {
+    public void setPosition2(Constants.ElevatorConstants.ElevatorPositions position) {
         elevatorPositions = position;
 
         MotionMagicExpoVoltage motionMagicVoltage = new MotionMagicExpoVoltage(
@@ -97,6 +96,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public Command positionDownCmd() {
-        return runOnce(() -> setPosition(ElevatorConstants.ElevatorPositions.DOWN));
+        return runOnce(() -> setPosition(Constants.ElevatorConstants.ElevatorPositions.DOWN));
     }
 }

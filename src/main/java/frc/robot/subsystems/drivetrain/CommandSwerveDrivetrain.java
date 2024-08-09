@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.constants.DriveConstants;
+import frc.robot.Constants;
 import frc.robot.subsystems.drivetrain.generated.TunerConstants;
 import frc.robot.util.RobotDataPublisher;
 
@@ -140,10 +140,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             var currentConfig = module.getDriveMotor().getConfigurator();
             currentConfig.refresh(currentLimitConfigs);
 
-            currentLimitConfigs.SupplyCurrentLimit = DriveConstants.SUPPLY_CURRENT_LIMIT;
-            currentLimitConfigs.SupplyCurrentLimitEnable = DriveConstants.SUPPLY_CURRENT_LIMIT_ENABLE;
-            currentLimitConfigs.SupplyCurrentThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
-            currentLimitConfigs.SupplyTimeThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD;
+            currentLimitConfigs.SupplyCurrentLimit = Constants.DriveConstants.SUPPLY_CURRENT_LIMIT;
+            currentLimitConfigs.SupplyCurrentLimitEnable = Constants.DriveConstants.SUPPLY_CURRENT_LIMIT_ENABLE;
+            currentLimitConfigs.SupplyCurrentThreshold = Constants.DriveConstants.SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
+            currentLimitConfigs.SupplyTimeThreshold = Constants.DriveConstants.SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD;
 
             currentConfig.apply(currentLimitConfigs);
         }
@@ -156,10 +156,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             var currentConfig = module.getSteerMotor().getConfigurator();
             currentConfig.refresh(currentLimitConfigs);
 
-            currentLimitConfigs.SupplyCurrentLimit = DriveConstants.SUPPLY_CURRENT_LIMIT;
-            currentLimitConfigs.SupplyCurrentLimitEnable = DriveConstants.SUPPLY_CURRENT_LIMIT_ENABLE;
-            currentLimitConfigs.SupplyCurrentThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
-            currentLimitConfigs.SupplyTimeThreshold = DriveConstants.SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD;
+            currentLimitConfigs.SupplyCurrentLimit = Constants.DriveConstants.SUPPLY_CURRENT_LIMIT;
+            currentLimitConfigs.SupplyCurrentLimitEnable = Constants.DriveConstants.SUPPLY_CURRENT_LIMIT_ENABLE;
+            currentLimitConfigs.SupplyCurrentThreshold = Constants.DriveConstants.SUPPLY_CURRENT_LIMIT_CURRENT_THRESHOLD;
+            currentLimitConfigs.SupplyTimeThreshold = Constants.DriveConstants.SUPPLY_CURRENT_LIMIT_TIME_THRESHOLD;
 
             currentConfig.apply(currentLimitConfigs);
         }
@@ -173,8 +173,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
             currentConfig.refresh(voltageLimitConfigs);
 
-            voltageLimitConfigs.PeakForwardVoltage = DriveConstants.PEAK_FORWARD_VOLTAGE;
-            voltageLimitConfigs.PeakReverseVoltage = DriveConstants.PEAK_REVERSE_VOLTAGE;
+            voltageLimitConfigs.PeakForwardVoltage = Constants.DriveConstants.PEAK_FORWARD_VOLTAGE;
+            voltageLimitConfigs.PeakReverseVoltage = Constants.DriveConstants.PEAK_REVERSE_VOLTAGE;
 
             currentConfig.apply(voltageLimitConfigs);
         }
@@ -188,8 +188,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
             currentConfig.refresh(voltageLimitConfigs);
 
-            voltageLimitConfigs.PeakForwardVoltage = DriveConstants.PEAK_FORWARD_VOLTAGE;
-            voltageLimitConfigs.PeakReverseVoltage = DriveConstants.PEAK_REVERSE_VOLTAGE;
+            voltageLimitConfigs.PeakForwardVoltage = Constants.DriveConstants.PEAK_FORWARD_VOLTAGE;
+            voltageLimitConfigs.PeakReverseVoltage = Constants.DriveConstants.PEAK_REVERSE_VOLTAGE;
 
             currentConfig.apply(voltageLimitConfigs);
         }

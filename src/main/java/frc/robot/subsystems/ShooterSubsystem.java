@@ -11,8 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.ShooterConstants;
-import frc.robot.constants.TalonFXConstants;
+import frc.robot.Constants;
 import frc.robot.util.RobotDataPublisher;
 import frc.robot.util.RobotDataPublisher.RobotDataSubscription;
 import frc.robot.util.ShooterStateData;
@@ -33,16 +32,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     public ShooterSubsystem() {
-        leftKraken = new TalonFX(ShooterConstants.SHOOTER_LEFT_MOTOR, TalonFXConstants.CANIVORE_NAME);
-        rightKraken = new TalonFX(ShooterConstants.SHOOTER_RIGHT_MOTOR, TalonFXConstants.CANIVORE_NAME);
+        leftKraken = new TalonFX(Constants.ShooterConstants.SHOOTER_LEFT_MOTOR, Constants.TalonFXConstants.CANIVORE_NAME);
+        rightKraken = new TalonFX(Constants.ShooterConstants.SHOOTER_RIGHT_MOTOR, Constants.TalonFXConstants.CANIVORE_NAME);
         var rightMotorConfigurator = rightKraken.getConfigurator();
         var leftMotorConfigurator = leftKraken.getConfigurator();
         var rightMotorConfiguration = new TalonFXConfiguration();
 
-        rightMotorConfiguration.MotorOutput.Inverted = ShooterConstants.SHOOTER_INVERSION;
+        rightMotorConfiguration.MotorOutput.Inverted = Constants.ShooterConstants.SHOOTER_INVERSION;
         rightMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        rightMotorConfiguration.CurrentLimits = ShooterConstants.SHOOTER_CURRENT_LIMIT;
-        rightMotorConfiguration.Slot0 = ShooterConstants.SLOT_0_CONFIGS;
+        rightMotorConfiguration.CurrentLimits = Constants.ShooterConstants.SHOOTER_CURRENT_LIMIT;
+        rightMotorConfiguration.Slot0 = Constants.ShooterConstants.SLOT_0_CONFIGS;
         leftKraken.setControl(new Follower(rightKraken.getDeviceID(), false));
 
         shooterStatus = ShooterStatus.OFF;
@@ -51,9 +50,9 @@ public class ShooterSubsystem extends SubsystemBase {
         leftVel = leftKraken.getVelocity();
         rightVel = rightKraken.getVelocity();
 
-        neo = new TalonFX(ShooterConstants.SHOOTER_NEO, "canivoreBus");
+        neo = new TalonFX(Constants.ShooterConstants.SHOOTER_NEO, "canivoreBus");
 
-        beamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK);
+        beamBreak = new DigitalInput(Constants.ShooterConstants.BEAM_BREAK);
 
         motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(0);
 
@@ -104,8 +103,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public double getVelocity() {
         if (!leftVel.hasUpdated() || !rightVel.hasUpdated()) {
-            leftVel.waitForUpdate(ShooterConstants.SHOOTER_STATUS_FRAME_SECONDS);
-            rightVel.waitForUpdate(ShooterConstants.SHOOTER_STATUS_FRAME_SECONDS);
+            leftVel.waitForUpdate(Constants.ShooterConstants.SHOOTER_STATUS_FRAME_SECONDS);
+            rightVel.waitForUpdate(Constants.ShooterConstants.SHOOTER_STATUS_FRAME_SECONDS);
         }
 
         return (leftVel.getValue() + rightVel.getValue()) / 2;

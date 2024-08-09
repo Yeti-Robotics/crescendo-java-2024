@@ -2,8 +2,7 @@
 
  import edu.wpi.first.math.geometry.Translation2d;
  import edu.wpi.first.wpilibj2.command.Command;
- import frc.robot.constants.FieldConstants;
- import frc.robot.constants.VisionConstants;
+ import frc.robot.Constants;
  import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
  import frc.robot.util.AllianceFlipUtil;
  import frc.robot.util.LimelightHelpers;
@@ -36,10 +35,10 @@ public class AutoAimCommand extends Command {
 
     @Override
     public void initialize() {
-        currentTag = LimelightHelpers.getFiducialID(VisionConstants.LIMELIGHT_NAME);
+        currentTag = LimelightHelpers.getFiducialID(Constants.VisionConstants.LIMELIGHT_NAME);
 
         Translation2d speakerCenter = AllianceFlipUtil.apply(
-                FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()
+                Constants.FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()
         );
 
         poseAimRequest.setPointToFace(speakerCenter);
@@ -47,7 +46,7 @@ public class AutoAimCommand extends Command {
 
     @Override
     public void execute() {
-        if(LimelightHelpers.getFiducialID(VisionConstants.LIMELIGHT_NAME) == currentTag) {
+        if(LimelightHelpers.getFiducialID(Constants.VisionConstants.LIMELIGHT_NAME) == currentTag) {
             drivetrain.setControl(
                     poseAimRequest.withVelocityX(xVelSupplier.getAsDouble() * 1.5).withVelocityY(yVelSupplier.getAsDouble() * 1.5)
             );
