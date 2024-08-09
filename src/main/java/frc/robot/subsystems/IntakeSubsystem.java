@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,17 +14,24 @@ public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX intakeKraken;
     private final DigitalInput beamBreak;
 
+    public static final int INTAKE_KRAKEN_ID = 8;
+
+    public static final InvertedValue INTAKE_INVERSION = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue INTAKE_NEUTRAL_MODE = NeutralModeValue.Brake;
+    public static final double INTAKE_POSITION_STATUS_FRAME = 0.05;
+    public static final double INTAKE_VELOCITY_STATUS_FRAME = 0.01;
+
     public IntakeSubsystem() {
-        intakeKraken = new TalonFX(Constants.IntakeConstants.INTAKE_KRAKEN_ID, "canivoreBus");
+        intakeKraken = new TalonFX(INTAKE_KRAKEN_ID, "canivoreBus");
         var intakeConfigurator = intakeKraken.getConfigurator();
         var configs = new TalonFXConfiguration();
 
         beamBreak = new DigitalInput(2);
-        configs.MotorOutput.Inverted = Constants.IntakeConstants.INTAKE_INVERSION;
-        configs.MotorOutput.NeutralMode = Constants.IntakeConstants.INTAKE_NEUTRAL_MODE;
+        configs.MotorOutput.Inverted = INTAKE_INVERSION;
+        configs.MotorOutput.NeutralMode = INTAKE_NEUTRAL_MODE;
         configs.FutureProofConfigs = Constants.TalonFXConstants.TALON_FUTURE_PROOF;
-        intakeKraken.getRotorVelocity().waitForUpdate(Constants.IntakeConstants.INTAKE_VELOCITY_STATUS_FRAME);
-        intakeKraken.getRotorPosition().waitForUpdate(Constants.IntakeConstants.INTAKE_POSITION_STATUS_FRAME);
+        intakeKraken.getRotorVelocity().waitForUpdate(INTAKE_VELOCITY_STATUS_FRAME);
+        intakeKraken.getRotorPosition().waitForUpdate(INTAKE_POSITION_STATUS_FRAME);
         intakeConfigurator.apply(configs);
     }
 

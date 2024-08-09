@@ -1,8 +1,7 @@
 package frc.robot.subsystems;
 
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -15,11 +14,55 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final TalonFX armKraken;
     private final CANcoder armEncoder;
-    private Constants.ArmConstants.ArmPositions armPositions = Constants.ArmConstants.ArmPositions.STOWED;
+    private ArmPositions armPositions = ArmPositions.STOWED;
+    public static final int ARM_KRAKEN_ID = 21;
+    public static final int ARM_CANCODER_ID = 5;
+
+    public static final InvertedValue ARM_INVERSION = InvertedValue.CounterClockwise_Positive;
+    public static final NeutralModeValue ARM_NEUTRAL_MODE = NeutralModeValue.Brake;
+    public static final double ARM_POSITION_STATUS_FRAME = 0.05;
+    public static final double ARM_VELOCITY_STATUS_FRAME = 0.01;
+    public static final double ARM_HANDOFF_POSITION = 0.03;
+
+    public static final double GRAVITY_FEEDFORWARD = 0.05;
+
+    public static final double ANGLE_TOLERANCE = 5;
+
+    public static final double ARM_P = 0;
+    public static final double ARM_I = 0;
+    public static final double ARM_D = 0;
+
+    public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().withKP(ARM_P).withKI(ARM_I).withKD(ARM_D).withGravityType(GravityTypeValue.Arm_Cosine);
+    public static final CurrentLimitsConfigs ARM_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
+            withSupplyCurrentThreshold(55).withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);
+
+    public static final SoftwareLimitSwitchConfigs ARM_SOFT_LIMIT = new SoftwareLimitSwitchConfigs().
+            withForwardSoftLimitEnable
+                    (true).
+            withForwardSoftLimitThreshold(
+                    0.0195 //placeholder
+            ).withReverseSoftLimitEnable(false).withReverseSoftLimitThreshold(
+                    65 //placeholder
+            );
+    public static final double MAGNET_OFFSET = -1;
+
+    public static final double GEAR_RATIO = 1.0 / (50.463 / 12.0);
+    public enum ArmPositions {
+        DOWN(-15),
+        STOWED(90);
+
+        public final double angle;
+        public final double sensorUnits;
+
+        ArmPositions(double angle) {
+            this.angle = angle;
+            this.sensorUnits = angle / GEAR_RATIO * Constants.CANCoderConstants.COUNTS_PER_DEG;
+        }
+    }
 
     public ArmSubsystem() {
-        armKraken = new TalonFX(Constants.ArmConstants.ARM_KRAKEN_ID, Constants.TalonFXConstants.CANIVORE_NAME);
-        armEncoder = new CANcoder(Constants.ArmConstants.ARM_CANCODER_ID, Constants.TalonFXConstants.CANIVORE_NAME);
+        armKraken = new TalonFX(ARM_KRAKEN_ID, Constants.TalonFXConstants.CANIVORE_NAME);
+        armEncoder = new CANcoder(ARM_CANCODER_ID, Constants.TalonFXConstants.CANIVORE_NAME);
 
         var armConfigurator = armKraken.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
@@ -27,17 +70,17 @@ public class ArmSubsystem extends SubsystemBase {
 
         talonFXConfiguration.Feedback.FeedbackRemoteSensorID = armEncoder.getDeviceID();
         talonFXConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        talonFXConfiguration.MotorOutput.Inverted = Constants.ArmConstants.ARM_INVERSION;
-        talonFXConfiguration.MotorOutput.NeutralMode = Constants.ArmConstants.ARM_NEUTRAL_MODE;
+        talonFXConfiguration.MotorOutput.Inverted = ARM_INVERSION;
+        talonFXConfiguration.MotorOutput.NeutralMode = ARM_NEUTRAL_MODE;
         talonFXConfiguration.FutureProofConfigs = Constants.TalonFXConstants.TALON_FUTURE_PROOF;
         talonFXConfiguration.Feedback.SensorToMechanismRatio = 50; //placeholder
         talonFXConfiguration.Feedback.RotorToSensorRatio = 12.8;
-        talonFXConfiguration.CurrentLimits = Constants.ArmConstants.ARM_CURRENT_LIMIT;
-        talonFXConfiguration.SoftwareLimitSwitch = Constants.ArmConstants.ARM_SOFT_LIMIT;
-        talonFXConfiguration.Slot0 = Constants.ArmConstants.SLOT_0_CONFIGS;
+        talonFXConfiguration.CurrentLimits = ARM_CURRENT_LIMIT;
+        talonFXConfiguration.SoftwareLimitSwitch = ARM_SOFT_LIMIT;
+        talonFXConfiguration.Slot0 = SLOT_0_CONFIGS;
 
-        armKraken.getRotorVelocity().waitForUpdate(Constants.ArmConstants.ARM_VELOCITY_STATUS_FRAME);
-        armKraken.getRotorPosition().waitForUpdate(Constants.ArmConstants.ARM_POSITION_STATUS_FRAME);
+        armKraken.getRotorVelocity().waitForUpdate(ARM_VELOCITY_STATUS_FRAME);
+        armKraken.getRotorPosition().waitForUpdate(ARM_POSITION_STATUS_FRAME);
 
         armConfigurator.apply(talonFXConfiguration);
 
@@ -45,7 +88,7 @@ public class ArmSubsystem extends SubsystemBase {
         var cancoderConfiguration = new CANcoderConfiguration();
 
         cancoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
-        cancoderConfiguration.MagnetSensor.MagnetOffset = Constants.ArmConstants.MAGNET_OFFSET;
+        cancoderConfiguration.MagnetSensor.MagnetOffset = MAGNET_OFFSET;
         cancoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         armEncoderConfigurator.apply(cancoderConfiguration);
 
@@ -57,7 +100,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
 
-    public void setPosition(Constants.ArmConstants.ArmPositions position) {
+    public void setPosition(ArmPositions position) {
         armPositions = position;
         setMotorsBrake();
 
@@ -65,7 +108,7 @@ public class ArmSubsystem extends SubsystemBase {
         double cosineScalar = Math.cos(radians);
 
         MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(
-                position.sensorUnits, true, Constants.ArmConstants.GRAVITY_FEEDFORWARD * cosineScalar, 0,
+                position.sensorUnits, true, GRAVITY_FEEDFORWARD * cosineScalar, 0,
                 true, false, false);
 
         armKraken.setControl(motionMagicVoltage);
@@ -75,10 +118,10 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getAngle() {
-        return armKraken.getRotorPosition().getValue() / Constants.CANCoderConstants.COUNTS_PER_DEG * Constants.ArmConstants.GEAR_RATIO;
+        return armKraken.getRotorPosition().getValue() / Constants.CANCoderConstants.COUNTS_PER_DEG * GEAR_RATIO;
     }
 
-    public Constants.ArmConstants.ArmPositions getArmPositions() {
+    public ArmPositions getArmPositions() {
         return armPositions;
     }
 
@@ -87,7 +130,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public boolean isMotionFinished() {
-        return Math.abs(getAngle() - armPositions.angle) <= Constants.ArmConstants.ANGLE_TOLERANCE;
+        return Math.abs(getAngle() - armPositions.angle) <= ANGLE_TOLERANCE;
     }
 
     public void moveUp(double speed) {

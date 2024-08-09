@@ -47,8 +47,8 @@ public class RobotContainer {
 
     final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(Constants.DriveConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
-            .withRotationalDeadband(Constants.DriveConstants.MaFxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(CommandSwerveDrivetrain.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
+            .withRotationalDeadband(CommandSwerveDrivetrain.MaFxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
 
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -87,7 +87,7 @@ public class RobotContainer {
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
         }
-        Telemetry logger = new Telemetry(Constants.DriveConstants.MAX_VELOCITY_METERS_PER_SECOND);
+        Telemetry logger = new Telemetry(CommandSwerveDrivetrain.MAX_VELOCITY_METERS_PER_SECOND);
         drivetrain.registerTelemetry(logger::telemeterize);
 
         configureBindings();
@@ -110,10 +110,10 @@ public class RobotContainer {
         buttonHelper.createButton(5, 0,
                 pivot.adjustPivotPositionTo(.42).andThen(
                         new StartEndCommand(() -> arm.moveUp(.7), arm::stop).until(() ->
-                                arm.getEnc() <= Constants.ArmConstants.ARM_HANDOFF_POSITION).andThen(
+                                arm.getEnc() <= ArmSubsystem.ARM_HANDOFF_POSITION).andThen(
                                 shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-.2))
                         ).until(shooter::getBeamBreak),
-                        pivot.movePivotPositionTo(Constants.PivotConstants.PivotPosition.HANDOFF)
+                        pivot.movePivotPositionTo(PivotSubsystem.PivotPosition.HANDOFF)
                 ).andThen(
                         shooter.setVelocityContinuous(100)).andThen(
                         intake.rollOut(-.1).withTimeout(0.2)).andThen(
@@ -124,10 +124,10 @@ public class RobotContainer {
 
         buttonHelper.createButton(10, 0, robotCommands.handoff().withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(2, 0, intake.rollOut(-.65), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevator.goDown(0.2), elevator::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevator.setPosition(Constants.ElevatorConstants.ElevatorPositions.DOWN)).andThen(pivot.movePivotPositionTo(Constants.PivotConstants.PivotPosition.HANDOFF))), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevator.goDown(0.2), elevator::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevator.setPosition(ElevatorSubsystem.ElevatorPositions.DOWN)).andThen(pivot.movePivotPositionTo(PivotSubsystem.PivotPosition.HANDOFF))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(6, 0, shooter.spinFeederAndStop(-.1).alongWith(intake.rollIn(0.5)), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(9,
-                0, new InstantCommand(() -> elevator.setPosition2(Constants.ElevatorConstants.ElevatorPositions.AMP)).andThen(pivot.moveDown(-0.25).unless(
+                0, new InstantCommand(() -> elevator.setPosition2(ElevatorSubsystem.ElevatorPositions.AMP)).andThen(pivot.moveDown(-0.25).unless(
                         () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(11, 0, shooter.shooterTrap(), MultiButton.RunCondition.WHILE_HELD);
 
@@ -140,7 +140,7 @@ public class RobotContainer {
                                         // +Y in velocity = left, -X in joystick = left
                                         .withVelocityY(-joystick.getLeftX() * TunerConstants.kSpeedAt12VoltsMps)
                                         // +rotational rate = counterclockwise (left), -X in joystick = left
-                                        .withRotationalRate(-joystick.getRightX() * Constants.DriveConstants.MaFxAngularRate)
+                                        .withRotationalRate(-joystick.getRightX() * CommandSwerveDrivetrain.MaFxAngularRate)
                 ));
 
         // Lock on to speaker
@@ -158,7 +158,7 @@ public class RobotContainer {
 
         // Arm down
         joystick.leftBumper().onTrue(new StartEndCommand(() -> arm.moveDown(.5), arm::stop, arm).until(
-                () -> arm.getEnc() <= .54 && arm.getEnc() >= .52).alongWith(pivot.movePivotPositionTo(Constants.PivotConstants.PivotPosition.HANDOFF)));
+                () -> arm.getEnc() <= .54 && arm.getEnc() >= .52).alongWith(pivot.movePivotPositionTo(PivotSubsystem.PivotPosition.HANDOFF)));
 
         // (This is unassigned on the gamepad map??)
         joystick.a().onTrue(

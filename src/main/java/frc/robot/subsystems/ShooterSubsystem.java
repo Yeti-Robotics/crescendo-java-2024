@@ -1,11 +1,16 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,18 +35,57 @@ public class ShooterSubsystem extends SubsystemBase {
     private final StatusSignal<Double> leftVel;
     private final StatusSignal<Double> rightVel;
 
+    public static final int SHOOTER_LEFT_MOTOR = 5; //id
+    public static final int SHOOTER_RIGHT_MOTOR = 15; //id
+    public static final CurrentLimitsConfigs SHOOTER_CURRENT_LIMIT = new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
+            withSupplyCurrentThreshold(55).withSupplyCurrentLimit(65).withSupplyTimeThreshold(0.1).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(65);
+    public static final InvertedValue SHOOTER_INVERSION = InvertedValue.CounterClockwise_Positive;
+
+    public static final double SHOOTER_P = 0.11;//0.043315
+    public static final double SHOOTER_S = 0.25;//0.043315
+    public static final double SHOOTER_I = 0.0;
+    public static final double SHOOTER_D = 0.0;
+    public static final double SHOOTER_V = 0.12;
+    public static final double MOTION_MAGIC_ACCELERATION = 0.1;
+    public static final double SHOOTER_STATUS_FRAME_SECONDS = 0.01;
+
+    public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().
+            withKS(SHOOTER_S).
+            withKP(SHOOTER_P).
+            withKI(SHOOTER_I).
+            withKD(SHOOTER_D).
+            withKA(MOTION_MAGIC_ACCELERATION).
+            withKV(SHOOTER_V);
+
+
+    public static final int SHOOTER_NEO = 16;
+    public static final int BEAM_BREAK = 0;
+
+    public static InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
+        InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
+        // TODO: decrease angles by aroun 0.05 to tune
+        map.put(1.375, new ShooterStateData(0.5, 125));
+        map.put(1.7, new ShooterStateData(.485, 125));
+        map.put(2.0, new ShooterStateData(0.478, 125));
+        map.put(2.3, new ShooterStateData(0.47, 125));
+        map.put(2.65, new ShooterStateData(.465, 125));
+        map.put(2.8, new ShooterStateData(.4625, 125));
+        map.put(3.0, new ShooterStateData(0.46, 125));
+        map.put(3.8, new ShooterStateData(0.443, 125));
+        return map;
+    }
 
     public ShooterSubsystem() {
-        leftKraken = new TalonFX(Constants.ShooterConstants.SHOOTER_LEFT_MOTOR, Constants.TalonFXConstants.CANIVORE_NAME);
-        rightKraken = new TalonFX(Constants.ShooterConstants.SHOOTER_RIGHT_MOTOR, Constants.TalonFXConstants.CANIVORE_NAME);
+        leftKraken = new TalonFX(SHOOTER_LEFT_MOTOR, Constants.TalonFXConstants.CANIVORE_NAME);
+        rightKraken = new TalonFX(SHOOTER_RIGHT_MOTOR, Constants.TalonFXConstants.CANIVORE_NAME);
         var rightMotorConfigurator = rightKraken.getConfigurator();
         var leftMotorConfigurator = leftKraken.getConfigurator();
         var rightMotorConfiguration = new TalonFXConfiguration();
 
-        rightMotorConfiguration.MotorOutput.Inverted = Constants.ShooterConstants.SHOOTER_INVERSION;
+        rightMotorConfiguration.MotorOutput.Inverted = SHOOTER_INVERSION;
         rightMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        rightMotorConfiguration.CurrentLimits = Constants.ShooterConstants.SHOOTER_CURRENT_LIMIT;
-        rightMotorConfiguration.Slot0 = Constants.ShooterConstants.SLOT_0_CONFIGS;
+        rightMotorConfiguration.CurrentLimits = SHOOTER_CURRENT_LIMIT;
+        rightMotorConfiguration.Slot0 = SLOT_0_CONFIGS;
         leftKraken.setControl(new Follower(rightKraken.getDeviceID(), false));
 
         shooterStatus = ShooterStatus.OFF;
@@ -50,9 +94,9 @@ public class ShooterSubsystem extends SubsystemBase {
         leftVel = leftKraken.getVelocity();
         rightVel = rightKraken.getVelocity();
 
-        neo = new TalonFX(Constants.ShooterConstants.SHOOTER_NEO, "canivoreBus");
+        neo = new TalonFX(SHOOTER_NEO, "canivoreBus");
 
-        beamBreak = new DigitalInput(Constants.ShooterConstants.BEAM_BREAK);
+        beamBreak = new DigitalInput(BEAM_BREAK);
 
         motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(0);
 
@@ -103,8 +147,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public double getVelocity() {
         if (!leftVel.hasUpdated() || !rightVel.hasUpdated()) {
-            leftVel.waitForUpdate(Constants.ShooterConstants.SHOOTER_STATUS_FRAME_SECONDS);
-            rightVel.waitForUpdate(Constants.ShooterConstants.SHOOTER_STATUS_FRAME_SECONDS);
+            leftVel.waitForUpdate(SHOOTER_STATUS_FRAME_SECONDS);
+            rightVel.waitForUpdate(SHOOTER_STATUS_FRAME_SECONDS);
         }
 
         return (leftVel.getValue() + rightVel.getValue()) / 2;
