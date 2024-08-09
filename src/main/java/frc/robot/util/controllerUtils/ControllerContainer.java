@@ -1,15 +1,15 @@
 package frc.robot.util.controllerUtils;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.constants.OIConstants;
+import frc.robot.Constants;
 
 public class ControllerContainer {
     private final Controller[] controllers;
 
     public ControllerContainer() {
-        controllers = new Controller[OIConstants.CONTROLLER_COUNT];
+        controllers = new Controller[Constants.OIConstants.CONTROLLER_COUNT];
 
-        OIConstants.CONTROLLERS.forEach((port, type) -> {
+        Constants.OIConstants.CONTROLLERS.forEach((port, type) -> {
             switch (type) {
                 case CUSTOM:
                     controllers[port] = new CustomController(port);

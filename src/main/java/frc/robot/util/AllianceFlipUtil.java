@@ -13,14 +13,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.constants.FieldConstants;
+import frc.robot.Constants;
 
 /** Utility functions for flipping from the blue to red alliance. */
 public class AllianceFlipUtil {
     /** Flips an x coordinate to the correct side of the field based on the current alliance color. */
     public static double apply(double xCoordinate) {
         if (shouldFlip()) {
-            return FieldConstants.fieldLength - xCoordinate;
+            return Constants.FieldConstants.fieldLength - xCoordinate;
         } else {
             return xCoordinate;
         }
