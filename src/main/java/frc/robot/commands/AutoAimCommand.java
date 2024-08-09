@@ -36,7 +36,7 @@ public class AutoAimCommand extends Command {
 
     @Override
     public void initialize() {
-        currentTag = LimelightHelpers.getFiducialID(VisionSubsystem.LIMELIGHT_NAME);
+        currentTag = LimelightHelpers.getFiducialID(VisionSubsystem.VisionConstants.LIMELIGHT_NAME);
 
         Translation2d speakerCenter = AllianceFlipUtil.apply(
                 Constants.FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()
@@ -47,7 +47,7 @@ public class AutoAimCommand extends Command {
 
     @Override
     public void execute() {
-        if(LimelightHelpers.getFiducialID(VisionSubsystem.LIMELIGHT_NAME) == currentTag) {
+        if(LimelightHelpers.getFiducialID(VisionSubsystem.VisionConstants.LIMELIGHT_NAME) == currentTag) {
             drivetrain.setControl(
                     poseAimRequest.withVelocityX(xVelSupplier.getAsDouble() * 1.5).withVelocityY(yVelSupplier.getAsDouble() * 1.5)
             );

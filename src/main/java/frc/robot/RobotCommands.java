@@ -41,7 +41,7 @@ public class RobotCommands {
             final Pose2d speakerPose = AllianceFlipUtil.apply(new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0)));
             Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
             double distance = relativeSpeaker.getTranslation().getNorm();
-            return ShooterSubsystem.SHOOTER_MAP().get(distance);
+            return ShooterSubsystem.ShooterConstants.SHOOTER_MAP().get(distance);
         });
 
         return pivot.updatePivotPositionWith(shooterStatePublisher)
@@ -49,9 +49,9 @@ public class RobotCommands {
     }
 
     public Command handoff() {
-        return pivot.movePivotPositionTo(PivotSubsystem.PivotPosition.HANDOFF).andThen(
+        return pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF).andThen(
                 new StartEndCommand(() -> arm.moveUp(.5), arm::stop).until(() ->
-                        arm.getEnc() <= ArmSubsystem.ARM_HANDOFF_POSITION).andThen(
+                        arm.getEnc() <= ArmSubsystem.ArmConstants.ARM_HANDOFF_POSITION).andThen(
                         shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-0.35))
                 ).until(shooter::getBeamBreak).andThen(intake.rollOut(1).withTimeout(0.2))
         );

@@ -110,10 +110,10 @@ public class RobotContainer {
         buttonHelper.createButton(5, 0,
                 pivot.adjustPivotPositionTo(.42).andThen(
                         new StartEndCommand(() -> arm.moveUp(.7), arm::stop).until(() ->
-                                arm.getEnc() <= ArmSubsystem.ARM_HANDOFF_POSITION).andThen(
+                                arm.getEnc() <= ArmSubsystem.ArmConstants.ARM_HANDOFF_POSITION).andThen(
                                 shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-.2))
                         ).until(shooter::getBeamBreak),
-                        pivot.movePivotPositionTo(PivotSubsystem.PivotPosition.HANDOFF)
+                        pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)
                 ).andThen(
                         shooter.setVelocityContinuous(100)).andThen(
                         intake.rollOut(-.1).withTimeout(0.2)).andThen(
@@ -124,10 +124,10 @@ public class RobotContainer {
 
         buttonHelper.createButton(10, 0, robotCommands.handoff().withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(2, 0, intake.rollOut(-.65), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevator.goDown(0.2), elevator::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevator.setPosition(ElevatorSubsystem.ElevatorPositions.DOWN)).andThen(pivot.movePivotPositionTo(PivotSubsystem.PivotPosition.HANDOFF))), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevator.goDown(0.2), elevator::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevator.setPosition(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)).andThen(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(6, 0, shooter.spinFeederAndStop(-.1).alongWith(intake.rollIn(0.5)), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(9,
-                0, new InstantCommand(() -> elevator.setPosition2(ElevatorSubsystem.ElevatorPositions.AMP)).andThen(pivot.moveDown(-0.25).unless(
+                0, new InstantCommand(() -> elevator.setPosition2(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP)).andThen(pivot.moveDown(-0.25).unless(
                         () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(11, 0, shooter.shooterTrap(), MultiButton.RunCondition.WHILE_HELD);
 
@@ -158,7 +158,7 @@ public class RobotContainer {
 
         // Arm down
         joystick.leftBumper().onTrue(new StartEndCommand(() -> arm.moveDown(.5), arm::stop, arm).until(
-                () -> arm.getEnc() <= .54 && arm.getEnc() >= .52).alongWith(pivot.movePivotPositionTo(PivotSubsystem.PivotPosition.HANDOFF)));
+                () -> arm.getEnc() <= .54 && arm.getEnc() >= .52).alongWith(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
 
         // (This is unassigned on the gamepad map??)
         joystick.a().onTrue(

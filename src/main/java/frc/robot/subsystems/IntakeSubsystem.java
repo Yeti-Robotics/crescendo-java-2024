@@ -11,27 +11,30 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
+
     private final TalonFX intakeKraken;
     private final DigitalInput beamBreak;
 
-    public static final int INTAKE_KRAKEN_ID = 8;
+    public class IntakeConstants {
+        public static final int INTAKE_KRAKEN_ID = 8;
 
-    public static final InvertedValue INTAKE_INVERSION = InvertedValue.Clockwise_Positive;
-    public static final NeutralModeValue INTAKE_NEUTRAL_MODE = NeutralModeValue.Brake;
-    public static final double INTAKE_POSITION_STATUS_FRAME = 0.05;
-    public static final double INTAKE_VELOCITY_STATUS_FRAME = 0.01;
+        public static final InvertedValue INTAKE_INVERSION = InvertedValue.Clockwise_Positive;
+        public static final NeutralModeValue INTAKE_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final double INTAKE_POSITION_STATUS_FRAME = 0.05;
+        public static final double INTAKE_VELOCITY_STATUS_FRAME = 0.01;
+    }
 
     public IntakeSubsystem() {
-        intakeKraken = new TalonFX(INTAKE_KRAKEN_ID, "canivoreBus");
+        intakeKraken = new TalonFX(IntakeConstants.INTAKE_KRAKEN_ID, "canivoreBus");
         var intakeConfigurator = intakeKraken.getConfigurator();
         var configs = new TalonFXConfiguration();
 
         beamBreak = new DigitalInput(2);
-        configs.MotorOutput.Inverted = INTAKE_INVERSION;
-        configs.MotorOutput.NeutralMode = INTAKE_NEUTRAL_MODE;
+        configs.MotorOutput.Inverted = IntakeConstants.INTAKE_INVERSION;
+        configs.MotorOutput.NeutralMode = IntakeConstants.INTAKE_NEUTRAL_MODE;
         configs.FutureProofConfigs = Constants.TalonFXConstants.TALON_FUTURE_PROOF;
-        intakeKraken.getRotorVelocity().waitForUpdate(INTAKE_VELOCITY_STATUS_FRAME);
-        intakeKraken.getRotorPosition().waitForUpdate(INTAKE_POSITION_STATUS_FRAME);
+        intakeKraken.getRotorVelocity().waitForUpdate(IntakeConstants.INTAKE_VELOCITY_STATUS_FRAME);
+        intakeKraken.getRotorPosition().waitForUpdate(IntakeConstants.INTAKE_POSITION_STATUS_FRAME);
         intakeConfigurator.apply(configs);
     }
 
