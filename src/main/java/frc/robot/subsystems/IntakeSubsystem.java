@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.IntakeConstants;
@@ -12,9 +13,7 @@ import frc.robot.constants.TalonFXConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
     private final TalonFX intakeKraken;
-
     private final DigitalInput beamBreak;
-    public final Trigger intakeOccupiedTrigger;
 
     public IntakeSubsystem() {
         intakeKraken = new TalonFX(IntakeConstants.INTAKE_KRAKEN_ID, "canivoreBus");
@@ -22,8 +21,6 @@ public class IntakeSubsystem extends SubsystemBase {
         var configs = new TalonFXConfiguration();
 
         beamBreak = new DigitalInput(2);
-        intakeOccupiedTrigger = new Trigger(this::getBeamBreak);
-
         configs.MotorOutput.Inverted = IntakeConstants.INTAKE_INVERSION;
         configs.MotorOutput.NeutralMode = IntakeConstants.INTAKE_NEUTRAL_MODE;
         configs.FutureProofConfigs = TalonFXConstants.TALON_FUTURE_PROOF;
@@ -38,27 +35,39 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putData("intake beam break", beamBreak);
     }
 
-    public void rollIn(double speed) {
-        intakeKraken.set(Math.abs(speed));
-    }
-
-    public void rollOut(double speed) {
-        intakeKraken.set(-Math.abs(speed));
-    }
-
-    public void roll(double speed) {
+    private void setIntakeSpeed(double speed) {
         intakeKraken.set(speed);
     }
 
-    public void stop() {
+    private void stop() {
         intakeKraken.stopMotor();
     }
 
-    public boolean getBeamBreak() {
-        return !beamBreak.get();
+    private Command roll(double vel) {
+        return startEnd(() -> setIntakeSpeed(vel), this::stop);
     }
 
-    public Command rollCmd(double val) {
-        return startEnd(() -> roll(val), this::stop);
+    /**
+     * Sucks up note into the robot
+     *
+     * @param vel positive speed in RPS
+     * @return {@code Command} instance
+     */
+    public Command rollIn(double vel) {
+        // TODO: add some kind of warning logging if a negative value is passed
+
+        return roll(Math.abs(vel));
+    }
+
+    /**
+     * Sucks up note into the robot
+     *
+     * @param vel negative speed in RPS
+     * @return {@code Command} instance
+     */
+    public Command rollOut(double vel) {
+        // TODO: add some kind of warning logging if a positive value is passed
+
+        return roll(-Math.abs(vel));
     }
 }

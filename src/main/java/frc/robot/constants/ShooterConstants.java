@@ -23,7 +23,7 @@ public final class ShooterConstants {
     public static final double SHOOTER_V = 0.12;
     public static final double SHOOTER_A = 0.01;
     public static final double MOTION_MAGIC_ACCELERATION = 0.1;
-
+    public static final double SHOOTER_STATUS_FRAME_SECONDS = 0.01;
     public static final double FLYWHEEL_DIAMETER_IN = 4.0; // inches
     public static final double FLYWHEEL_DIAMETER_M = 0.1016; // meters
 
@@ -33,7 +33,7 @@ public final class ShooterConstants {
     public static final double TRAP_VEL = 900.0 / 60.0;
     public static final double DEFAULT_VEL = 300 / 60.0;
 
-    public static final double PULLEY_RATIO = 2 / 3;
+    public static final double PULLEY_RATIO = (double) 2 / 3;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs().
             withKS(SHOOTER_S).

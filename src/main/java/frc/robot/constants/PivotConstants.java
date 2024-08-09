@@ -1,8 +1,6 @@
 package frc.robot.constants;
 
 import com.ctre.phoenix6.configs.*;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -21,8 +19,6 @@ public class PivotConstants {
     public static final double PIVOT_POSITION_STATUS_FRAME = 0.05;
 
     public static final double PIVOT_VELOCITY_STATUS_FRAME = 0.01;
-
-    public static final double PIVOT_HOME_POSITION = 0.5;
 
     public static final double GRAVITY_FEEDFORWARD = 1; //placeholder
 
@@ -54,14 +50,33 @@ public class PivotConstants {
 
     public static final double GEAR_RATIO = 1.0/144.0;
 
-    public enum PivotPositions {
-        BUMPFIRE(52),
-        ADJUSTABLE_POSITIONS(0); //placeholder
-        public final double angle;
-        public final double sensorUnits;
-        PivotPositions(double angle){
-            this.angle = angle;
-            this.sensorUnits = angle/GEAR_RATIO * CANCoderConstants.COUNTS_PER_DEG;
+    public enum PivotPosition {
+        CUSTOM(-1) {
+            @Override
+            public double getPosition() {
+                if (super.getPosition() == -1) {
+                    throw new IllegalArgumentException("Custom pivot position was not set");
+                }
+
+                return super.getPosition();
+            }
+        },
+        HANDOFF(0.5);
+        //placeholder
+        private double position;
+
+        PivotPosition(double position){
+            this.position = position;
+        }
+
+        public double getPosition() {
+            return position;
+        }
+
+        public static PivotPosition CUSTOM(double position) {
+           PivotPosition pivotPosition = PivotPosition.CUSTOM;
+           pivotPosition.position = position;
+           return pivotPosition;
         }
     }
 }
