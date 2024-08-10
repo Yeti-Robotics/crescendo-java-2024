@@ -65,7 +65,7 @@ public class IntakeSubsystem extends SubsystemBase {
         return !beamBreak.get();}
 
     /**
-     * Sucks up note into the robot
+     * Ejects note from the robot
      *
      * @param vel negative speed in RPS
      * @return {@code Command} instance

@@ -146,7 +146,7 @@ public class RobotContainer {
                 ));
 
         // Lock on to speaker
-        joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(robotCommands.setShooterState()));
+        joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.setShooterState())));
 
         // Swerve lock
         joystick.b().whileTrue(drivetrain
@@ -167,7 +167,7 @@ public class RobotContainer {
                 shooter.setVelocityAndStop(45).withTimeout(0.5)
         );
         // Shoot
-        joystick.rightTrigger().whileTrue(shooter.spinFeederMaxAndStop());
+        joystick.rightTrigger().whileTrue(shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1)));
         // Handoff
         joystick.povUp().onTrue(robotCommands.handoff().withTimeout(2));
         // Move elevator down
