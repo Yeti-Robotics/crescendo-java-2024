@@ -159,7 +159,7 @@ public class RobotContainer {
 
         // Arm down
         joystick.leftBumper().onTrue(new StartEndCommand(() -> arm.moveDown(.5), arm::stop, arm).until(
-                () -> arm.getEnc() <= .54 && arm.getEnc() >= .52).alongWith(pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF)));
+                () -> arm.getEnc() <= .02 && arm.getEnc() >= 0).alongWith(pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF)));
 
         // (This is unassigned on the gamepad map??)
         joystick.a().onTrue(
@@ -177,6 +177,7 @@ public class RobotContainer {
         // Spin feeder
         joystick.x().whileTrue(shooter.spinFeederAndStop(.3));
     }
+
 
     public void updateOdometryVision() {
         var visionResult = vision.getTargetingResults();
