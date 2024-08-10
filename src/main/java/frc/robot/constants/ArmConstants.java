@@ -40,8 +40,7 @@ public final class ArmConstants {
     ).withReverseSoftLimitEnable(false).withReverseSoftLimitThreshold(
             65 //placeholder
     );
-    public static final double MAGNET_OFFSET = -1; //placeholder
-
+    public static final double MAGNET_OFFSET = -0.523352; //placeholder
 
     public static final double GEAR_RATIO = 1.0 / (50.463 / 12.0);
 
