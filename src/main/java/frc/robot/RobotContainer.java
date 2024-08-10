@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutoAimCommand;
-import frc.robot.commands.ShutteAimCommand;
+import frc.robot.commands.ShuttleAimCommand;
 import frc.robot.commands.auto.AutoNamedCommands;
 import frc.robot.constants.*;
 import frc.robot.subsystems.*;
@@ -106,7 +106,7 @@ public class RobotContainer {
 
     private void configureBindings() {
 
-        buttonHelper.createButton(1, 0, robotCommands.setShuttleState().alongWith(new ShutteAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX())), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(1, 0, robotCommands.setShuttleState().alongWith(new ShuttleAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX())), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(8, 0, shooter.setVelocityAndStop(-70), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(7, 0, shooter.setVelocityAndStop(15), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(5, 0,

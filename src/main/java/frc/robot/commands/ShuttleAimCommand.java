@@ -11,14 +11,14 @@ import frc.robot.util.LimelightHelpers;
 import java.util.function.DoubleSupplier;
 
 
-public class ShutteAimCommand extends Command {
+public class ShuttleAimCommand extends Command {
     private final CommandSwerveDrivetrain drivetrain;
     private final DoubleSupplier xVelSupplier;
     private final TurnToPoint poseAimRequest;
     private final DoubleSupplier yVelSupplier;
     private double currentTag;
 
-    public ShutteAimCommand(CommandSwerveDrivetrain drivetrain, DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier) {
+    public ShuttleAimCommand(CommandSwerveDrivetrain drivetrain, DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier) {
         this.drivetrain = drivetrain;
         this.xVelSupplier = xVelSupplier;
         this.yVelSupplier = yVelSupplier;
