@@ -92,6 +92,17 @@ public class FieldConstants {
             }
         }
     }
+
+    public static final class Shuttle {
+        public static Translation2d closeShuttleTargetCorner =
+                new Translation2d(0.0,7.0);
+
+        public static Translation2d farShuttleTargetCorner =
+                new Translation2d(2.5, 7.0);
+
+        public static Translation2d shuttleTargetZone =
+                closeShuttleTargetCorner.interpolate(farShuttleTargetCorner, 0.5);
+    }
     public static AprilTagFieldLayout aprilTagLayout;
     public static List<Pose2d> aprilTagPoses = new ArrayList<Pose2d>(12);
     public static List<Pose2d> allianceAprilTags = new ArrayList<Pose2d>(6);
