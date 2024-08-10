@@ -19,18 +19,14 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutoAimCommand;
-import frc.robot.commands.HandoffCommandGroup;
-import frc.robot.commands.PivotLimitSwitchCommand;
-import frc.robot.commands.ShooterStateCommand;
 import frc.robot.commands.auto.AutoNamedCommands;
-import frc.robot.commands.pivot.PivotHomeCommand;
-import frc.robot.constants.ArmConstants;
-import frc.robot.constants.AutoConstants;
-import frc.robot.constants.DriveConstants;
-import frc.robot.constants.ElevatorConstants;
+import frc.robot.constants.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drivetrain.Telemetry;
@@ -57,38 +53,42 @@ public class RobotContainer {
             .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
 
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-    private final Telemetry logger = new Telemetry(DriveConstants.MAX_VELOCITY_METERS_PER_SECOND);
     public ControllerContainer controllerContainer = new ControllerContainer();
     public SendableChooser<AutoConstants.AutoMode> autoChooser;
     ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
     private boolean autoNeedsRebuild = true;
     private Command auto;
 
-    public RobotContainer() {
+    private final RobotCommands robotCommands = new RobotCommands(
+            intake, pivot, elevator, shooter, vision, drivetrain, arm
+    );
 
+    public RobotContainer() {
         NamedCommands.registerCommand("shootBump", Commands.sequence(
-                new InstantCommand(() -> pivot.setPivotPosition(0.55)),
-                shooter.bumpFireCmd(),
+                pivot.adjustPivotPositionTo(0.55),
+                shooter.shooterBumpFire(),
                 Commands.waitSeconds(.75), // is this waiting for a specific speed or something? should prob be replaced
-                shooter.spinNeoCmd().alongWith(new StartEndCommand(() -> intake.roll(-1), intake::stop).withTimeout(1))
+                shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1).withTimeout(1))
         ));
+
         var field = new Field2d();
         SmartDashboard.putData("Field", field);
 
         PathPlannerLogging.setLogCurrentPoseCallback(field::setRobotPose);
 
-        PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
-            field.getObject("target pose").setPose(pose);
-        });
+        PathPlannerLogging.setLogTargetPoseCallback(pose ->
+                field.getObject("target pose").setPose(pose)
+        );
 
-        PathPlannerLogging.setLogActivePathCallback((poses) -> {
-            field.getObject("path").setPoses(poses);
-        });
+        PathPlannerLogging.setLogActivePathCallback(poses ->
+                field.getObject("path").setPoses(poses)
+        );
 
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
         }
+        Telemetry logger = new Telemetry(DriveConstants.MAX_VELOCITY_METERS_PER_SECOND);
         drivetrain.registerTelemetry(logger::telemeterize);
 
         configureBindings();
@@ -96,43 +96,41 @@ public class RobotContainer {
         buildAutoChooser();
         rebuildAutoIfNecessary();
 
+        vision.ledOff();
+
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
         SmartDashboard.putNumber("shooterstate-position", 0.5);
     }
 
     private void configureBindings() {
-        buttonHelper.createButton(1, 0, new ShooterStateCommand(drivetrain, pivot, shooter, intake), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(8, 0, shooter.setVelocityCmd(-70), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(7, 0, shooter.setVelocityCmd(15), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(5, 0, new SequentialCommandGroup(
-                new InstantCommand(() -> pivot.setPivotPosition(0.42)).andThen(
+
+        buttonHelper.createButton(1, 0, robotCommands.setShooterState(), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(8, 0, shooter.setVelocityAndStop(-70), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(7, 0, shooter.setVelocityAndStop(15), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(5, 0,
+                pivot.adjustPivotPositionTo(.42).andThen(
                         new StartEndCommand(() -> arm.moveUp(.7), arm::stop).until(() ->
                                 arm.getEnc() <= ArmConstants.ARM_HANDOFF_POSITION).andThen(
-                                new StartEndCommand(() -> shooter.spinFeeder(-0.3),
-                                        shooter::stopFlywheel).alongWith(intake.rollCmd(-.2))
+                                shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-.2))
                         ).until(shooter::getBeamBreak),
-                        new PivotHomeCommand(pivot)
-                ),
-                shooter.setVelocityInstantCommand(100),
-                intake.rollCmd(-.1).withTimeout(0.2),
-                Commands.waitSeconds(.45),
-                new StartEndCommand(shooter::spinNeo, shooter::stopFlywheel).alongWith(new StartEndCommand(() -> intake.roll(-1), intake::stop).withTimeout(1),
-                        new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2)
-                )
-        ), MultiButton.RunCondition.WHEN_PRESSED);
+                        pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF)
+                ).andThen(
+                        shooter.setVelocityContinuous(100)).andThen(
+                        intake.rollOut(-.1).withTimeout(0.2)).andThen(
+                        Commands.waitSeconds(.45)).andThen(
+                        shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1).withTimeout(1)).andThen(
+                                robotCommands.handoff().withTimeout(2))
+                ), MultiButton.RunCondition.WHEN_PRESSED);
 
-        buttonHelper.createButton(10, 0, new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(2, 0, intake.rollCmd(-.65), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevator.goDown(0.2), elevator::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevator.setPosition(ElevatorConstants.ElevatorPositions.DOWN)).andThen(new InstantCommand(() -> pivot.setPivotPosition(0.5)))), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(6, 0, shooter.spinFeederCmd(-.1).alongWith(new StartEndCommand(() -> intake.rollOut(0.5), intake::stop)), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(9,
-                0, new InstantCommand(() -> elevator.setPosition2(ElevatorConstants.ElevatorPositions.AMP)).andThen(new StartEndCommand(() -> pivot.moveDown(0.25), pivot::stop).unless(
-                        () -> pivot.getEncAngle() < 0.4).withTimeout(0.6).andThen(new InstantCommand(() -> pivot.setPivotPosition(0.03)).unless(() -> !elevator.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(11, 0, shooter.shootTrapCmd(), MultiButton.RunCondition.WHILE_HELD);
-
-        pivot.anyLimitSwitchPressed.onTrue(new PivotLimitSwitchCommand(pivot));
+        buttonHelper.createButton(10, 0, robotCommands.handoff().withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(2, 0, intake.rollOut(-.65), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevator.goDown(0.2), elevator::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevator.setPosition(ElevatorConstants.ElevatorPositions.DOWN)).andThen(pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF))), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(6, 0, shooter.spinFeederAndStop(-.1).alongWith(intake.rollIn(0.5)), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(9, 0, new InstantCommand(() -> elevator.setPosition2(ElevatorConstants.ElevatorPositions.AMP)).andThen(pivot.moveDown(-0.25).unless(
+                        () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
         intake.intakeOccupiedTrigger.onTrue(vision.blinkLimelight());
+        buttonHelper.createButton(11, 0, shooter.shooterTrap(), MultiButton.RunCondition.WHILE_HELD);
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(
@@ -157,28 +155,29 @@ public class RobotContainer {
         joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
         // Suck in note
-        joystick.rightBumper().whileTrue(intake.rollCmd(.7));
+        joystick.rightBumper().whileTrue(intake.rollIn(.7));
 
         // Arm down
-        joystick.leftBumper().onTrue(new StartEndCommand(() -> arm.moveDown(.5), arm::stop).until(
-                () -> arm.getEnc() <= .54 && arm.getEnc() >= .52).alongWith(new PivotHomeCommand(pivot)));
+        joystick.leftBumper().onTrue(new StartEndCommand(() -> arm.moveDown(.5), arm::stop, arm).until(
+                () -> arm.getEnc() <= .02 && arm.getEnc() >= 0).alongWith(pivot.movePivotPositionTo(PivotConstants.PivotPosition.HANDOFF)));
 
         // (This is unassigned on the gamepad map??)
         joystick.a().onTrue(
-                shooter.setVelocityCmd(45).withTimeout(0.5)
+                shooter.setVelocityAndStop(45).withTimeout(0.5)
         );
         // Shoot
-        joystick.rightTrigger().whileTrue(new StartEndCommand(shooter::spinNeo, shooter::stopFlywheel).alongWith(new StartEndCommand(() -> intake.roll(-1), intake::stop)));
+        joystick.rightTrigger().whileTrue(shooter.spinFeederMaxAndStop());
         // Handoff
-        joystick.povUp().onTrue(new HandoffCommandGroup(pivot, arm, shooter, intake).withTimeout(2));
+        joystick.povUp().onTrue(robotCommands.handoff().withTimeout(2));
         // Move elevator down
         joystick.povDown().onTrue(elevator.positionDownCmd());
         // (These are also unassigned on the gamepad map?)
-        joystick.povLeft().whileTrue(new StartEndCommand(() -> pivot.moveUp(0.05), () -> pivot.moveDown(0.01)));
-        joystick.povRight().whileTrue(new StartEndCommand(() -> pivot.moveDown(0.05), () -> pivot.moveDown(0.01)));
+        joystick.povLeft().whileTrue(pivot.moveUpWithBrake(0.05, -0.01));
+        joystick.povRight().whileTrue(pivot.moveDownWithBrake(-0.05, 0.01));
         // Spin feeder
-        joystick.x().whileTrue(shooter.spinFeederCmd(.3));
+        joystick.x().whileTrue(shooter.spinFeederAndStop(.3));
     }
+
 
     public void updateOdometryVision() {
         var visionResult = vision.getTargetingResults();
@@ -192,8 +191,7 @@ public class RobotContainer {
     }
 
     public void buildAutoChooser() {
-
-        var namedCommands = new AutoNamedCommands(intake, shooter, pivot, arm);
+        var namedCommands = new AutoNamedCommands(intake, shooter, pivot, arm, robotCommands);
         namedCommands.registerCommands();
 
         autoChooser = new SendableChooser<>();

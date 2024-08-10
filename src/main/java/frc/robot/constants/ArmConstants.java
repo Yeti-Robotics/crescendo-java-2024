@@ -17,7 +17,7 @@ public final class ArmConstants {
     public static final NeutralModeValue ARM_NEUTRAL_MODE = NeutralModeValue.Brake;
     public static final double ARM_POSITION_STATUS_FRAME = 0.05;
     public static final double ARM_VELOCITY_STATUS_FRAME = 0.01;
-    public static final double ARM_HANDOFF_POSITION = 0.03;
+    public static final double ARM_HANDOFF_POSITION = 0.51;
 
     public static final double GRAVITY_FEEDFORWARD = 0.05;
 
@@ -40,8 +40,7 @@ public final class ArmConstants {
     ).withReverseSoftLimitEnable(false).withReverseSoftLimitThreshold(
             65 //placeholder
     );
-    public static final double MAGNET_OFFSET = -1; //placeholder
-
+    public static final double MAGNET_OFFSET = -0.474609; //placeholder
 
     public static final double GEAR_RATIO = 1.0 / (50.463 / 12.0);
 

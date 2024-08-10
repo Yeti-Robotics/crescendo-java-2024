@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.drivetrain.generated.TunerConstants;
+import frc.robot.util.RobotDataPublisher;
 
 import java.util.function.Supplier;
 
@@ -38,10 +39,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private final Rotation2d BluePerspectiveRotation = Rotation2d.fromDegrees(0);
     private final Rotation2d RedPerspectiveRotation = Rotation2d.fromDegrees(180);
     private final SwerveRequest.ApplyChassisSpeeds AutoReq = new SwerveRequest.ApplyChassisSpeeds();
-    StructArrayPublisher<SwerveModuleState> publisher;
+    private StructArrayPublisher<SwerveModuleState> publisher;
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
     private boolean hasAppliedPerspective = false;
+
+    private final RobotDataPublisher<Pose2d> posePublisher = new RobotDataPublisher<>();
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
@@ -205,15 +208,20 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         }
 
 
-        Pose2d speakerPose = DriverStation.getAlliance().equals(DriverStation.Alliance.Blue)
+        Pose2d speakerPose = DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue).equals(DriverStation.Alliance.Blue)
                 ? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
                 : new Pose2d(0.0, 2.45, Rotation2d.fromRotations(0));
 
         Pose2d robotPose = this.getState().Pose;
+        posePublisher.publish(robotPose);
         Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
         double distance = relativeSpeaker.getTranslation().getNorm();
         SmartDashboard.putNumber("distance", distance);
         SmartDashboard.putNumber("gyro spin rate", getPigeon2().getRate());
+    }
+
+    public RobotDataPublisher<Pose2d> observablePose() {
+        return posePublisher;
     }
 }
 
