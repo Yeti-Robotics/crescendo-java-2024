@@ -33,7 +33,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     MotionMagicVelocityVoltage motionMagicVelocityVoltage;
 
-    public class ShooterConstants {
+    public static class ShooterConstants {
         public static ShooterModes shooterModes;
         public static ShooterStatus shooterStatus;
         public static double velocity = 0;
@@ -75,6 +75,12 @@ public class ShooterSubsystem extends SubsystemBase {
             map.put(2.8, new ShooterStateData(.4625, 125));
             map.put(3.0, new ShooterStateData(0.46, 125));
             map.put(3.8, new ShooterStateData(0.443, 125));
+            return map;
+        }
+
+        public static InterpolatingTreeMap<Double, ShooterStateData> SHUTTLE_MAP() {
+            InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
+            map.put(8.0, new ShooterStateData(0.5, 125));
             return map;
         }
     }

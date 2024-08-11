@@ -48,12 +48,22 @@ public class RobotCommands {
                 .alongWith(shooter.updateVelocityWith(shooterStatePublisher));
     }
 
+    public Command setShuttleState() {
+        RobotDataPublisher<ShooterStateData> shuttleStatePublisher = commandSwerveDrivetrain.observablePose().map(robotPose -> {
+            final Pose2d shuttleTarget = AllianceFlipUtil.apply(new Pose2d(2.5, 7.0, Rotation2d.fromDegrees(0)));
+            Pose2d relativeShuttleTarget = robotPose.relativeTo(shuttleTarget);
+            double distance = relativeShuttleTarget.getTranslation().getNorm();
+            return ShooterSubsystem.ShooterConstants.SHUTTLE_MAP().get(distance);
+        });
+        return pivot.updatePivotPositionWith(shuttleStatePublisher).alongWith(shooter.updateVelocityWith(shuttleStatePublisher));
+    }
+
     public Command handoff() {
         return pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF).andThen(
                 new StartEndCommand(() -> arm.moveUp(.5), arm::stop).until(() ->
-                        arm.getEnc() <= ArmSubsystem.ArmConstants.ARM_HANDOFF_POSITION).andThen(
-                        shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-0.35))
-                ).until(shooter::getBeamBreak).andThen(intake.rollOut(1).withTimeout(0.2))
+                        arm.getEnc() >= ArmSubsystem.ArmConstants.ARM_HANDOFF_POSITION).andThen(
+                        shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-0.15))
+                ).until(shooter::getBeamBreak)
         );
     }
 }

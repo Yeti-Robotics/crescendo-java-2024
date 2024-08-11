@@ -47,6 +47,17 @@ public class Constants {
                 }
             }
         }
+
+        public static final class Shuttle {
+            public static Translation2d closeShuttleTargetCorner =
+                    new Translation2d(0.0,7.0);
+
+            public static Translation2d farShuttleTargetCorner =
+                    new Translation2d(2.5, 7.0);
+
+            public static Translation2d shuttleTargetZone =
+                    closeShuttleTargetCorner.interpolate(farShuttleTargetCorner, 0.5);
+        }
     }
 
     public class CANCoderConstants{
