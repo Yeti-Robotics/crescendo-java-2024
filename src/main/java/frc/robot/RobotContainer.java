@@ -130,7 +130,7 @@ public class RobotContainer {
         buttonHelper.createButton(6, 0, shooter.spinFeederAndStop(-.1).alongWith(intake.rollIn(0.5)), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(9, 0, new InstantCommand(() -> elevator.setPosition2(ElevatorConstants.ElevatorPositions.AMP)).andThen(pivot.moveDown(-0.25).unless(
                         () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
-        intake.intakeOccupiedTrigger.onTrue(vision.blinkLimelight());
+        intake.intakeOccupiedTrigger.onTrue(vision.blinkLimelight().alongWith(robotCommands.handoff().withTimeout(2)));
         buttonHelper.createButton(11, 0, shooter.shooterTrap(), MultiButton.RunCondition.WHILE_HELD);
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
