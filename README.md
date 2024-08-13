@@ -3,7 +3,7 @@
 This README will allow developers to understand the purpose, structure, and setup of our code for Kitty, our robot for the 2024 _FIRST_ Robotics Competition season.
 This respository describes the use of the XML documents and the SRC code. This repository has all of the presets and classes needed to run FRC code. 
 
-Installation Procedure
+## Installation
 1. Go to "https://www.jetbrains.com/products/compare/?product=idea&product=idea-ce"
 2. Install "IntelliJ Community Edition"
 3. Follow the instructions you will be prompted to
