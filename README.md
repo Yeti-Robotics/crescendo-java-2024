@@ -1,4 +1,6 @@
-This read.me will allow developers to have an understanding about the purpose of this respository and its installation. 
+# 2024 Season Code - Kitty
+## Overview
+This README will allow developers to understand the purpose, structure, and setup of our code for Kitty, our robot for the 2024 _FIRST_ Robotics Competition season.
 This respository describes the use of the XML documents and the SRC code. This repository has all of the presets and classes needed to run FRC code. 
 
 Installation Procedure
