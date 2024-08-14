@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 public class ElevatorSubsystem extends SubsystemBase {
     private final TalonFX elevatorMotor;
     private final DigitalInput magSwitch;
@@ -83,7 +86,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void goDown(double speed) {
         elevatorMotor.set(-Math.abs(speed));
-    }
+   }
 
     public void stop() {
         elevatorMotor.stopMotor();
@@ -104,25 +107,31 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     // why do we have two of these methods????
 
-    public void setPosition(ElevatorConstants.ElevatorPositions position) {
+    private void setPosition(ElevatorConstants.ElevatorPositions position) {
         ElevatorConstants.elevatorPositions = position;
-
         MotionMagicExpoVoltage motionMagicVoltage = new MotionMagicExpoVoltage(
                 position.distanceEl, true, 0.0, 0,
                 true, false, false);
-
-        elevatorMotor.setControl(motionMagicVoltage.withPosition(position.distanceEl));
+        if (position == ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP) {
+            motionMagicVoltage.withFeedForward(10);
+        }
+        elevatorMotor.setControl(motionMagicVoltage);
     }
 
-    public void setPosition2(ElevatorConstants.ElevatorPositions position) {
-        ElevatorConstants.elevatorPositions = position;
-
-        MotionMagicExpoVoltage motionMagicVoltage = new MotionMagicExpoVoltage(
-                position.distanceEl, true, 4.0, 0,
-                true, false, false);
-
-        elevatorMotor.setControl(motionMagicVoltage.withPosition(position.distanceEl).withFeedForward(10));
+    public Command setPositionDown(){
+        //setPosition(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)
+      return run(() -> setPosition(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN));
     }
+
+    public Command setPositionAmp(){
+        //setPosition(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP)
+        return run(() -> setPosition(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP));
+    }
+
+    public Command goDownAndStop(double speed){
+        return startEnd(() -> goDown(speed), this::stop);
+    }
+
 
     @Override
     public void periodic() {
@@ -132,6 +141,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putData("Elevator motor", elevatorMotor);
         SmartDashboard.putData("Elevator magswitch", magSwitch);
     }
+
 
     public Command positionDownCmd() {
         return runOnce(() -> setPosition(ElevatorConstants.ElevatorPositions.DOWN));
