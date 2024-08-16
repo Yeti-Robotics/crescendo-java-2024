@@ -14,16 +14,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 public class ElevatorSubsystem extends SubsystemBase {
     private final TalonFX elevatorMotor;
     private final DigitalInput magSwitch;
+    private static ElevatorConstants.ElevatorPositions elevatorPosition = ElevatorConstants.ElevatorPositions.DOWN;
 
-    public class ElevatorConstants {
-        public static ElevatorConstants.ElevatorPositions elevatorPositions = ElevatorConstants.ElevatorPositions.DOWN;
-
+    public static class ElevatorConstants {
         public static int STAGES = 3;
         public static final double ELEVATOR_DISTANCE_PER_PULSE = 1; //PLACEHOLDER
         public static int ELEVATOR_ID = 10;
@@ -61,7 +57,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public ElevatorSubsystem() {
         elevatorMotor = new TalonFX(ElevatorConstants.ELEVATOR_ID, Constants.TalonFXConstants.CANIVORE_NAME);
         magSwitch = new DigitalInput(9);
-        var ElConfigurator = elevatorMotor.getConfigurator();
+        var elConfigurator = elevatorMotor.getConfigurator();
         var talonFXConfiguration = new TalonFXConfiguration();
 
         talonFXConfiguration.CurrentLimits = ElevatorConstants.ELEVATOR_CURRENT_LIMIT;
@@ -74,14 +70,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.getRotorVelocity().waitForUpdate(ElevatorConstants.ELEVATOR_VELOCITY_STATUS_FRAME);
         elevatorMotor.getRotorPosition().waitForUpdate(ElevatorConstants.ELEVATOR_POSITION_STATUS_FRAME);
 
-        ElConfigurator.apply(talonFXConfiguration);
+        elConfigurator.apply(talonFXConfiguration);
         elevatorMotor.setNeutralMode(NeutralModeValue.Brake);
 
 
-    }
-
-    public void goUp(double speed) {
-        elevatorMotor.set(Math.abs(speed));
     }
 
     public void goDown(double speed) {
@@ -92,40 +84,25 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.stopMotor();
     }
 
-    public boolean getmagSwitch() {
+    public boolean getMagSwitch() {
         return magSwitch.get();
-    }
-
-    public double getEncoder() {
-        return elevatorMotor.getRotorPosition().getValue();
-    }
-
-
-    public void setRotations(double rotations) {
-        elevatorMotor.setPosition(rotations);
     }
 
     // why do we have two of these methods????
 
     private void setPosition(ElevatorConstants.ElevatorPositions position) {
-        ElevatorConstants.elevatorPositions = position;
+        elevatorPosition = position;
         MotionMagicExpoVoltage motionMagicVoltage = new MotionMagicExpoVoltage(
                 position.distanceEl, true, 0.0, 0,
                 true, false, false);
-        if (position == ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP) {
+        if (position == ElevatorConstants.ElevatorPositions.AMP) {
             motionMagicVoltage.withFeedForward(10);
         }
         elevatorMotor.setControl(motionMagicVoltage);
     }
 
-    public Command setPositionDown(){
-        //setPosition(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)
-      return run(() -> setPosition(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN));
-    }
-
-    public Command setPositionAmp(){
-        //setPosition(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP)
-        return run(() -> setPosition(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP));
+    public Command setPositionTo(ElevatorConstants.ElevatorPositions position){
+        return runOnce(() -> setPosition(position));
     }
 
     public Command goDownAndStop(double speed){
@@ -135,15 +112,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (getmagSwitch() && ElevatorConstants.elevatorPositions == ElevatorConstants.ElevatorPositions.DOWN) {
-            setRotations(0);
+        if (getMagSwitch() && elevatorPosition == ElevatorConstants.ElevatorPositions.DOWN) {
+            elevatorMotor.setPosition(0.0);
         }
         SmartDashboard.putData("Elevator motor", elevatorMotor);
         SmartDashboard.putData("Elevator magswitch", magSwitch);
-    }
-
-
-    public Command positionDownCmd() {
-        return runOnce(() -> setPosition(ElevatorConstants.ElevatorPositions.DOWN));
     }
 }
