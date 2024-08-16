@@ -2,13 +2,20 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.robot.commands.TurnToPoint;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
+import frc.robot.util.LimelightHelpers;
 import frc.robot.util.RobotDataPublisher;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterStateData;
+
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.DoubleSupplier;
 
 public class RobotCommands {
 
@@ -18,7 +25,6 @@ public class RobotCommands {
     private final ShooterSubsystem shooter;
     private final VisionSubsystem vision;
     private final CommandSwerveDrivetrain commandSwerveDrivetrain;
-
     private final ArmSubsystem arm;
 
     public RobotCommands(IntakeSubsystem intake, PivotSubsystem pivot, ElevatorSubsystem elevator, ShooterSubsystem shooter, VisionSubsystem vision, CommandSwerveDrivetrain commandSwerveDrivetrain, ArmSubsystem arm) {
@@ -34,6 +40,7 @@ public class RobotCommands {
     /**
      * Requires
      * Sets shooter state in preparation for shooting
+     *
      * @return {@code Command} instance
      */
     public Command setShooterState() {
@@ -46,6 +53,34 @@ public class RobotCommands {
 
         return pivot.updatePivotPositionWith(shooterStatePublisher)
                 .alongWith(shooter.updateVelocityWith(shooterStatePublisher));
+    }
+
+    public Command locationAim(DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier) {
+        TurnToPoint poseAimRequest = new TurnToPoint();
+        poseAimRequest.HeadingController.setPID(5, 0, 0);
+        poseAimRequest.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
+
+        AtomicReference<Double> initTag = new AtomicReference<>((double) 0);
+
+        return new FunctionalCommand(
+                () -> {
+                    initTag.set(LimelightHelpers.getFiducialID(VisionSubsystem.VisionConstants.LIMELIGHT_NAME));
+
+                    Translation2d aimTarget = AllianceFlipUtil.apply(
+                            commandSwerveDrivetrain.getLatestPose().getX() > 5 ?
+                                    Constants.FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d() : Constants.FieldConstants.Shuttle.shuttleTargetZone
+                    );
+
+                    poseAimRequest.setPointToFace(aimTarget);
+                },
+                () -> {
+                    double currentTag = LimelightHelpers.getFiducialID(VisionSubsystem.VisionConstants.LIMELIGHT_NAME);
+                    if (currentTag == initTag.get()) {
+                        poseAimRequest.withVelocityX(xVelSupplier.getAsDouble() * 1.5).withVelocityY(yVelSupplier.getAsDouble() * 1.5);
+                        commandSwerveDrivetrain.setControl(poseAimRequest);
+                    }
+                }, (bool) -> {}, () -> true,commandSwerveDrivetrain
+                );
     }
 
     public Command setShuttleState() {

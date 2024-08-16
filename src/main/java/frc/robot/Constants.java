@@ -57,6 +57,9 @@ public class Constants {
 
             public static Translation2d shuttleTargetZone =
                     closeShuttleTargetCorner.interpolate(farShuttleTargetCorner, 0.5);
+
+            public double closeShuttleLimit =  5.5;
+            public double farShuttleLimit = 10.23;
         }
     }
 

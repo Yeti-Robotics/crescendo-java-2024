@@ -34,11 +34,11 @@ public class ShuttleAimCommand extends Command {
     public void initialize() {
         currentTag = LimelightHelpers.getFiducialID(VisionSubsystem.VisionConstants.LIMELIGHT_NAME);
 
-        Translation2d speakerCenter = AllianceFlipUtil.apply(
+        Translation2d shuttleTargetZone = AllianceFlipUtil.apply(
                 Constants.FieldConstants.Shuttle.shuttleTargetZone
         );
 
-        poseAimRequest.setPointToFace(speakerCenter);
+        poseAimRequest.setPointToFace(shuttleTargetZone);
     }
 
     @Override

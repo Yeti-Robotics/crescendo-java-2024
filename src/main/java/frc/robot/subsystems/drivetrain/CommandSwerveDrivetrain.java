@@ -64,6 +64,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(22.25); //PLACEHOLDER
     private static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(22.25); //PLACEHOLDER
 
+    private Pose2d latestPose = new Pose2d();
+
     public static final SwerveDriveKinematics DRIVE_KINEMATICS =
             new SwerveDriveKinematics(
                     // Front left
@@ -248,9 +250,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 ? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
                 : new Pose2d(0.0, 2.45, Rotation2d.fromRotations(0));
 
-        Pose2d robotPose = this.getState().Pose;
-        posePublisher.publish(robotPose);
-        Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
+        latestPose = this.getState().Pose;
+        posePublisher.publish(latestPose);
+        Pose2d relativeSpeaker = latestPose.relativeTo(speakerPose);
         double distance = relativeSpeaker.getTranslation().getNorm();
         SmartDashboard.putNumber("distance", distance);
         SmartDashboard.putNumber("gyro spin rate", getPigeon2().getRate());
@@ -258,6 +260,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public RobotDataPublisher<Pose2d> observablePose() {
         return posePublisher;
+    }
+
+    public Pose2d getLatestPose() {
+        return latestPose;
     }
 }
 
