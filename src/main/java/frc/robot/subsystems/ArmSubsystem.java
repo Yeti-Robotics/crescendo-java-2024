@@ -16,7 +16,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final TalonFX armKraken;
     private final CANcoder armEncoder;
 
-    public class ArmConstants {
+    public static class ArmConstants {
         public static ArmConstants.ArmPositions armPositions = ArmConstants.ArmPositions.STOWED;
 
         public static final int ARM_KRAKEN_ID = 21;

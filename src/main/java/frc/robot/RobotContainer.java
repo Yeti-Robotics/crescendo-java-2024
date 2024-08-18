@@ -60,7 +60,7 @@ public class RobotContainer {
     private Command auto;
 
     private final RobotCommands robotCommands = new RobotCommands(
-            intake, pivot, elevator, shooter, vision, drivetrain, arm
+            intake, pivot, shooter, drivetrain, arm
     );
 
     public RobotContainer() {

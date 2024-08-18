@@ -14,18 +14,14 @@ public class RobotCommands {
 
     private final IntakeSubsystem intake;
     private final PivotSubsystem pivot;
-    private final ElevatorSubsystem elevator;
     private final ShooterSubsystem shooter;
-    private final VisionSubsystem vision;
     private final CommandSwerveDrivetrain commandSwerveDrivetrain;
     private final ArmSubsystem arm;
 
-    public RobotCommands(IntakeSubsystem intake, PivotSubsystem pivot, ElevatorSubsystem elevator, ShooterSubsystem shooter, VisionSubsystem vision, CommandSwerveDrivetrain commandSwerveDrivetrain, ArmSubsystem arm) {
+    public RobotCommands(IntakeSubsystem intake, PivotSubsystem pivot, ShooterSubsystem shooter, CommandSwerveDrivetrain commandSwerveDrivetrain, ArmSubsystem arm) {
         this.intake = intake;
         this.pivot = pivot;
-        this.elevator = elevator;
         this.shooter = shooter;
-        this.vision = vision;
         this.commandSwerveDrivetrain = commandSwerveDrivetrain;
         this.arm = arm;
     }
