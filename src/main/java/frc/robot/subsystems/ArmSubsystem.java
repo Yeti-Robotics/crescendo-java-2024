@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -28,9 +29,6 @@ public class ArmSubsystem extends SubsystemBase {
         public static final double ARM_HANDOFF_POSITION = 0.51;
 
         public static final double GRAVITY_FEEDFORWARD = 0.05;
-
-        public static final double ANGLE_TOLERANCE = 5;
-
         public static final double ARM_P = 0;
         public static final double ARM_I = 0;
         public static final double ARM_D = 0;
@@ -52,7 +50,6 @@ public class ArmSubsystem extends SubsystemBase {
         public static final double GEAR_RATIO = 1.0 / (50.463 / 12.0);
 
         public enum ArmPositions {
-            DOWN(-15),
             STOWED(90);
 
             public final double angle;
@@ -126,16 +123,8 @@ public class ArmSubsystem extends SubsystemBase {
         return armKraken.getRotorPosition().getValue() / Constants.CANCoderConstants.COUNTS_PER_DEG * ArmConstants.GEAR_RATIO;
     }
 
-    public ArmConstants.ArmPositions getArmPositions() {
-        return ArmConstants.armPositions;
-    }
-
     public double getEnc() {
         return armEncoder.getAbsolutePosition().getValue();
-    }
-
-    public boolean isMotionFinished() {
-        return Math.abs(getAngle() - ArmConstants.armPositions.angle) <= ArmConstants.ANGLE_TOLERANCE;
     }
 
     public void moveUp(double speed) {
@@ -143,30 +132,21 @@ public class ArmSubsystem extends SubsystemBase {
         armKraken.set(Math.abs(speed));
     }
 
-    public void moveDown(double speed) {
-        armKraken.set(-Math.abs(speed));
+    public Command moveUpAndStop(double speed) {
+        return startEnd(() -> moveUp(speed), this::stop);
     }
 
-    public void setMotorsCoast() {
-        armKraken.setNeutralMode(NeutralModeValue.Coast);
+    public void moveDown(double speed) {
+        armKraken.set(-Math.abs(speed));
     }
 
     public void setMotorsBrake() {
         armKraken.setNeutralMode(NeutralModeValue.Brake);
     }
 
-    public double getSuppliedCurrent() {
-        return armKraken.getSupplyCurrent().getValue();
-    }
-
     public void stop() {
         armKraken.stopMotor();
     }
-
-    public boolean atAngle() {
-        return (armEncoder.getAbsolutePosition().getValue() < 0.18261);
-    }
-
 
 }
 

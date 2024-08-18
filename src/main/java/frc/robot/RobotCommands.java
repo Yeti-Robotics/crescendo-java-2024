@@ -18,7 +18,6 @@ public class RobotCommands {
     private final ShooterSubsystem shooter;
     private final VisionSubsystem vision;
     private final CommandSwerveDrivetrain commandSwerveDrivetrain;
-
     private final ArmSubsystem arm;
 
     public RobotCommands(IntakeSubsystem intake, PivotSubsystem pivot, ElevatorSubsystem elevator, ShooterSubsystem shooter, VisionSubsystem vision, CommandSwerveDrivetrain commandSwerveDrivetrain, ArmSubsystem arm) {

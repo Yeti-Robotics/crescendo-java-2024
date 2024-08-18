@@ -110,7 +110,7 @@ public class RobotContainer {
         buttonHelper.createButton(7, 0, shooter.setVelocityAndStop(15), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(5, 0,
                 pivot.adjustPivotPositionTo(.42).andThen(
-                        new StartEndCommand(() -> arm.moveUp(.7), arm::stop).until(() ->
+                        arm.moveUpAndStop(0.7).until(() ->
                                 arm.getEnc() <= ArmSubsystem.ArmConstants.ARM_HANDOFF_POSITION).andThen(
                                 shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-.2))
                         ).until(shooter::getBeamBreak),
