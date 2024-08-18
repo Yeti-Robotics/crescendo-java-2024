@@ -43,19 +43,9 @@ public class RobotCommands {
      *
      * @return {@code Command} instance
      */
-    public Command setShooterState() {
-        RobotDataPublisher<ShooterStateData> shooterStatePublisher = commandSwerveDrivetrain.observablePose().map(robotPose -> {
-            final Pose2d speakerPose = AllianceFlipUtil.apply(new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0)));
-            Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
-            double distance = relativeSpeaker.getTranslation().getNorm();
-            return ShooterSubsystem.ShooterConstants.SHOOTER_MAP().get(distance);
-        });
 
-        return pivot.updatePivotPositionWith(shooterStatePublisher)
-                .alongWith(shooter.updateVelocityWith(shooterStatePublisher));
-    }
 
-    public Command locationAim(DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier) {
+    public Command locationBasedAim(DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier) {
         TurnToPoint poseAimRequest = new TurnToPoint();
         poseAimRequest.HeadingController.setPID(5, 0, 0);
         poseAimRequest.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
@@ -67,7 +57,7 @@ public class RobotCommands {
                     initTag.set(LimelightHelpers.getFiducialID(VisionSubsystem.VisionConstants.LIMELIGHT_NAME));
 
                     Translation2d aimTarget = AllianceFlipUtil.apply(
-                            commandSwerveDrivetrain.getLatestPose().getX() > 5 ?
+                            commandSwerveDrivetrain.getLatestPose().getX() < Constants.FieldConstants.Shuttle.shuttleLimit ?
                                     Constants.FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d() : Constants.FieldConstants.Shuttle.shuttleTargetZone
                     );
 
@@ -83,10 +73,40 @@ public class RobotCommands {
                 );
     }
 
+    public Command locationBasedShooter() {
+        RobotDataPublisher<ShooterStateData> shooterPublisher = commandSwerveDrivetrain.observablePose().map(robotPose -> {
+            final Pose2d speakerPose = AllianceFlipUtil.apply(new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0)));
+            final Pose2d shuttleTarget = AllianceFlipUtil.apply(new Pose2d(2.5, 7.0, Rotation2d.fromDegrees(0)));
+            Pose2d relativeTarget = AllianceFlipUtil.apply(
+                    commandSwerveDrivetrain.getLatestPose().getX() < Constants.FieldConstants.Shuttle.shuttleLimit ?
+                            robotPose.relativeTo(Constants.FieldConstants.Speaker.speakerPose) : robotPose.relativeTo(Constants.FieldConstants.Shuttle.shuttleTarget)
+            );
+            double targetDistance = relativeTarget.getTranslation().getNorm();
+            if (relativeTarget == AllianceFlipUtil.apply(robotPose.relativeTo(Constants.FieldConstants.Speaker.speakerPose))){
+                return ShooterSubsystem.ShooterConstants.SHOOTER_MAP().get(targetDistance);
+            }
+            else {
+                return ShooterSubsystem.ShooterConstants.SHUTTLE_MAP().get(targetDistance);
+            }
+        });
+
+        return pivot.updatePivotPositionWith(shooterPublisher).alongWith(shooter.updateVelocityWith(shooterPublisher));
+    }
+
+    public Command setShooterState() {
+        RobotDataPublisher<ShooterStateData> shooterStatePublisher = commandSwerveDrivetrain.observablePose().map(robotPose -> {
+            Pose2d relativeSpeaker = robotPose.relativeTo(Constants.FieldConstants.Speaker.speakerPose);
+            double distance = relativeSpeaker.getTranslation().getNorm();
+            return ShooterSubsystem.ShooterConstants.SHOOTER_MAP().get(distance);
+        });
+
+        return pivot.updatePivotPositionWith(shooterStatePublisher)
+                .alongWith(shooter.updateVelocityWith(shooterStatePublisher));
+    }
+
     public Command setShuttleState() {
         RobotDataPublisher<ShooterStateData> shuttleStatePublisher = commandSwerveDrivetrain.observablePose().map(robotPose -> {
-            final Pose2d shuttleTarget = AllianceFlipUtil.apply(new Pose2d(2.5, 7.0, Rotation2d.fromDegrees(0)));
-            Pose2d relativeShuttleTarget = robotPose.relativeTo(shuttleTarget);
+            Pose2d relativeShuttleTarget = robotPose.relativeTo(Constants.FieldConstants.Shuttle.shuttleTarget);
             double distance = relativeShuttleTarget.getTranslation().getNorm();
             return ShooterSubsystem.ShooterConstants.SHUTTLE_MAP().get(distance);
         });

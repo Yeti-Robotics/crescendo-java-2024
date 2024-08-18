@@ -145,8 +145,8 @@ public class RobotContainer {
                                         .withRotationalRate(-joystick.getRightX() * CommandSwerveDrivetrain.MaFxAngularRate)
                 ));
 
-        // Lock on to speaker
-        joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.setShooterState())));
+        // Lock on to target based on field location
+        joystick.leftTrigger().whileTrue(robotCommands.locationBasedAim(() -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.locationBasedShooter())));
 
         // Swerve lock
         joystick.b().whileTrue(drivetrain
