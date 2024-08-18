@@ -15,14 +15,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.ShuttleAimCommand;
@@ -128,8 +128,9 @@ public class RobotContainer {
         buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevator.goDown(0.2), elevator::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevator.setPosition(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)).andThen(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF))), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(6, 0, shooter.spinFeederAndStop(-.1).alongWith(intake.rollIn(0.5)), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(9, 0, new InstantCommand(() -> elevator.setPosition2(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP)).andThen(pivot.moveDown(-0.25).unless(
-                        () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
-        intake.intakeOccupiedTrigger.onTrue(vision.blinkLimelight().alongWith(robotCommands.handoff().withTimeout(2)));
+                () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
+        intake.intakeOccupiedTrigger.onTrue(vision.blinkLimelight().alongWith(successfulIntakeRumble()));
+        intake.intakeOccupiedTrigger.and(joystick.rightBumper().negate()).onTrue(robotCommands.handoff().withTimeout(2));
         buttonHelper.createButton(11, 0, shooter.shooterTrap(), MultiButton.RunCondition.WHILE_HELD);
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -177,6 +178,15 @@ public class RobotContainer {
         // Spin feeder
         joystick.x().whileTrue(shooter.spinFeederAndStop(.3));
     }
+
+    //Add haptics to beam break
+    public Command successfulIntakeRumble() {
+        return Commands.startEnd( //Starts the command and waits for ending condition
+                        () -> joystick.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0), //Set both rumble motors to max
+                        () -> joystick.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.0)) // Turn off rumble
+                .raceWith(Commands.waitSeconds(0.5)); //Condition to end method
+    }
+
 
     public void updateOdometryVision() {
         var visionResult = vision.getTargetingResults();
