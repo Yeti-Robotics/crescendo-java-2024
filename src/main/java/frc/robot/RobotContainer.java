@@ -125,10 +125,10 @@ public class RobotContainer {
 
         buttonHelper.createButton(10, 0, robotCommands.handoff().withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(2, 0, intake.rollOut(-.65), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(4, 0, new StartEndCommand(() -> elevator.goDown(0.2), elevator::stop).withTimeout(0.3).andThen(new InstantCommand(() -> elevator.setPosition(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)).andThen(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF))), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(4, 0, elevator.goDownAndStop(0.2).withTimeout(0.3).andThen(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)).andThen(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(6, 0, shooter.spinFeederAndStop(-.1).alongWith(intake.rollIn(0.5)), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(9, 0, new InstantCommand(() -> elevator.setPosition2(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP)).andThen(pivot.moveDown(-0.25).unless(
-                () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getmagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(9, 0, elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP).andThen(pivot.moveDown(-0.25).unless(
+                        () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getMagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
         intake.intakeOccupiedTrigger.onTrue(vision.blinkLimelight().alongWith(successfulIntakeRumble()));
         intake.intakeOccupiedTrigger.and(joystick.rightBumper().negate()).onTrue(robotCommands.handoff().withTimeout(2));
         buttonHelper.createButton(11, 0, shooter.shooterTrap(), MultiButton.RunCondition.WHILE_HELD);
@@ -171,7 +171,7 @@ public class RobotContainer {
         // Handoff
         joystick.povUp().onTrue(robotCommands.handoff().withTimeout(2));
         // Move elevator down
-        joystick.povDown().onTrue(elevator.positionDownCmd());
+        joystick.povDown().onTrue(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN));
         // (These are also unassigned on the gamepad map?)
         joystick.povLeft().whileTrue(pivot.moveUpWithBrake(0.05, -0.01));
         joystick.povRight().whileTrue(pivot.moveDownWithBrake(-0.05, 0.01));
