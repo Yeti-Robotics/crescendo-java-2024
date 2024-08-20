@@ -18,6 +18,8 @@ import frc.robot.util.RobotDataPublisher;
 import frc.robot.util.RobotDataPublisher.RobotDataSubscription;
 import frc.robot.util.ShooterStateData;
 
+import java.util.function.Supplier;
+
 public class PivotSubsystem extends SubsystemBase {
 
     public final TalonFX pivotMotor;
@@ -177,10 +179,8 @@ public class PivotSubsystem extends SubsystemBase {
         return runOnce(() -> setPivotPosition(PivotConstants.PivotPosition.CUSTOM(angle)));
     }
 
-    public Command updatePivotPositionWith(RobotDataPublisher<ShooterStateData> shooterDataPublisher) {
-        RobotDataSubscription<ShooterStateData> shooterStateSubscription = shooterDataPublisher.subscribeWith(data -> setPivotPosition(PivotConstants.PivotPosition.CUSTOM(data.angle)));
-
-        return startEnd(shooterStateSubscription::start, shooterStateSubscription::cancel);
+    public Command updatePivotPositionWith(Supplier<ShooterStateData> shooterStateDataSupplier) {
+        return adjustPivotPositionTo(shooterStateDataSupplier.get().angle);
     }
 
     public double getEncoderAngle() {

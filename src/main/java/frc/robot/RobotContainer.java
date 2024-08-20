@@ -146,7 +146,7 @@ public class RobotContainer {
                 ));
 
         // Lock on to target based on field location
-        joystick.leftTrigger().whileTrue(robotCommands.locationBasedAim(() -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.locationBasedShooter())));
+        joystick.leftTrigger().whileTrue(robotCommands.aimAndShoot(() -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.locationBasedShooter())));
 
         // Swerve lock
         joystick.b().whileTrue(drivetrain

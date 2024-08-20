@@ -16,6 +16,7 @@ import frc.robot.util.ShooterStateData;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public class RobotCommands {
 
@@ -37,14 +38,85 @@ public class RobotCommands {
         this.arm = arm;
     }
 
+
+    private Translation2d getShooterTarget(Pose2d robotPose) {
+        Pose2d targetPose = AllianceFlipUtil.apply(
+                commandSwerveDrivetrain.getLatestPose().getX() < Constants.FieldConstants.Shuttle.shuttleLimit ?
+                        Constants.FieldConstants.Speaker.speakerPose : Constants.FieldConstants.Shuttle.shuttleTarget
+        );
+
+        return robotPose.relativeTo(targetPose).getTranslation();
+    }
+
+    private Translation2d getDriveTarget(Pose2d robotPose) {
+        return AllianceFlipUtil.apply(
+                robotPose.getX() < Constants.FieldConstants.Shuttle.shuttleLimit ?
+                        Constants.FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d() : Constants.FieldConstants.Shuttle.shuttleTargetZone
+        );
+    }
+
     /**
      * Requires
      * Sets shooter state in preparation for shooting
      *
      * @return {@code Command} instance
      */
+    public Command aimAndShoot(DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier) {
+        TurnToPoint poseAimRequest = new TurnToPoint();
+        poseAimRequest.HeadingController.setPID(5, 0, 0);
+        poseAimRequest.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
+
+        Supplier<ShooterStateData> shooterStateDataSupplier = () -> {
+            Pose2d robotPose = commandSwerveDrivetrain.getLatestPose();
+            double shooterStateDistance = getShooterTarget(robotPose).getNorm();
+
+            return robotPose.getX() < Constants.FieldConstants.Shuttle.shuttleLimit ?
+                    ShooterSubsystem.ShooterConstants.SHOOTER_MAP().get(shooterStateDistance) : ShooterSubsystem.ShooterConstants.SHUTTLE_MAP().get(shooterStateDistance);
+        };
+
+        return commandSwerveDrivetrain.applyRequest(() -> {
+                    poseAimRequest.setPointToFace(getDriveTarget(commandSwerveDrivetrain.getLatestPose()));
+                    poseAimRequest.withVelocityX(xVelSupplier.getAsDouble() * 1.5).withVelocityY(yVelSupplier.getAsDouble() * 1.5);
+                    return poseAimRequest;
+                }).repeatedly()
+                .alongWith(pivot.updatePivotPositionWith(shooterStateDataSupplier).repeatedly())
+                .alongWith(shooter.updateVelocityWith(shooterStateDataSupplier).repeatedly());
+    }
 
 
+    public Command aim(DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier) {
+        TurnToPoint poseAimRequest = new TurnToPoint();
+        poseAimRequest.HeadingController.setPID(5, 0, 0);
+        poseAimRequest.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
+
+        return commandSwerveDrivetrain.runEnd(() -> {
+            poseAimRequest.withVelocityX(xVelSupplier.getAsDouble() * 1.5).withVelocityY(yVelSupplier.getAsDouble() * 1.5);
+            poseAimRequest.setPointToFace(getDriveTarget(commandSwerveDrivetrain.getLatestPose()));
+            commandSwerveDrivetrain.setControl(poseAimRequest);
+        }, () -> {
+        });
+    }
+
+    public Command shoot() {
+        RobotDataPublisher<ShooterStateData> shooterRobotPublisher = commandSwerveDrivetrain.observablePose()
+                .map(pose2d -> {
+                    boolean isSpeaker = commandSwerveDrivetrain.getLatestPose().getX() < Constants.FieldConstants.Shuttle.shuttleLimit;
+                    Pose2d targetPose = AllianceFlipUtil.apply(
+                            isSpeaker ?
+                                    Constants.FieldConstants.Speaker.speakerPose : Constants.FieldConstants.Shuttle.shuttleTarget
+                    );
+                    Pose2d relativePose = pose2d.relativeTo(targetPose);
+
+                    ShooterStateData data = isSpeaker ? ShooterSubsystem.ShooterConstants.SHOOTER_MAP().get(relativePose.getTranslation().getNorm()) :
+                            ShooterSubsystem.ShooterConstants.SHUTTLE_MAP().get(relativePose.getTranslation().getNorm());
+
+                    return data;
+                });
+
+        return pivot.updatePivotPositionWith(shooterRobotPublisher).alongWith(shooter.updateVelocityWith(shooterRobotPublisher));
+    }
+
+    @Deprecated
     public Command locationBasedAim(DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier) {
         TurnToPoint poseAimRequest = new TurnToPoint();
         poseAimRequest.HeadingController.setPID(5, 0, 0);
@@ -69,8 +141,9 @@ public class RobotCommands {
                         poseAimRequest.withVelocityX(xVelSupplier.getAsDouble() * 1.5).withVelocityY(yVelSupplier.getAsDouble() * 1.5);
                         commandSwerveDrivetrain.setControl(poseAimRequest);
                     }
-                }, (bool) -> {}, () -> true,commandSwerveDrivetrain
-                );
+                }, (bool) -> {
+        }, () -> true, commandSwerveDrivetrain
+        );
     }
 
     public Command locationBasedShooter() {
@@ -82,10 +155,9 @@ public class RobotCommands {
                             robotPose.relativeTo(Constants.FieldConstants.Speaker.speakerPose) : robotPose.relativeTo(Constants.FieldConstants.Shuttle.shuttleTarget)
             );
             double targetDistance = relativeTarget.getTranslation().getNorm();
-            if (relativeTarget == AllianceFlipUtil.apply(robotPose.relativeTo(Constants.FieldConstants.Speaker.speakerPose))){
+            if (relativeTarget == AllianceFlipUtil.apply(robotPose.relativeTo(Constants.FieldConstants.Speaker.speakerPose))) {
                 return ShooterSubsystem.ShooterConstants.SHOOTER_MAP().get(targetDistance);
-            }
-            else {
+            } else {
                 return ShooterSubsystem.ShooterConstants.SHUTTLE_MAP().get(targetDistance);
             }
         });
