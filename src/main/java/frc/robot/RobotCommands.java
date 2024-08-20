@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -39,13 +40,18 @@ public class RobotCommands {
     }
 
 
-    private Translation2d getShooterTarget(Pose2d robotPose) {
+    private ShooterStateData getShooterData(Pose2d robotPose) {
+        boolean isSpeaker = commandSwerveDrivetrain.getLatestPose().getX() < Constants.FieldConstants.Shuttle.shuttleLimit;
+
         Pose2d targetPose = AllianceFlipUtil.apply(
-                commandSwerveDrivetrain.getLatestPose().getX() < Constants.FieldConstants.Shuttle.shuttleLimit ?
-                        Constants.FieldConstants.Speaker.speakerPose : Constants.FieldConstants.Shuttle.shuttleTarget
+                isSpeaker ? Constants.FieldConstants.Speaker.speakerPose : Constants.FieldConstants.Shuttle.shuttleTarget
         );
 
-        return robotPose.relativeTo(targetPose).getTranslation();
+        double relativeDistance = robotPose.relativeTo(targetPose).getTranslation().getNorm();
+
+        InterpolatingTreeMap<Double, ShooterStateData> map = isSpeaker ? ShooterSubsystem.ShooterConstants.SHOOTER_MAP() : ShooterSubsystem.ShooterConstants.SHUTTLE_MAP();
+
+        return map.get(relativeDistance);
     }
 
     private Translation2d getDriveTarget(Pose2d robotPose) {
@@ -66,13 +72,7 @@ public class RobotCommands {
         poseAimRequest.HeadingController.setPID(5, 0, 0);
         poseAimRequest.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
 
-        Supplier<ShooterStateData> shooterStateDataSupplier = () -> {
-            Pose2d robotPose = commandSwerveDrivetrain.getLatestPose();
-            double shooterStateDistance = getShooterTarget(robotPose).getNorm();
-
-            return robotPose.getX() < Constants.FieldConstants.Shuttle.shuttleLimit ?
-                    ShooterSubsystem.ShooterConstants.SHOOTER_MAP().get(shooterStateDistance) : ShooterSubsystem.ShooterConstants.SHUTTLE_MAP().get(shooterStateDistance);
-        };
+        Supplier<ShooterStateData> shooterStateDataSupplier = () -> getShooterData(commandSwerveDrivetrain.getLatestPose());
 
         return commandSwerveDrivetrain.applyRequest(() -> {
                     poseAimRequest.setPointToFace(getDriveTarget(commandSwerveDrivetrain.getLatestPose()));

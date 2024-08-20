@@ -167,7 +167,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public Command updateVelocityWith(Supplier<ShooterStateData> shooterStateDataSupplier) {
-       return runEnd(() -> setVelocity(shooterStateDataSupplier.get().rps), this::stopShooter);
+       return startEnd(() -> setVelocity(shooterStateDataSupplier.get().rps), this::stopShooter);
     }
 
     public Command shooterBumpFire() {
