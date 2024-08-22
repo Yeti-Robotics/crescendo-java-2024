@@ -129,16 +129,16 @@ public class ArmSubsystem extends SubsystemBase {
         armKraken.set(Math.abs(speed));
     }
 
+    private void moveDown(double speed) {
+        armKraken.set(-Math.abs(speed));
+    }
+
     public Command moveUpAndStop(double speed) {
         return startEnd(() -> moveUp(speed), this::stop);
     }
 
     public Command moveDownAndStop(double speed){
         return startEnd(() -> moveDown(speed), this::stop);
-    }
-
-    private void moveDown(double speed) {
-        armKraken.set(-Math.abs(speed));
     }
 
     private void stop() {
