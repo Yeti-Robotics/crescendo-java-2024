@@ -145,10 +145,6 @@ public class ArmSubsystem extends SubsystemBase {
         armKraken.stopMotor();
     }
 
-    public Command moveArmUp(double speed) {
-        return startEnd(() -> moveUp(speed), this::stop);
-    }
-
 }
 
 
