@@ -104,8 +104,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void setPosition(ArmConstants.ArmPositions position) {
         ArmConstants.armPositions = position;
-        setMotorsBrake();
-
         double radians = Math.toRadians(getAngle());
         double cosineScalar = Math.cos(radians);
 
@@ -119,7 +117,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     }
 
-    public double getAngle() {
+    private double getAngle() {
         return armKraken.getRotorPosition().getValue() / Constants.CANCoderConstants.COUNTS_PER_DEG * ArmConstants.GEAR_RATIO;
     }
 
@@ -127,8 +125,7 @@ public class ArmSubsystem extends SubsystemBase {
         return armEncoder.getAbsolutePosition().getValue();
     }
 
-    public void moveUp(double speed) {
-        setMotorsBrake();
+    private void moveUp(double speed) {
         armKraken.set(Math.abs(speed));
     }
 
@@ -136,16 +133,20 @@ public class ArmSubsystem extends SubsystemBase {
         return startEnd(() -> moveUp(speed), this::stop);
     }
 
-    public void moveDown(double speed) {
+    public Command moveDownAndStop(double speed){
+        return startEnd(() -> moveDown(speed), this::stop);
+    }
+
+    private void moveDown(double speed) {
         armKraken.set(-Math.abs(speed));
     }
 
-    public void setMotorsBrake() {
-        armKraken.setNeutralMode(NeutralModeValue.Brake);
+    private void stop() {
+        armKraken.stopMotor();
     }
 
-    public void stop() {
-        armKraken.stopMotor();
+    public Command moveArmUp(double speed) {
+        return startEnd(() -> moveUp(speed), this::stop);
     }
 
 }
