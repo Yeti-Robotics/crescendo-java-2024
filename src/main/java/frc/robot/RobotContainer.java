@@ -157,8 +157,7 @@ public class RobotContainer {
         joystick.rightBumper().whileTrue(intake.rollIn(.7));
 
         // Arm down
-        joystick.leftBumper().onTrue(arm.moveDownAndStop(.5).until(()
-                -> arm.getEnc() <= .02 && arm.getEnc() >= 0).alongWith(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
+        joystick.leftBumper().onTrue(arm.stowArm(0.5).alongWith(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
 
         // (This is unassigned on the gamepad map??)
         joystick.a().onTrue(

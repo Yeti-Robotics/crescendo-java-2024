@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 
 import com.ctre.phoenix6.configs.*;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
@@ -17,7 +16,6 @@ public class ArmSubsystem extends SubsystemBase {
     private final CANcoder armEncoder;
 
     public static class ArmConstants {
-        public static ArmConstants.ArmPositions armPositions = ArmConstants.ArmPositions.STOWED;
 
         public static final int ARM_KRAKEN_ID = 21;
         public static final int ARM_CANCODER_ID = 5;
@@ -28,7 +26,6 @@ public class ArmSubsystem extends SubsystemBase {
         public static final double ARM_VELOCITY_STATUS_FRAME = 0.01;
         public static final double ARM_HANDOFF_POSITION = 0.51;
 
-        public static final double GRAVITY_FEEDFORWARD = 0.05;
         public static final double ARM_P = 0;
         public static final double ARM_I = 0;
         public static final double ARM_D = 0;
@@ -101,22 +98,6 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Arm encoder: ", armEncoder.getAbsolutePosition().getValue());
     }
 
-
-    public void setPosition(ArmConstants.ArmPositions position) {
-        ArmConstants.armPositions = position;
-        double radians = Math.toRadians(getAngle());
-        double cosineScalar = Math.cos(radians);
-
-        MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(
-                position.sensorUnits, true, ArmConstants.GRAVITY_FEEDFORWARD * cosineScalar, 0,
-                true, false, false);
-
-        armKraken.setControl(motionMagicVoltage);
-
-        SmartDashboard.putNumber("arm set point: ", position.sensorUnits);
-
-    }
-
     private double getAngle() {
         return armKraken.getRotorPosition().getValue() / Constants.CANCoderConstants.COUNTS_PER_DEG * ArmConstants.GEAR_RATIO;
     }
@@ -139,6 +120,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     public Command moveDownAndStop(double speed){
         return startEnd(() -> moveDown(speed), this::stop);
+    }
+
+    public Command stowArm(double speed){
+        return startEnd(() -> moveDownAndStop(speed).until(()
+                -> getEnc() <= .02 && getEnc() >= 0), this::stop);
     }
 
     private void stop() {
