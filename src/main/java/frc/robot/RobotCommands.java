@@ -9,6 +9,7 @@ import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.util.RobotDataPublisher;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterStateData;
+import frc.robot.util.controllerUtils.MultiButton;
 
 public class RobotCommands {
 
@@ -65,5 +66,14 @@ public class RobotCommands {
                         shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-0.15))
                 ).until(shooter::getBeamBreak)
         );
+    }
+
+    public Command ampReady() {
+        return elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP).andThen(pivot.moveDown(-0.25).unless(
+                () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getMagSwitch())));
+    }
+
+    public Command ampStow() {
+        return pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF).andThen(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN));
     }
 }
