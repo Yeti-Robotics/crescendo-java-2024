@@ -35,6 +35,7 @@ public class RobotCommands {
     /**
      * Requires
      * Sets shooter state in preparation for shooting
+     *
      * @return {@code Command} instance
      */
     public Command setShooterState() {
@@ -68,12 +69,12 @@ public class RobotCommands {
         );
     }
 
-    public Command ampReady() {
-        return elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP).andThen(pivot.moveDown(-0.25).unless(
-                () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getMagSwitch())));
-    }
-
-    public Command ampStow() {
-        return pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF).andThen(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN));
+    public Command setAmp() {
+        if (elevator.getMagSwitch()) {
+            return elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP).andThen(pivot.moveDown(-0.25).unless(
+                    () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getMagSwitch())));
+        } else {
+            return pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF).andThen(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN));
+        }
     }
 }

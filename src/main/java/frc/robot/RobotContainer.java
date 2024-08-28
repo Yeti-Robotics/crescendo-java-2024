@@ -166,7 +166,7 @@ public class RobotContainer {
                 () -> arm.getEnc() <= .02 && arm.getEnc() >= 0).alongWith(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
 
         // Amp Toggle
-        joystick.a().onTrue(robotCommands.ampReady());
+        joystick.a().onTrue(robotCommands.setAmp());
 
         // Shoot
         joystick.rightTrigger().whileTrue(shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1)));
@@ -178,7 +178,6 @@ public class RobotContainer {
         joystick.povLeft().whileTrue(pivot.moveUpWithBrake(0.05, -0.01));
         joystick.povRight().whileTrue(pivot.moveDownWithBrake(-0.05, 0.01));
         // Spin feeder
-        joystick.x().whileTrue(robotCommands.ampStow());
     }
 
     //Add haptics to beam break
