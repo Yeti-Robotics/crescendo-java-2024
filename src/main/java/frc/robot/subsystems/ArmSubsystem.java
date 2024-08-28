@@ -122,7 +122,7 @@ public class ArmSubsystem extends SubsystemBase {
         return startEnd(() -> moveDown(speed), this::stop);
     }
 
-    public Command stowArm(double speed){
+    public Command deployArm(double speed){
         return startEnd(() -> moveDownAndStop(speed).until(()
                 -> getEnc() <= .02 && getEnc() >= 0), this::stop);
     }
