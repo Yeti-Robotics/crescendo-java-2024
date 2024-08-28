@@ -137,8 +137,7 @@ public class RobotContainer {
         joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.setShooterState())));
 
         // Swerve lock
-        joystick.b().whileTrue(drivetrain
-                .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+        joystick.b().whileTrue(robotCommands.bumpFire());
 
         // Reset the field-centric heading
         joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
