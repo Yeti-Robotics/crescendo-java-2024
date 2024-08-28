@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
@@ -65,5 +66,20 @@ public class RobotCommands {
                         shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-0.15))
                 ).until(shooter::getBeamBreak)
         );
+    }
+
+    public Command bumpFire(){
+        return pivot.adjustPivotPositionTo(.42).andThen(
+                new StartEndCommand(() -> arm.moveUp(.7), arm::stop).until(() ->
+                        arm.getEnc() <= ArmSubsystem.ArmConstants.ARM_HANDOFF_POSITION).andThen(
+                        shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-.2))
+                ).until(shooter::getBeamBreak),
+                pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)
+        ).andThen(
+                shooter.setVelocityContinuous(100)).andThen(
+                intake.rollOut(-.1).withTimeout(0.2)).andThen(
+                Commands.waitSeconds(.45)).andThen(
+                shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1).withTimeout(1)).andThen(
+                        this.handoff().withTimeout(2)));
     }
 }

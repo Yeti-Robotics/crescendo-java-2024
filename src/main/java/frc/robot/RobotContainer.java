@@ -109,20 +109,7 @@ public class RobotContainer {
         buttonHelper.createButton(1, 0, robotCommands.setShuttleState().alongWith(new ShuttleAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX())), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(8, 0, shooter.setVelocityAndStop(-70), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(7, 0, shooter.setVelocityAndStop(15), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(5, 0,
-                pivot.adjustPivotPositionTo(.42).andThen(
-                        new StartEndCommand(() -> arm.moveUp(.7), arm::stop).until(() ->
-                                arm.getEnc() <= ArmSubsystem.ArmConstants.ARM_HANDOFF_POSITION).andThen(
-                                shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-.2))
-                        ).until(shooter::getBeamBreak),
-                        pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)
-                ).andThen(
-                        shooter.setVelocityContinuous(100)).andThen(
-                        intake.rollOut(-.1).withTimeout(0.2)).andThen(
-                        Commands.waitSeconds(.45)).andThen(
-                        shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1).withTimeout(1)).andThen(
-                                robotCommands.handoff().withTimeout(2))
-                ), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(5, 0, robotCommands.bumpFire(), MultiButton.RunCondition.WHEN_PRESSED);
 
         buttonHelper.createButton(10, 0, robotCommands.handoff().withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(2, 0, intake.rollOut(-.65), MultiButton.RunCondition.WHILE_HELD);
