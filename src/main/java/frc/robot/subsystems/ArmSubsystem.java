@@ -123,8 +123,8 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public Command deployArm(double speed){
-        return startEnd(() -> moveDownAndStop(speed).until(()
-                -> getEnc() <= .02 && getEnc() >= 0), this::stop);
+        return moveDownAndStop(speed).until(()
+                -> getEnc() <= .02 && getEnc() >= 0);
     }
 
     private void stop() {
