@@ -17,8 +17,6 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
-import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -60,7 +58,7 @@ public class RobotContainer {
     private Command auto;
 
     private final RobotCommands robotCommands = new RobotCommands(
-            intake, pivot, elevator, shooter, vision, drivetrain, arm
+            intake, pivot, shooter, drivetrain, arm
     );
 
     public RobotContainer() {
@@ -110,7 +108,7 @@ public class RobotContainer {
         buttonHelper.createButton(7, 0, shooter.setVelocityAndStop(15), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(5, 0,
                 pivot.adjustPivotPositionTo(.42).andThen(
-                        new StartEndCommand(() -> arm.moveUp(.7), arm::stop).until(() ->
+                        arm.moveUpAndStop(0.7).until(() ->
                                 arm.getEnc() <= ArmSubsystem.ArmConstants.ARM_HANDOFF_POSITION).andThen(
                                 shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-.2))
                         ).until(shooter::getBeamBreak),
@@ -159,8 +157,7 @@ public class RobotContainer {
         joystick.rightBumper().whileTrue(intake.rollIn(.7));
 
         // Arm down
-        joystick.leftBumper().onTrue(new StartEndCommand(() -> arm.moveDown(.5), arm::stop, arm).until(
-                () -> arm.getEnc() <= .02 && arm.getEnc() >= 0).alongWith(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
+        joystick.leftBumper().onTrue(arm.deployArm(0.5).alongWith(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
 
         // (This is unassigned on the gamepad map??)
         joystick.a().onTrue(
