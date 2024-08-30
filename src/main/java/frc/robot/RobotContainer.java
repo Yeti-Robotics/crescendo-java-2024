@@ -149,7 +149,7 @@ public class RobotContainer {
         joystick.y().whileTrue(new ShuttleAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.setShuttleState())));
 
         // Swerve lock
-        joystick.b().onTrue(robotCommands.stowAmp());
+        joystick.x().onTrue(robotCommands.stowAmp());
 
         // Reset the field-centric heading
         joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
