@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
@@ -18,13 +19,15 @@ public class RobotCommands {
     private final ShooterSubsystem shooter;
     private final CommandSwerveDrivetrain commandSwerveDrivetrain;
     private final ArmSubsystem arm;
+    private final ElevatorSubsystem elevator;
 
-    public RobotCommands(IntakeSubsystem intake, PivotSubsystem pivot, ShooterSubsystem shooter, CommandSwerveDrivetrain commandSwerveDrivetrain, ArmSubsystem arm) {
+    public RobotCommands(IntakeSubsystem intake, PivotSubsystem pivot, ShooterSubsystem shooter, CommandSwerveDrivetrain commandSwerveDrivetrain, ArmSubsystem arm, ElevatorSubsystem elevator1) {
         this.intake = intake;
         this.pivot = pivot;
         this.shooter = shooter;
         this.commandSwerveDrivetrain = commandSwerveDrivetrain;
         this.arm = arm;
+        this.elevator = elevator1;
     }
 
     /**
@@ -65,11 +68,12 @@ public class RobotCommands {
     }
 
     public Command setAmp() {
-        if (elevator.getMagSwitch()) {
-            return elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP).andThen(pivot.moveDown(-0.25).unless(
-                    () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getMagSwitch())));
-        } else {
-            return pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF).andThen(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN));
-        }
+        return elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP).andThen(pivot.moveDown(-0.25).unless(
+                        () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getMagSwitch())));
     }
+
+    public Command stowAmp() {
+        return pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF).andThen(elevator.goDownAndStop(0.2).withTimeout(0.3).andThen(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)));
+    }
+
 }
