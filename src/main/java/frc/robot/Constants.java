@@ -7,12 +7,15 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterStateData;
 
 import java.io.IOException;
@@ -46,6 +49,7 @@ public class Constants {
                     throw new RuntimeException(e);
                 }
             }
+            static final Pose2d speakerPose = AllianceFlipUtil.apply(new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0)));
         }
 
         public static final class Shuttle {
@@ -57,6 +61,9 @@ public class Constants {
 
             public static Translation2d shuttleTargetZone =
                     closeShuttleTargetCorner.interpolate(farShuttleTargetCorner, 0.5);
+
+            public static double shuttleLimit =  5.5;
+            static final Pose2d shuttleTarget = AllianceFlipUtil.apply(new Pose2d(2.5, 7.0, Rotation2d.fromDegrees(0)));
         }
     }
 

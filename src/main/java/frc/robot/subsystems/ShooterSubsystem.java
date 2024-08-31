@@ -21,6 +21,8 @@ import frc.robot.util.RobotDataPublisher;
 import frc.robot.util.RobotDataPublisher.RobotDataSubscription;
 import frc.robot.util.ShooterStateData;
 
+import java.util.function.Supplier;
+
 public class ShooterSubsystem extends SubsystemBase {
 
     private final TalonFX leftKraken;
@@ -164,13 +166,8 @@ public class ShooterSubsystem extends SubsystemBase {
         return (leftVel.getValue() + rightVel.getValue()) / 2;
     }
 
-    public Command updateVelocityWith(RobotDataPublisher<ShooterStateData> shooterStateDataPublisher) {
-        RobotDataSubscription<ShooterStateData> shooterStateDataSubscription = shooterStateDataPublisher.subscribeWith(data -> setVelocity(data.rps));
-
-        return startEnd(shooterStateDataSubscription::start, () -> {
-            shooterStateDataSubscription.cancel();
-            stopShooter();
-        });
+    public Command updateVelocityWith(Supplier<ShooterStateData> shooterStateDataSupplier) {
+       return startEnd(() -> setVelocity(shooterStateDataSupplier.get().rps), this::stopShooter);
     }
 
     public Command shooterBumpFire() {
