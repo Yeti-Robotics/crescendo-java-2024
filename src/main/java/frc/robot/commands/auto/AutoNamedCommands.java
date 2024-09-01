@@ -2,7 +2,6 @@ package frc.robot.commands.auto;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotCommands;
 import frc.robot.subsystems.ArmSubsystem;
@@ -29,8 +28,8 @@ public class AutoNamedCommands {
     public void registerCommands() {
         NamedCommands.registerCommand("rollIn", intakeSubsystem.rollIn(0.9));
         NamedCommands.registerCommand("rollOut", intakeSubsystem.rollOut(-0.7));
-        NamedCommands.registerCommand("armUp", new StartEndCommand(() -> armSubsystem.moveUp(.5), armSubsystem::stop).until(() -> armSubsystem.getEnc() >= 0.75).andThen(armSubsystem::stop));
-        NamedCommands.registerCommand("armDown", new StartEndCommand(() -> armSubsystem.moveDown(.5), armSubsystem::stop).until(
+        NamedCommands.registerCommand("armUp", armSubsystem.moveUpAndStop(.5).until(() -> armSubsystem.getEnc() >= 0.75));
+        NamedCommands.registerCommand("armDown", armSubsystem.moveDownAndStop(.5).until(
                 () -> armSubsystem.getEnc() <= .5 && armSubsystem.getEnc() >= .44).alongWith(pivotSubsystem.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
         NamedCommands.registerCommand("shootBump", new SequentialCommandGroup(
                 pivotSubsystem.adjustPivotPositionTo(0.53),
