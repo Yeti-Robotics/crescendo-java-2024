@@ -64,12 +64,11 @@ public class RobotCommands {
     }
 
     public Command bumpFire(){
-        return pivot.adjustPivotPositionTo(.42).andThen(
+        return pivot.adjustPivotPositionTo(.53).andThen(
                 new StartEndCommand(() -> arm.moveUp(.7), arm::stop).until(() ->
                         arm.getEnc() <= ArmSubsystem.ArmConstants.ARM_HANDOFF_POSITION).andThen(
                         shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-.2))
-                ).until(shooter::getBeamBreak),
-                pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)
+                ).until(shooter::getBeamBreak)
         ).andThen(
                 shooter.setVelocityContinuous(100)).andThen(
                 intake.rollOut(-.1).withTimeout(0.2)).andThen(
