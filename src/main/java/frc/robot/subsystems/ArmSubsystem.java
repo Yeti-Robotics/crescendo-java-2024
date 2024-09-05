@@ -104,7 +104,7 @@ public class ArmSubsystem extends SubsystemBase {
         return armEncoder.getAbsolutePosition().getValue();
     }
 
-    private void moveUp(double speed) {
+    public void moveUp(double speed) {
         armKraken.set(Math.abs(speed));
     }
 
@@ -125,7 +125,7 @@ public class ArmSubsystem extends SubsystemBase {
                 -> getEnc() <= ArmConstants.ARM_DEPLOY_UPPER_BOUND && getEnc() >= ArmConstants.ARM_DEPLOY_LOWER_BOUND);
     }
 
-    private void stop() {
+    public void stop() {
         armKraken.stopMotor();
     }
 
