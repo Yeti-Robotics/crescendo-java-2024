@@ -57,9 +57,7 @@ public class RobotContainer {
     private boolean autoNeedsRebuild = true;
     private Command auto;
 
-    private final RobotCommands robotCommands = new RobotCommands(
-            intake, pivot, shooter, drivetrain, arm
-    );
+    private final RobotCommands robotCommands = new RobotCommands(intake, pivot, shooter, drivetrain, arm, elevator);
 
     public RobotContainer() {
         NamedCommands.registerCommand("shootBump", Commands.sequence(
@@ -99,6 +97,7 @@ public class RobotContainer {
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
         SmartDashboard.putNumber("shooterstate-position", 0.5);
+        SmartDashboard.putBoolean("elev mag switch", elevator.getMagSwitch());
     }
 
     private void configureBindings() {
@@ -146,9 +145,11 @@ public class RobotContainer {
         // Lock on to speaker
         joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.setShooterState())));
 
+        // Lock on to shuttle target
+        joystick.y().whileTrue(new ShuttleAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.setShuttleState())));
+
         // Swerve lock
-        joystick.b().whileTrue(drivetrain
-                .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+        joystick.x().onTrue(robotCommands.stowAmp());
 
         // Reset the field-centric heading
         joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
@@ -159,10 +160,9 @@ public class RobotContainer {
         // Arm down
         joystick.leftBumper().onTrue(arm.deployArm(0.5).alongWith(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
 
-        // (This is unassigned on the gamepad map??)
-        joystick.a().onTrue(
-                shooter.setVelocityAndStop(45).withTimeout(0.5)
-        );
+        // Amp Toggle
+        joystick.a().onTrue(robotCommands.setAmp());
+
         // Shoot
         joystick.rightTrigger().whileTrue(shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1)));
         // Handoff
@@ -173,7 +173,6 @@ public class RobotContainer {
         joystick.povLeft().whileTrue(pivot.moveUpWithBrake(0.05, -0.01));
         joystick.povRight().whileTrue(pivot.moveDownWithBrake(-0.05, 0.01));
         // Spin feeder
-        joystick.x().whileTrue(shooter.spinFeederAndStop(.3));
     }
 
     //Add haptics to beam break
