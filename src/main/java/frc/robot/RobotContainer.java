@@ -101,12 +101,12 @@ public class RobotContainer {
     }
     private void configureBindings() {
 
-        buttonHelper.createButton(1, 0, robotCommands.setShooterState().alongWith(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX())), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(1, 0, robotCommands.readyAimSpeaker(), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(2, 0, intake.rollOut( -.65), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(3,0, arm.deployArm(0.5), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(4, 0, elevator.goDownAndStop(0.2).withTimeout(0.3).andThen(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)).andThen(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(4, 0, robotCommands.stowAmp(), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(5, 0, robotCommands.bumpFire(), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(6, 0, robotCommands.setShuttleState().alongWith(new ShuttleAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX())), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(6, 0, robotCommands.readyAimShuttle(), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(7, 0, shooter.setVelocityAndStop(15), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(8, 0, shooter.setVelocityAndStop(-70), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(9, 0, elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP).andThen(pivot.moveDown(-0.25).unless(
@@ -129,10 +129,10 @@ public class RobotContainer {
                 ));
 
         // Lock on to speaker
-        joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.setShooterState())));
+        joystick.leftTrigger().whileTrue(new AutoAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.readyAimSpeaker())));
 
         // Lock on to shuttle target
-        joystick.y().whileTrue(new ShuttleAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.setShuttleState())));
+        joystick.y().whileTrue(new ShuttleAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()).alongWith(intake.rollOut(-0.3).withTimeout(0.2).andThen(robotCommands.readyAimShuttle())));
 
         // Swerve lock
         joystick.b().whileTrue(robotCommands.bumpFire());
