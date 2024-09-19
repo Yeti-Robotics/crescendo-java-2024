@@ -85,7 +85,7 @@ public class RobotCommands {
                         shooter.spinFeederAndStop(-0.3).alongWith(intake.rollOut(-.2))
                 ).until(shooter::getBeamBreak)
         ).andThen(
-                shooter.setVelocityContinuous(100)).andThen(
+                shooter.setVelocityAndStop(100)).andThen(
                 intake.rollOut(-.1).withTimeout(0.2)).andThen(
                 Commands.waitSeconds(.45)).andThen(
                 shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1).withTimeout(1)).andThen(
