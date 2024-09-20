@@ -1,28 +1,24 @@
- package frc.robot.commands;
+package frc.robot.commands;
 
- import edu.wpi.first.math.geometry.Translation2d;
- import edu.wpi.first.wpilibj2.command.Command;
- import frc.robot.Constants;
- import frc.robot.subsystems.VisionSubsystem;
- import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
- import frc.robot.util.AllianceFlipUtil;
- import frc.robot.util.LimelightHelpers;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
+import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.LimelightHelpers;
 
- import java.util.function.DoubleSupplier;
+import java.util.function.DoubleSupplier;
 
-public class AutoAimCommand extends Command {
 
+public class ShuttleAimCommand extends Command {
     private final CommandSwerveDrivetrain drivetrain;
     private final DoubleSupplier xVelSupplier;
     private final TurnToPoint poseAimRequest;
     private final DoubleSupplier yVelSupplier;
     private double currentTag;
 
-    public AutoAimCommand(
-            CommandSwerveDrivetrain drivetrain,
-            DoubleSupplier xVelSupplier,
-            DoubleSupplier yVelSupplier) {
-
+    public ShuttleAimCommand(CommandSwerveDrivetrain drivetrain, DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier) {
         this.drivetrain = drivetrain;
         this.xVelSupplier = xVelSupplier;
         this.yVelSupplier = yVelSupplier;
@@ -39,7 +35,7 @@ public class AutoAimCommand extends Command {
         currentTag = LimelightHelpers.getFiducialID(VisionSubsystem.VisionConstants.LIMELIGHT_NAME);
 
         Translation2d speakerCenter = AllianceFlipUtil.apply(
-                Constants.FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()
+                Constants.FieldConstants.Shuttle.shuttleTargetZone
         );
 
         poseAimRequest.setPointToFace(speakerCenter);
@@ -57,8 +53,5 @@ public class AutoAimCommand extends Command {
     }
 
     @Override
-    public boolean isFinished() {
-        return false;
-    }
+    public boolean isFinished() {return false;}
 }
-
