@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -14,7 +15,6 @@ import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.RobotDataPublisher;
@@ -25,8 +25,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final TalonFX leftKraken;
     private final TalonFX rightKraken;
-    private final TalonFX neo;
     private final DigitalInput beamBreak;
+    private final FeederSubsystem feederSubsystem;
 
     private final StatusSignal<Double> leftVel;
     private final StatusSignal<Double> rightVel;
@@ -36,7 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public static class ShooterConstants {
         public static ShooterModes shooterModes;
         public static ShooterStatus shooterStatus;
-        public static double velocity = 0;
+
 
         public static final int SHOOTER_LEFT_MOTOR = 5; //id
         public static final int SHOOTER_RIGHT_MOTOR = 15; //id
@@ -60,13 +60,11 @@ public class ShooterSubsystem extends SubsystemBase {
                 withKA(MOTION_MAGIC_ACCELERATION).
                 withKV(SHOOTER_V);
 
-
-        public static final int SHOOTER_NEO = 16;
         public static final int BEAM_BREAK = 0;
 
         public static InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
             InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
-            // TODO: decrease angles by aroun 0.05 to tune
+            // TODO: decrease angles by around 0.05 to tune
             map.put(1.375, new ShooterStateData(0.5, 125));
             map.put(1.7, new ShooterStateData(.485, 125));
             map.put(2.0, new ShooterStateData(0.478, 125));
@@ -82,6 +80,20 @@ public class ShooterSubsystem extends SubsystemBase {
             InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
             map.put(8.0, new ShooterStateData(0.5, 125));
             return map;
+        }
+    }
+
+
+    private static class FeederSubsystem extends SubsystemBase {
+        private final TalonFX feederMotor;
+        public static final int SHOOTER_NEO = 16;
+
+        public FeederSubsystem() {
+            feederMotor = new TalonFX(SHOOTER_NEO, "canivoreBus");
+        }
+
+        protected Command spinFeederAndStop(double speed) {
+            return startEnd(() -> feederMotor.set(speed), feederMotor::stopMotor);
         }
     }
 
@@ -104,8 +116,6 @@ public class ShooterSubsystem extends SubsystemBase {
         leftVel = leftKraken.getVelocity();
         rightVel = rightKraken.getVelocity();
 
-        neo = new TalonFX(ShooterConstants.SHOOTER_NEO, "canivoreBus");
-
         beamBreak = new DigitalInput(ShooterConstants.BEAM_BREAK);
 
         motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(0);
@@ -115,6 +125,8 @@ public class ShooterSubsystem extends SubsystemBase {
         motionMagicConfigs.MotionMagicJerk = 4000;
         rightMotorConfigurator.apply(rightMotorConfiguration);
         leftMotorConfigurator.apply(rightMotorConfiguration);
+
+        feederSubsystem = new FeederSubsystem();
     }
 
     @Override
@@ -131,22 +143,14 @@ public class ShooterSubsystem extends SubsystemBase {
         return !beamBreak.get();
     }
 
-    private void stopFeeder() {
-        neo.stopMotor();
-    }
-
-    private void spinFeeder(double speed) {
-        neo.set(speed);
-    }
-
     public void stopShooter() {
         rightKraken.stopMotor();
         leftKraken.stopMotor();
-        neo.stopMotor();
         ShooterConstants.shooterStatus = ShooterStatus.OFF;
     }
 
     public void setDualVelocity(double leftVel, double rightVel) {
+        leftKraken.setControl(new VelocityVoltage(leftVel));
         leftKraken.setControl(motionMagicVelocityVoltage.withVelocity(leftVel));
         rightKraken.setControl(motionMagicVelocityVoltage.withVelocity(rightVel));
     }
@@ -190,7 +194,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public Command spinFeederAndStop(double vel) {
-        return startEnd(() -> spinFeeder(vel), this::stopFeeder);
+        return feederSubsystem.spinFeederAndStop(vel);
     }
 
     public Command spinFeederMaxAndStop() {
