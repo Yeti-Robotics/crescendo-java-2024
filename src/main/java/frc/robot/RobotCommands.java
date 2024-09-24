@@ -6,6 +6,7 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.shooter.*;
 import frc.robot.util.AllianceFlipUtil;
@@ -14,6 +15,7 @@ import java.util.function.Supplier;
 
 public class RobotCommands {
 
+    private final IntakeSubsystem intake;
     private final PivotSubsystem pivot;
     private final CommandSwerveDrivetrain commandSwerveDrivetrain;
     private final ArmSubsystem arm;
@@ -21,7 +23,8 @@ public class RobotCommands {
     private final FeederSubsystem feeder;
     private final FlywheelSubsystem flywheel;
 
-    public RobotCommands(PivotSubsystem pivot, CommandSwerveDrivetrain commandSwerveDrivetrain, ArmSubsystem arm, ElevatorSubsystem elevator, FeederSubsystem feeder, FlywheelSubsystem flywheel) {
+    public RobotCommands(IntakeSubsystem intake, PivotSubsystem pivot, CommandSwerveDrivetrain commandSwerveDrivetrain, ArmSubsystem arm, ElevatorSubsystem elevator, FeederSubsystem feeder, FlywheelSubsystem flywheel) {
+        this.intake = intake;
         this.pivot = pivot;
         this.commandSwerveDrivetrain = commandSwerveDrivetrain;
         this.arm = arm;

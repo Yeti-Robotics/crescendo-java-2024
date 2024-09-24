@@ -58,7 +58,7 @@ public class RobotContainer {
     private boolean autoNeedsRebuild = true;
     private Command auto;
 
-    private final RobotCommands robotCommands = new RobotCommands(pivot, drivetrain, arm, elevator, feeder, flywheel);
+    private final RobotCommands robotCommands = new RobotCommands(intake, pivot, drivetrain, arm, elevator, feeder, flywheel);
 
     public RobotContainer() {
         var field = new Field2d();
