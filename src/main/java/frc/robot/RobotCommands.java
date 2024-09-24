@@ -68,7 +68,7 @@ public class RobotCommands {
         return arm.moveUpAndStop(.5).until(() ->
                         arm.getEnc() >= ArmSubsystem.ArmConstants.ARM_HANDOFF_POSITION)
                         .andThen(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF))
-                        .andThen(feeder.ingest(-1));
+                        .andThen(feeder.ingest(-0.3).alongWith(intake.rollOut(-0.15)));
     }
 
     public Command setAmp() {
