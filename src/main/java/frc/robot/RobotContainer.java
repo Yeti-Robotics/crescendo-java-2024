@@ -8,7 +8,6 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,20 +28,22 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drivetrain.Telemetry;
 import frc.robot.subsystems.drivetrain.generated.TunerConstants;
+import frc.robot.subsystems.shooter.FeederSubsystem;
+import frc.robot.subsystems.shooter.FlywheelSubsystem;
+import frc.robot.subsystems.shooter.PivotSubsystem;
 import frc.robot.util.controllerUtils.ButtonHelper;
 import frc.robot.util.controllerUtils.ControllerContainer;
 import frc.robot.util.controllerUtils.MultiButton;
 
 
 public class RobotContainer {
-
-    public final ShooterSubsystem shooter = new ShooterSubsystem();
-    public final PivotSubsystem pivot = new PivotSubsystem();
     public final ElevatorSubsystem elevator = new ElevatorSubsystem();
     public final IntakeSubsystem intake = new IntakeSubsystem();
     public final ArmSubsystem arm = new ArmSubsystem();
-    public final CommandXboxController joystick = new CommandXboxController(1); // My joystick
     public final VisionSubsystem vision = new VisionSubsystem();
+    public final FeederSubsystem feeder = new FeederSubsystem();
+    public final FlywheelSubsystem flywheel = new FlywheelSubsystem();
+    public final PivotSubsystem pivot = new PivotSubsystem();
 
     final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -50,23 +51,16 @@ public class RobotContainer {
             .withRotationalDeadband(CommandSwerveDrivetrain.MaFxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage); // I want field-centric
 
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     public ControllerContainer controllerContainer = new ControllerContainer();
     public SendableChooser<AutoConstants.AutoMode> autoChooser;
-    ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
+    private final ButtonHelper buttonHelper = new ButtonHelper(controllerContainer.getControllers());
+    public final CommandXboxController joystick = new CommandXboxController(1); // My joystick
     private boolean autoNeedsRebuild = true;
     private Command auto;
 
-    private final RobotCommands robotCommands = new RobotCommands(intake, pivot, shooter, drivetrain, arm, elevator);
+    private final RobotCommands robotCommands = new RobotCommands(pivot, drivetrain, arm, elevator, feeder, flywheel);
 
     public RobotContainer() {
-        NamedCommands.registerCommand("shootBump", Commands.sequence(
-                pivot.adjustPivotPositionTo(0.55),
-                shooter.shooterBumpFire(),
-                Commands.waitSeconds(.75), // is this waiting for a specific speed or something? should prob be replaced
-                shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1).withTimeout(1))
-        ));
-
         var field = new Field2d();
         SmartDashboard.putData("Field", field);
 
@@ -79,7 +73,6 @@ public class RobotContainer {
         PathPlannerLogging.setLogActivePathCallback(poses ->
                 field.getObject("path").setPoses(poses)
         );
-
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -103,19 +96,18 @@ public class RobotContainer {
     private void configureBindings() {
 
         buttonHelper.createButton(1, 0, robotCommands.setShuttleState().alongWith(new ShuttleAimCommand(drivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX())), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(8, 0, shooter.setVelocityAndStop(-70), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(7, 0, shooter.setVelocityAndStop(15), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(8, 0, flywheel.reachVelocity(-70), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(7, 0, flywheel.reachVelocity(15), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(5, 0, robotCommands.bumpFire(), MultiButton.RunCondition.WHEN_PRESSED);
 
         buttonHelper.createButton(10, 0, robotCommands.handoff().withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(2, 0, intake.rollOut(-.65), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(4, 0, elevator.goDownAndStop(0.2).withTimeout(0.3).andThen(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)).andThen(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)), MultiButton.RunCondition.WHEN_PRESSED);
-        buttonHelper.createButton(6, 0, shooter.spinFeederAndStop(-.1).alongWith(intake.rollIn(0.5)), MultiButton.RunCondition.WHILE_HELD);
+        buttonHelper.createButton(6, 0, feeder.feed(-.1).alongWith(intake.rollIn(0.5)), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(9, 0, elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP).andThen(pivot.moveDown(-0.25).unless(
-                        () -> pivot.getEncoderAngle() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getMagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
+                        () -> pivot.getPosition() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getMagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
         intake.intakeOccupiedTrigger.onTrue(vision.blinkLimelight().alongWith(successfulIntakeRumble()));
         intake.intakeOccupiedTrigger.and(joystick.rightBumper().negate()).onTrue(robotCommands.handoff().withTimeout(2));
-        buttonHelper.createButton(11, 0, shooter.shooterTrap(), MultiButton.RunCondition.WHILE_HELD);
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(
@@ -152,7 +144,7 @@ public class RobotContainer {
         joystick.a().onTrue(robotCommands.setAmp());
 
         // Shoot
-        joystick.rightTrigger().whileTrue(shooter.spinFeederMaxAndStop().alongWith(intake.rollOut(-1)));
+        joystick.rightTrigger().whileTrue(feeder.feed(-1).alongWith(intake.rollOut(-1)));
         // Handoff
         joystick.povUp().onTrue(robotCommands.handoff().withTimeout(2));
         // Move elevator down
@@ -184,7 +176,7 @@ public class RobotContainer {
     }
 
     public void buildAutoChooser() {
-        var namedCommands = new AutoNamedCommands(intake, shooter, pivot, arm, robotCommands);
+        var namedCommands = new AutoNamedCommands(intake, pivot, arm, feeder, robotCommands);
         namedCommands.registerCommands();
 
         autoChooser = new SendableChooser<>();
