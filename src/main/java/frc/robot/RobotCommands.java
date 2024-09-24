@@ -4,14 +4,17 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.robot.commands.AutoAimCommand;
+import frc.robot.commands.ShuttleAimCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.util.RobotDataPublisher;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterStateData;
-import frc.robot.util.controllerUtils.MultiButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
+
 
 public class RobotCommands {
 
@@ -21,6 +24,9 @@ public class RobotCommands {
     private final CommandSwerveDrivetrain commandSwerveDrivetrain;
     private final ArmSubsystem arm;
     private final ElevatorSubsystem elevator;
+    public final CommandXboxController joystick = new CommandXboxController(1);
+
+
 
     public RobotCommands(IntakeSubsystem intake, PivotSubsystem pivot, ShooterSubsystem shooter, CommandSwerveDrivetrain commandSwerveDrivetrain, ArmSubsystem arm, ElevatorSubsystem elevator1) {
         this.intake = intake;
@@ -29,6 +35,7 @@ public class RobotCommands {
         this.commandSwerveDrivetrain = commandSwerveDrivetrain;
         this.arm = arm;
         this.elevator = elevator1;
+
     }
 
     /**
@@ -37,7 +44,8 @@ public class RobotCommands {
      *
      * @return {@code Command} instance
      */
-    public Command setShooterState() {
+
+    public Command readyAimSpeaker() {
         RobotDataPublisher<ShooterStateData> shooterStatePublisher = commandSwerveDrivetrain.observablePose().map(robotPose -> {
             final Pose2d speakerPose = AllianceFlipUtil.apply(new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0)));
             Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
@@ -46,17 +54,20 @@ public class RobotCommands {
         });
 
         return pivot.updatePivotPositionWith(shooterStatePublisher)
-                .alongWith(shooter.updateVelocityWith(shooterStatePublisher));
+                .alongWith(shooter.updateVelocityWith(shooterStatePublisher))
+                .alongWith(new AutoAimCommand(commandSwerveDrivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()));
     }
 
-    public Command setShuttleState() {
+    public Command readyAimShuttle() {
         RobotDataPublisher<ShooterStateData> shuttleStatePublisher = commandSwerveDrivetrain.observablePose().map(robotPose -> {
             final Pose2d shuttleTarget = AllianceFlipUtil.apply(new Pose2d(2.5, 7.0, Rotation2d.fromDegrees(0)));
             Pose2d relativeShuttleTarget = robotPose.relativeTo(shuttleTarget);
             double distance = relativeShuttleTarget.getTranslation().getNorm();
             return ShooterSubsystem.ShooterConstants.SHUTTLE_MAP().get(distance);
         });
-        return pivot.updatePivotPositionWith(shuttleStatePublisher).alongWith(shooter.updateVelocityWith(shuttleStatePublisher));
+        return pivot.updatePivotPositionWith(shuttleStatePublisher)
+                .alongWith(shooter.updateVelocityWith(shuttleStatePublisher))
+                .alongWith(new ShuttleAimCommand(commandSwerveDrivetrain, () -> -joystick.getLeftY(), () -> -joystick.getLeftX()));
     }
 
     public Command handoff() {
