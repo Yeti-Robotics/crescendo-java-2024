@@ -32,8 +32,6 @@ public class PivotSubsystem extends SubsystemBase {
         public static final int PIVOT_ONE_CANCODER_ID = 16; // placeholder
         public static final NeutralModeValue PIVOT_NEUTRAL_MODE = NeutralModeValue.Brake;
 
-        public static final double PIVOT_POSITION_STATUS_FRAME = 0.05;
-
         public static final double PIVOT_P = 50; // 1 //350.0 /11.7
         public static final double PIVOT_I = 0;
         public static final double PIVOT_D = 2; // 0 //45.0
