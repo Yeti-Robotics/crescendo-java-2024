@@ -102,7 +102,7 @@ public class RobotContainer {
 
         buttonHelper.createButton(10, 0, robotCommands.handoff().withTimeout(2), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(2, 0, intake.rollOut(-.65), MultiButton.RunCondition.WHILE_HELD);
-        buttonHelper.createButton(4, 0, elevator.goDownAndStop(0.2).withTimeout(0.3).andThen(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)).andThen(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)), MultiButton.RunCondition.WHEN_PRESSED);
+        buttonHelper.createButton(4, 0, elevator.goDownAndStop(0.2).withTimeout(0.3).andThen(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)).andThen(pivot.adjustPivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)), MultiButton.RunCondition.WHEN_PRESSED);
         buttonHelper.createButton(6, 0, feeder.feed(-.1).alongWith(intake.rollIn(0.5)), MultiButton.RunCondition.WHILE_HELD);
         buttonHelper.createButton(9, 0, elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.AMP).andThen(pivot.moveDown(-0.25).unless(
                         () -> pivot.getPosition() < 0.4).withTimeout(0.6).andThen(pivot.adjustPivotPositionTo(0.03).unless(() -> !elevator.getMagSwitch()))), MultiButton.RunCondition.WHEN_PRESSED);
@@ -138,7 +138,7 @@ public class RobotContainer {
         joystick.rightBumper().whileTrue(intake.rollIn(.7));
 
         // Arm down
-        joystick.leftBumper().onTrue(arm.deployArm(0.5).alongWith(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
+        joystick.leftBumper().onTrue(arm.deployArm(0.5).alongWith(pivot.adjustPivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
 
         // Amp Toggle
         joystick.a().onTrue(robotCommands.setAmp());

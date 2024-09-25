@@ -11,7 +11,6 @@ import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
@@ -23,7 +22,6 @@ public class PivotSubsystem extends SubsystemBase {
     public DigitalInput reverseLimitSwitch;
 
     private final StatusSignal<Double> pivotPositionStatusSignal;
-    private PivotConstants.PivotPosition setPosition;
 
     public static class PivotConstants {
         public static final int PIVOT_LIMIT_SWITCH_FORWARD = 7;
@@ -59,16 +57,7 @@ public class PivotSubsystem extends SubsystemBase {
         public static final double ANGLE_THRESHOLD = 0.01;
 
         public enum PivotPosition {
-            CUSTOM(-1) {
-                @Override
-                public double getPosition() {
-                    if (super.getPosition() == -1) {
-                        throw new IllegalArgumentException("Custom pivot position was not set");
-                    }
-
-                    return super.getPosition();
-                }
-            },
+            BUMP_FIRE(0.53),
             HANDOFF(0.5);
 
             // placeholder
@@ -80,12 +69,6 @@ public class PivotSubsystem extends SubsystemBase {
 
             public double getPosition() {
                 return position;
-            }
-
-            public static PivotPosition CUSTOM(double position) {
-                PivotPosition pivotPosition = PivotPosition.CUSTOM;
-                pivotPosition.position = position;
-                return pivotPosition;
             }
         }
     }
@@ -99,8 +82,6 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor.setInverted(true);
         pivotMotor.setNeutralMode(NeutralModeValue.Brake);
         pivotPositionStatusSignal = pivotMotor.getPosition();
-
-        setPosition = PivotConstants.PivotPosition.CUSTOM(pivotPositionStatusSignal.getValue());
 
         new Trigger(this::getForwardLimitSwitch).whileTrue(moveDown(0.05));
         new Trigger(this::getReverseLimitSwitch).whileTrue(moveUp(0.05));
@@ -154,11 +135,9 @@ public class PivotSubsystem extends SubsystemBase {
         return !reverseLimitSwitch.get();
     }
 
-    private void setPosition(PivotConstants.PivotPosition pivotPosition) {
-        setPosition = pivotPosition;
-
+    private void setPosition(double pivotPosition) {
         MotionMagicVoltage motionMagicControlRequest = new MotionMagicVoltage(
-                pivotPosition.getPosition(), true, 0, 0, false, false, false)
+                pivotPosition, true, 0, 0, false, false, false)
                 .withLimitForwardMotion(getForwardLimitSwitch())
                 .withLimitReverseMotion(getReverseLimitSwitch())
                 .withSlot(0)
@@ -183,26 +162,16 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor.stopMotor();
     }
 
-    private boolean isAtSetPoint() {
-        return Math.abs(setPosition.getPosition() - getPosition()) < PivotConstants.ANGLE_THRESHOLD;
+    public Command adjustPivotPositionTo(PivotConstants.PivotPosition pivotPosition) {
+        return adjustPivotPositionTo(pivotPosition.getPosition());
     }
 
-    private Command waitUntilSetPointReached() {
-        return Commands.waitUntil(this::isAtSetPoint);
+    public Command adjustPivotPositionTo(Supplier<Double> positionSupplier) {
+        return runEnd(() -> setPosition(positionSupplier.get()), this::stopPivotMotor);
     }
 
-    public Command movePivotPositionTo(PivotConstants.PivotPosition pivotPosition) {
-        return runOnce(() -> setPosition(pivotPosition))
-                .andThen(waitUntilSetPointReached());
-    }
-
-    public Command updatePivotPositionWith(Supplier<Double> positionSupplier) {
-        return runEnd(() -> setPosition(PivotConstants.PivotPosition.CUSTOM(positionSupplier.get())), this::stopPivotMotor)
-                .andThen(waitUntilSetPointReached());
-    }
-
-    public Command adjustPivotPositionTo(double angle) {
-        return movePivotPositionTo(PivotConstants.PivotPosition.CUSTOM(angle));
+    public Command adjustPivotPositionTo(double position) {
+        return runOnce(() -> setPosition(position));
     }
 
     public Command moveUp(double speed) {

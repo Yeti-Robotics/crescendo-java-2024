@@ -34,7 +34,7 @@ public class RobotCommands {
     }
 
     private Command updateTarget(Supplier<ShooterTarget> shooterTarget) {
-        return pivot.updatePivotPositionWith(() -> shooterTarget.get().angle)
+        return pivot.adjustPivotPositionTo(() -> shooterTarget.get().angle)
                 .alongWith(flywheel.reachVelocity(() -> shooterTarget.get().rps));
     }
 
@@ -70,7 +70,7 @@ public class RobotCommands {
     public Command handoff() {
         return arm.moveUpAndStop(.5).until(() ->
                         arm.getEnc() >= ArmSubsystem.ArmConstants.ARM_HANDOFF_POSITION)
-                        .andThen(pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF))
+                        .andThen(pivot.adjustPivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF))
                         .andThen(feeder.ingest(-0.3).alongWith(intake.rollOut(-0.15)));
     }
 
@@ -80,7 +80,7 @@ public class RobotCommands {
     }
 
     public Command stowAmp() {
-        return pivot.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF).andThen(elevator.goDownAndStop(0.2).withTimeout(0.3).andThen(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)));
+        return pivot.adjustPivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF).andThen(elevator.goDownAndStop(0.2).withTimeout(0.3).andThen(elevator.setPositionTo(ElevatorSubsystem.ElevatorConstants.ElevatorPositions.DOWN)));
     }
 
     public Command bumpFire(){

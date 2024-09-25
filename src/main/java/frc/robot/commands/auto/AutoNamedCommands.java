@@ -30,7 +30,7 @@ public class AutoNamedCommands {
         NamedCommands.registerCommand("rollOut", intakeSubsystem.rollOut(-0.7));
         NamedCommands.registerCommand("armUp", armSubsystem.moveUpAndStop(.5).until(() -> armSubsystem.getEnc() >= 0.75));
         NamedCommands.registerCommand("armDown", armSubsystem.moveDownAndStop(.5).until(
-                () -> armSubsystem.getEnc() <= .5 && armSubsystem.getEnc() >= .44).alongWith(pivotSubsystem.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
+                () -> armSubsystem.getEnc() <= .5 && armSubsystem.getEnc() >= .44).alongWith(pivotSubsystem.adjustPivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
 
         NamedCommands.registerCommand("shootBump", robotCommands.setTargetAndShoot(0.53, 100));
         NamedCommands.registerCommand("shootLine", robotCommands.setTargetAndShoot(0.47, 100));
@@ -45,6 +45,6 @@ public class AutoNamedCommands {
         NamedCommands.registerCommand("handoff", robotCommands.handoff().withTimeout(1.5));
         NamedCommands.registerCommand("handoffMidLine", intakeSubsystem.rollIn(.275).withTimeout(0.5).andThen(robotCommands.handoff().withTimeout(1.5)));
 
-        NamedCommands.registerCommand("pivotHandoff", pivotSubsystem.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF));
+        NamedCommands.registerCommand("pivotHandoff", pivotSubsystem.adjustPivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF));
     }
 }
