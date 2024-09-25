@@ -84,6 +84,6 @@ public class RobotCommands {
     }
 
     public Command bumpFire(){
-        return setTargetAndShoot(0.53, 100);
+        return pivot.adjustPivotPositionTo(0.53);
     }
 }
