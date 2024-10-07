@@ -29,14 +29,14 @@ public class AutoNamedCommands {
     public void registerCommands() {
         NamedCommands.registerCommand("rollIn", intakeSubsystem.rollIn(0.9));
         NamedCommands.registerCommand("rollOut", intakeSubsystem.rollOut(-0.7));
-        NamedCommands.registerCommand("armUp", armSubsystem.moveUpAndStop(.5).until(() -> armSubsystem.getEnc() >= 0.75));
+        NamedCommands.registerCommand("armUp", armSubsystem.moveUpAndStop(.5).until(() -> armSubsystem.getEnc() >= 0.5));
         NamedCommands.registerCommand("armDown", armSubsystem.moveDownAndStop(.5).until(
-                () -> armSubsystem.getEnc() <= .5 && armSubsystem.getEnc() >= .44).alongWith(pivotSubsystem.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
+                () -> armSubsystem.getEnc() <= ArmSubsystem.ArmConstants.ARM_DEPLOY_UPPER_BOUND && armSubsystem.getEnc() >= ArmSubsystem.ArmConstants.ARM_DEPLOY_LOWER_BOUND).alongWith(pivotSubsystem.movePivotPositionTo(PivotSubsystem.PivotConstants.PivotPosition.HANDOFF)));
         NamedCommands.registerCommand("shootBump", new SequentialCommandGroup(
                 pivotSubsystem.adjustPivotPositionTo(0.53),
                 shooterSubsystem.shooterBumpFire(),
                 new WaitCommand(.75),
-                shooterSubsystem.spinFeederMaxAndStop().alongWith(intakeSubsystem.rollOut(-1).withTimeout(1)),
+                shooterSubsystem.spinFeederMaxAndStop().alongWith(intakeSubsystem.rollOut(-1)).withTimeout(1),
                 new InstantCommand(shooterSubsystem::stopShooter)
         ));
 
