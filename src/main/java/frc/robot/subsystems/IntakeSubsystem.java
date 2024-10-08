@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.led.BlinkLimeLightCommand;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.TalonFXConstants;
@@ -18,10 +19,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private final DigitalInput beamBreak;
     private final BlinkLimeLightCommand blinkLimeLightCommand = new BlinkLimeLightCommand();
+    public final Trigger intakeOccupiedTrigger;
 
     private boolean prevBreak = false;
 
     public IntakeSubsystem() {
+        intakeOccupiedTrigger = new Trigger(this::getBeamBreak);
         intakeKraken = new TalonFX(IntakeConstants.INTAKE_KRAKEN_ID, "canivoreBus");
         var intakeConfigurator = intakeKraken.getConfigurator();
         var configs = new TalonFXConfiguration();
