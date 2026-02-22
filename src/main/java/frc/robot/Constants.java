@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -81,6 +82,6 @@ public class Constants {
 
     public class TalonFXConstants{
         public static final boolean TALON_FUTURE_PROOF = true;
-        public static final String CANIVORE_NAME = "canivoreBus";
+        public static final CANBus CANIVORE_NAME = new CANBus("canivore");
     }
 }
