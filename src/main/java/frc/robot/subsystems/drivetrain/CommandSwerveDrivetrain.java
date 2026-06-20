@@ -236,7 +236,7 @@ public class CommandSwerveDrivetrain extends TunerConstants.TunerSwerveDrivetrai
         Pose2d relativeSpeaker = robotPose.relativeTo(speakerPose);
         double distance = relativeSpeaker.getTranslation().getNorm();
         SmartDashboard.putNumber("distance", distance);
-        SmartDashboard.putNumber("gyro spin rate", getPigeon2().getRate());
+        SmartDashboard.putNumber("gyro spin rate", getPigeon2().getAngularVelocityZWorld().getValueAsDouble());
     }
 
     public RobotDataPublisher<Pose2d> observablePose() {

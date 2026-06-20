@@ -27,7 +27,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public IntakeSubsystem() {
-        intakeKraken = new TalonFX(IntakeConstants.INTAKE_KRAKEN_ID, "canivoreBus");
+        intakeKraken = new TalonFX(IntakeConstants.INTAKE_KRAKEN_ID, Constants.TalonFXConstants.CANIVORE_NAME);
         var intakeConfigurator = intakeKraken.getConfigurator();
         var configs = new TalonFXConfiguration();
 
