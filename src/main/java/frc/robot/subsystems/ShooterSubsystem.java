@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
@@ -97,7 +98,7 @@ public class ShooterSubsystem extends SubsystemBase {
         rightMotorConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         rightMotorConfiguration.CurrentLimits = ShooterConstants.SHOOTER_CURRENT_LIMIT;
         rightMotorConfiguration.Slot0 = ShooterConstants.SLOT_0_CONFIGS;
-        leftKraken.setControl(new Follower(rightKraken.getDeviceID(), false));
+        leftKraken.setControl(new Follower(rightKraken.getDeviceID(), MotorAlignmentValue.Opposed));
 
         ShooterConstants.shooterStatus = ShooterStatus.OFF;
         ShooterConstants.shooterModes = ShooterModes.TRAP;

@@ -98,7 +98,6 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor = new TalonFX(PivotConstants.PIVOT_ONE_MOTOR_ID, Constants.TalonFXConstants.CANIVORE_NAME);
         pivotEncoder = new CANcoder(PivotConstants.PIVOT_ONE_CANCODER_ID, Constants.TalonFXConstants.CANIVORE_NAME);
 
-        pivotMotor.setInverted(true);
         pivotMotor.setNeutralMode(NeutralModeValue.Brake);
         pivotPositionStatusSignal = pivotMotor.getPosition();
 
@@ -123,6 +122,7 @@ public class PivotSubsystem extends SubsystemBase {
         talonFXConfiguration.MotionMagic.MotionMagicAcceleration = 2;
         talonFXConfiguration.MotionMagic.MotionMagicExpo_kA = PivotConstants.PROFILE_A;
         talonFXConfiguration.MotionMagic.MotionMagicExpo_kV = PivotConstants.PROFILE_V;
+        talonFXConfiguration.withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
 
         pivotMotor1Configurator.apply(talonFXConfiguration);
 
